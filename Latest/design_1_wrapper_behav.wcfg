@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="testbench_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="axi_vip_pkg" />
+            <top_module name="glbl" />
+            <top_module name="std" />
+            <top_module name="testbench" />
+            <top_module name="vcomponents" />
+            <top_module name="xil_common_vip_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="148.870 ns"></ZoomStartTime>
+      <ZoomEndTime time="630.870 ns"></ZoomEndTime>
+      <Cursor1Time time="586.113 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="314"></NameColumnWidth>
+      <ValueColumnWidth column_width="102"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="17" />
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_AWADDR" type="array">
+      <obj_property name="ElementShortName">S_AXI_AWADDR[5:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_AWADDR[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_AWLEN" type="array">
+      <obj_property name="ElementShortName">S_AXI_AWLEN[7:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_AWLEN[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_AWVALID" type="logic">
+      <obj_property name="ElementShortName">S_AXI_AWVALID</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_AWVALID</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_AWREADY" type="logic">
+      <obj_property name="ElementShortName">S_AXI_AWREADY</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_AWREADY</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_WDATA" type="array">
+      <obj_property name="ElementShortName">S_AXI_WDATA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_WDATA[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_WLAST" type="logic">
+      <obj_property name="ElementShortName">S_AXI_WLAST</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_WLAST</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_WVALID" type="logic">
+      <obj_property name="ElementShortName">S_AXI_WVALID</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_WVALID</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_WREADY" type="logic">
+      <obj_property name="ElementShortName">S_AXI_WREADY</obj_property>
+      <obj_property name="ObjectShortName">S_AXI_WREADY</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/addr_fifo_din" type="array">
+      <obj_property name="ElementShortName">addr_fifo_din[31:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_din[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/addr_fifo_wr" type="logic">
+      <obj_property name="ElementShortName">addr_fifo_wr</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_wr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_cycle_cnt" type="array">
+      <obj_property name="ElementShortName">addr_cycle_cnt[31:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_cycle_cnt[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts" type="array">
+      <obj_property name="ElementShortName">addr_mon_cnts[15:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_mon_cnts[15:0][15:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/addr_mon_cnts" type="array">
+      <obj_property name="ElementShortName">addr_mon_cnts[15:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_mon_cnts[15:0][15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/freeze_program" type="logic">
+      <obj_property name="ElementShortName">freeze_program</obj_property>
+      <obj_property name="ObjectShortName">freeze_program</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/abort_program" type="logic">
+      <obj_property name="ElementShortName">abort_program</obj_property>
+      <obj_property name="ObjectShortName">abort_program</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/run_program" type="logic">
+      <obj_property name="ElementShortName">run_program</obj_property>
+      <obj_property name="ObjectShortName">run_program</obj_property>
+   </wvobject>
+   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/send_consec_addr" type="logic">
+      <obj_property name="ElementShortName">send_consec_addr</obj_property>
+      <obj_property name="ObjectShortName">send_consec_addr</obj_property>
+   </wvobject>
+</wave_config>

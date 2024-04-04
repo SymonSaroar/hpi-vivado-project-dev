@@ -1,0 +1,167 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"0.651061",
+   "Default View_TopLeft":"1110,323",
+   "Display-PortTypeClock":"true",
+   "Display-PortTypeData":"true",
+   "Display-PortTypeOthers":"true",
+   "Display-PortTypeReset":"true",
+   "ExpandedHierarchyInLayout":"",
+   "Interfaces View_Layers":"/zynq_ultra_ps_e_0_pl_clk0:false|/zynq_ultra_ps_e_0_pl_resetn0:false|/c_counter_binary_0_Q:false|/rst_ps8_0_99M_peripheral_aresetn:false|",
+   "Interfaces View_ScaleFactor":"0.743621",
+   "Interfaces View_TopLeft":"1,-100",
+   "No Loops_ExpandedHierarchyInLayout":"",
+   "No Loops_Layout":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0
+#  -string -flagsOSRD
+preplace portBus dout_0 -pg 1 -lvl 8 -x 2990 -y 860 -defaultsOSRD
+preplace inst zynq_ultra_ps_e_0 -pg 1 -lvl 5 -x 1860 -y 800 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 83 82 84} -defaultsOSRD -pinDir M_AXI_HPM0_LPD right -pinY M_AXI_HPM0_LPD 100R -pinDir S_AXI_HP1_FPD left -pinY S_AXI_HP1_FPD 20L -pinDir maxihpm0_lpd_aclk left -pinY maxihpm0_lpd_aclk 40L -pinDir saxihp1_fpd_aclk left -pinY saxihp1_fpd_aclk 60L -pinBusDir pl_ps_irq0 left -pinBusY pl_ps_irq0 100L -pinDir pl_resetn0 left -pinY pl_resetn0 80L -pinDir pl_clk0 right -pinY pl_clk0 120R
+preplace inst rst_ps8_0_99M -pg 1 -lvl 1 -x 160 -y 420 -swap {0 1 2 3 4 5 6 7 9 8} -defaultsOSRD -pinDir slowest_sync_clk right -pinY slowest_sync_clk 20R -pinDir ext_reset_in right -pinY ext_reset_in 460R -pinDir aux_reset_in left -pinY aux_reset_in 20L -pinDir mb_debug_sys_rst left -pinY mb_debug_sys_rst 40L -pinDir dcm_locked left -pinY dcm_locked 60L -pinDir mb_reset right -pinY mb_reset 480R -pinBusDir bus_struct_reset right -pinBusY bus_struct_reset 500R -pinBusDir peripheral_reset right -pinBusY peripheral_reset 520R -pinBusDir interconnect_aresetn right -pinBusY interconnect_aresetn 560R -pinBusDir peripheral_aresetn right -pinBusY peripheral_aresetn 540R
+preplace inst ps8_0_axi_periph -pg 1 -lvl 6 -x 2390 -y 880 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 86 84 87 85 89 88} -defaultsOSRD -pinDir S00_AXI left -pinY S00_AXI 20L -pinDir M00_AXI right -pinY M00_AXI 40R -pinDir ACLK left -pinY ACLK 80L -pinDir ARESETN left -pinY ARESETN 40L -pinDir S00_ACLK left -pinY S00_ACLK 100L -pinDir S00_ARESETN left -pinY S00_ARESETN 60L -pinDir M00_ACLK left -pinY M00_ACLK 140L -pinDir M00_ARESETN left -pinY M00_ARESETN 120L
+preplace inst fifo_generator_0 -pg 1 -lvl 7 -x 2790 -y 40 -defaultsOSRD -pinDir FIFO_WRITE left -pinY FIFO_WRITE 20L -pinDir FIFO_WRITE.full left -pinY FIFO_WRITE.full 40L -pinDir FIFO_WRITE.din left -pinY FIFO_WRITE.din 120L -pinDir FIFO_WRITE.wr_en left -pinY FIFO_WRITE.wr_en 140L -pinDir FIFO_READ left -pinY FIFO_READ 500L -pinDir FIFO_READ.dout left -pinY FIFO_READ.dout 520L -pinDir FIFO_READ.rd_en left -pinY FIFO_READ.rd_en 540L -pinDir clk left -pinY clk 700L -pinDir srst left -pinY srst 760L -pinDir valid right -pinY valid 20R -pinDir wr_rst_busy right -pinY wr_rst_busy 40R -pinDir rd_rst_busy right -pinY rd_rst_busy 60R
+preplace inst util_vector_logic_0 -pg 1 -lvl 6 -x 2390 -y 780 -defaultsOSRD -pinBusDir Op1 left -pinBusY Op1 20L -pinBusDir Res right -pinBusY Res 20R
+preplace inst util_vector_logic_1 -pg 1 -lvl 6 -x 2390 -y 120 -defaultsOSRD -pinBusDir Op1 left -pinBusY Op1 20L -pinBusDir Op2 left -pinBusY Op2 40L -pinBusDir Res right -pinBusY Res 60R
+preplace inst c_counter_binary_0 -pg 1 -lvl 4 -x 1220 -y 440 -defaultsOSRD -pinDir CLK left -pinY CLK 20L -pinBusDir Q right -pinBusY Q 20R
+preplace inst util_reduced_logic_0 -pg 1 -lvl 5 -x 1860 -y 300 -defaultsOSRD -pinBusDir Op1 left -pinBusY Op1 20L -pinDir Res right -pinY Res 20R
+preplace inst util_vector_logic_2 -pg 1 -lvl 6 -x 2390 -y 300 -defaultsOSRD -pinBusDir Op1 left -pinBusY Op1 20L -pinBusDir Res right -pinBusY Res 280R
+preplace inst custom_slave_0 -pg 1 -lvl 7 -x 2790 -y 900 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 45 44 46} -defaultsOSRD -pinDir S00_AXI left -pinY S00_AXI 20L -pinBusDir read_addr left -pinBusY read_addr 40L -pinDir start_read_tx left -pinY start_read_tx 60L -pinDir wvalid left -pinY wvalid 180L -pinDir s00_axi_aclk left -pinY s00_axi_aclk 80L -pinDir s00_axi_aresetn left -pinY s00_axi_aresetn 200L
+preplace inst master_custom_0 -pg 1 -lvl 4 -x 1220 -y 100 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 45 47 48 50 49 43 44 58 51 53 56 52 57 54 55 46 59} -defaultsOSRD -pinDir M00_AXI right -pinY M00_AXI 20R -pinBusDir debug_tx_num right -pinBusY debug_tx_num 80R -pinBusDir debug_addr right -pinBusY debug_addr 100R -pinBusDir debug_add_bytes right -pinBusY debug_add_bytes 120R -pinBusDir target_base_addr left -pinBusY target_base_addr 200L -pinBusDir output_data right -pinBusY output_data 140R -pinDir rvalid right -pinY rvalid 40R -pinDir rready right -pinY rready 60R -pinBusDir read_addr left -pinBusY read_addr 240L -pinDir addr_fifo_empty left -pinY addr_fifo_empty 220L -pinDir vector_fifo_full right -pinY vector_fifo_full 180R -pinDir arvalid right -pinY arvalid 240R -pinDir arready right -pinY arready 160R -pinDir m00_axi_init_axi_txn right -pinY m00_axi_init_axi_txn 260R -pinDir m00_axi_txn_done right -pinY m00_axi_txn_done 200R -pinDir m00_axi_error right -pinY m00_axi_error 220R -pinDir m00_axi_aclk left -pinY m00_axi_aclk 180L -pinDir m00_axi_aresetn left -pinY m00_axi_aresetn 260L
+preplace inst fifo_generator_1 -pg 1 -lvl 3 -x 780 -y 420 -defaultsOSRD -pinDir FIFO_WRITE right -pinY FIFO_WRITE 20R -pinDir FIFO_WRITE.din right -pinY FIFO_WRITE.din 40R -pinDir FIFO_WRITE.wr_en right -pinY FIFO_WRITE.wr_en 60R -pinDir FIFO_READ right -pinY FIFO_READ 80R -pinDir FIFO_READ.empty right -pinY FIFO_READ.empty 100R -pinDir FIFO_READ.dout right -pinY FIFO_READ.dout 120R -pinDir FIFO_READ.rd_en right -pinY FIFO_READ.rd_en 140R -pinDir clk left -pinY clk 20L -pinDir srst left -pinY srst 400L -pinDir wr_rst_busy right -pinY wr_rst_busy 160R -pinDir rd_rst_busy right -pinY rd_rst_busy 180R
+preplace inst util_vector_logic_3 -pg 1 -lvl 2 -x 480 -y 920 -defaultsOSRD -pinBusDir Op1 left -pinBusY Op1 20L -pinBusDir Res right -pinBusY Res 20R
+preplace inst system_ila_0 -pg 1 -lvl 5 -x 1860 -y 400 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 47 42 46 43 45 41 48 49 50 44 51} -defaultsOSRD -pinDir SLOT_0_AXI left -pinY SLOT_0_AXI 20L -pinDir clk left -pinY clk 140L -pinBusDir probe0 right -pinBusY probe0 240R -pinBusDir probe1 left -pinBusY probe1 120L -pinBusDir probe2 left -pinBusY probe2 60L -pinBusDir probe3 left -pinBusY probe3 100L -pinBusDir probe4 left -pinBusY probe4 40L -pinBusDir probe5 left -pinBusY probe5 180L -pinBusDir probe6 left -pinBusY probe6 200L -pinBusDir probe7 left -pinBusY probe7 220L -pinBusDir probe8 left -pinBusY probe8 80L -pinDir resetn left -pinY resetn 240L
+preplace inst system_ila_1 -pg 1 -lvl 6 -x 2390 -y 1140 -defaultsOSRD -pinDir SLOT_0_AXI left -pinY SLOT_0_AXI 20L -pinDir clk left -pinY clk 40L -pinDir resetn left -pinY resetn 60L
+preplace netloc c_counter_binary_0_Q 1 4 1 1500J 320n
+preplace netloc custom_slave_0_start_read_tx 1 4 3 1440 720 NJ 720 2540
+preplace netloc custom_slave_0_target_base_addr 1 3 4 1000 600 1540 700 NJ 700 2580
+preplace netloc driver_ctrl_debug_add_bytes1 1 4 1 N 220
+preplace netloc driver_ctrl_debug_addr1 1 4 1 N 200
+preplace netloc driver_ctrl_rready 1 4 2 NJ 160 N
+preplace netloc driver_ctrl_rvalid 1 4 2 NJ 140 N
+preplace netloc fifo_generator_0_dout 1 5 3 NJ 640 2600 860 NJ
+preplace netloc fifo_generator_0_dout_1 1 3 2 980 520 N
+preplace netloc fifo_generator_0_empty 1 3 2 960 580 NJ
+preplace netloc full 1 4 3 1540 180 2180J 80 N
+preplace netloc master_custom_0_arvalid 1 3 2 N 560 1420
+preplace netloc master_custom_0_output_data 1 4 3 1520 240 NJ 240 2600
+preplace netloc rst_ps8_0_99M_peripheral_aresetn 1 1 6 330 1000 NJ 1000 1040 640 1500 740 2180 1100 NJ
+preplace netloc testbench_pattern_gen_0_wr_en 1 3 4 940 620 1480 1080 NJ 1080 NJ
+preplace netloc util_reduced_logic_0_Res 1 5 1 NJ 320
+preplace netloc util_vector_logic_0_Res 1 6 1 N 800
+preplace netloc util_vector_logic_0_Res_1 1 2 1 630 820n
+preplace netloc util_vector_logic_1_Res 1 6 1 N 180
+preplace netloc util_vector_logic_2_Res 1 6 1 NJ 580
+preplace netloc zynq_ultra_ps_e_0_pl_clk0 1 1 6 NJ 440 630 380 1020 540 1520 760 2220 740 2560
+preplace netloc zynq_ultra_ps_e_0_pl_resetn0 1 1 4 NJ 880 NJ 880 NJ 880 N
+preplace netloc driver_ctrl_M00_AXI 1 4 1 1460 120n
+preplace netloc ps8_0_axi_periph_M00_AXI 1 6 1 N 920
+preplace netloc zynq_ultra_ps_e_0_M_AXI_HPM0_LPD 1 5 1 2200 900n
+levelinfo -pg 1 0 160 480 780 1220 1860 2390 2790 2990
+pagesize -pg 1 -db -bbox -sgen 0 0 3130 1260
+",
+   "No Loops_ScaleFactor":"0.391429",
+   "No Loops_TopLeft":"0,-5",
+   "Reduced Jogs_ExpandedHierarchyInLayout":"",
+   "Reduced Jogs_Layers":"/zynq_ultra_ps_e_0_pl_clk0:true|/zynq_ultra_ps_e_0_pl_resetn0:true|/c_counter_binary_0_Q:true|/rst_ps8_0_99M_peripheral_aresetn:true|",
+   "Reduced Jogs_Layout":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0
+#  -string -flagsOSRD
+preplace portBus dout_0 -pg 1 -lvl 6 -x 2550 -y 480 -defaultsOSRD
+preplace inst zynq_ultra_ps_e_0 -pg 1 -lvl 3 -x 1380 -y 970 -defaultsOSRD -pinY M_AXI_HPM0_LPD 50R -pinY S_AXI_HP1_FPD 30L -pinY maxihpm0_lpd_aclk 50L -pinY saxihp1_fpd_aclk 70L -pinBusY pl_ps_irq0 90L -pinY pl_resetn0 70R -pinY pl_clk0 90R
+preplace inst rst_ps8_0_99M -pg 1 -lvl 1 -x 210 -y 960 -swap {1 0 2 3 4 6 7 8 9 5} -defaultsOSRD -pinY slowest_sync_clk 40L -pinY ext_reset_in 20L -pinY aux_reset_in 60L -pinY mb_debug_sys_rst 80L -pinY dcm_locked 100L -pinY mb_reset 40R -pinBusY bus_struct_reset 60R -pinBusY peripheral_reset 80R -pinBusY interconnect_aresetn 100R -pinBusY peripheral_aresetn 20R
+preplace inst ps8_0_axi_periph -pg 1 -lvl 4 -x 1910 -y 1080 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 87 84 88 85 89 86} -defaultsOSRD -pinY S00_AXI 20L -pinY M00_AXI 80R -pinY ACLK 100L -pinY ARESETN 40L -pinY S00_ACLK 120L -pinY S00_ARESETN 60L -pinY M00_ACLK 140L -pinY M00_ARESETN 80L
+preplace inst fifo_generator_0 -pg 1 -lvl 5 -x 2330 -y 40 -swap {0 1 2 3 4 5 6 7 9 8 10 11 12} -defaultsOSRD -pinY FIFO_WRITE 20L -pinY FIFO_WRITE.full 40L -pinY FIFO_WRITE.din 60L -pinY FIFO_WRITE.wr_en 80L -pinY FIFO_READ 100L -pinY FIFO_READ.dout 120L -pinY FIFO_READ.rd_en 140L -pinY clk 380L -pinY srst 360L -pinY valid 20R -pinY wr_rst_busy 40R -pinY rd_rst_busy 60R
+preplace inst util_vector_logic_0 -pg 1 -lvl 4 -x 1910 -y 380 -defaultsOSRD -pinBusY Op1 20L -pinBusY Res 20R
+preplace inst util_vector_logic_1 -pg 1 -lvl 4 -x 1910 -y 260 -defaultsOSRD -pinBusY Op1 20L -pinBusY Op2 40L -pinBusY Res 20R
+preplace inst c_counter_binary_0 -pg 1 -lvl 2 -x 660 -y 160 -defaultsOSRD -pinY CLK 240L -pinBusY Q 20R
+preplace inst util_reduced_logic_0 -pg 1 -lvl 3 -x 1380 -y 160 -defaultsOSRD -pinBusY Op1 20L -pinY Res 20R
+preplace inst util_vector_logic_2 -pg 1 -lvl 4 -x 1910 -y 160 -defaultsOSRD -pinBusY Op1 20L -pinBusY Res 20R
+preplace inst custom_slave_0 -pg 1 -lvl 5 -x 2330 -y 1140 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 43 44 42 46 45} -defaultsOSRD -pinY S00_AXI 20L -pinBusY read_addr 40R -pinY start_read_tx 60R -pinY wvalid 20R -pinY s00_axi_aclk 60L -pinY s00_axi_aresetn 40L
+preplace inst master_custom_0 -pg 1 -lvl 2 -x 660 -y 500 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 49 48 47 55 45 43 44 59 58 46 57 53 52 54 56 50 51} -defaultsOSRD -pinY M00_AXI 20R -pinBusY debug_tx_num 140R -pinBusY debug_addr 120R -pinBusY debug_add_bytes 100R -pinBusY target_base_addr 180L -pinBusY output_data 80R -pinY rvalid 40R -pinY rready 60R -pinBusY read_addr 220L -pinY addr_fifo_empty 200L -pinY vector_fifo_full 20L -pinY arvalid 220R -pinY arready 160R -pinY m00_axi_init_axi_txn 160L -pinY m00_axi_txn_done 180R -pinY m00_axi_error 200R -pinY m00_axi_aclk 40L -pinY m00_axi_aresetn 140L
+preplace inst fifo_generator_1 -pg 1 -lvl 5 -x 2330 -y 760 -swap {0 1 2 3 4 5 6 7 9 8 10 11} -defaultsOSRD -pinY FIFO_WRITE 20L -pinY FIFO_WRITE.din 40L -pinY FIFO_WRITE.wr_en 60L -pinY FIFO_READ 80L -pinY FIFO_READ.empty 100L -pinY FIFO_READ.dout 120L -pinY FIFO_READ.rd_en 140L -pinY clk 260L -pinY srst 240L -pinY wr_rst_busy 20R -pinY rd_rst_busy 40R
+preplace inst util_vector_logic_3 -pg 1 -lvl 4 -x 1910 -y 980 -defaultsOSRD -pinBusY Op1 20L -pinBusY Res 20R
+preplace inst system_ila_0 -pg 1 -lvl 3 -x 1380 -y 500 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 45 41 46 42 44 43 47 48 51 49 50} -defaultsOSRD -pinY SLOT_0_AXI 20L -pinY clk 120L -pinBusY probe0 40L -pinBusY probe1 140L -pinBusY probe2 60L -pinBusY probe3 100L -pinBusY probe4 80L -pinBusY probe5 160L -pinBusY probe6 180L -pinBusY probe7 240L -pinBusY probe8 200L -pinY resetn 220L
+preplace inst system_ila_1 -pg 1 -lvl 4 -x 1910 -y 1320 -defaultsOSRD -pinY SLOT_0_AXI 20L -pinY clk 40L -pinY resetn 60L
+preplace netloc c_counter_binary_0_Q 1 2 1 NJ 180
+preplace netloc custom_slave_0_start_read_tx 1 1 5 420 860 940 940 NJ 940 2060J 1260 2510
+preplace netloc custom_slave_0_target_base_addr 1 1 5 440 840 980 820 NJ 820 2120 1080 2530
+preplace netloc driver_ctrl_debug_add_bytes1 1 2 1 N 600
+preplace netloc driver_ctrl_debug_addr1 1 2 1 N 620
+preplace netloc driver_ctrl_rready 1 2 2 880 300 NJ
+preplace netloc driver_ctrl_rvalid 1 2 2 860 280 NJ
+preplace netloc fifo_generator_0_dout 1 2 4 1060 460 NJ 460 2140 480 NJ
+preplace netloc fifo_generator_0_dout_1 1 1 4 480 800 1020 880 NJ 880 NJ
+preplace netloc fifo_generator_0_empty 1 1 4 460 820 960 860 NJ 860 NJ
+preplace netloc full 1 1 4 480 460 1040 80 NJ 80 NJ
+preplace netloc master_custom_0_arvalid 1 2 3 1000 900 NJ 900 NJ
+preplace netloc master_custom_0_output_data 1 2 3 1020 100 NJ 100 NJ
+preplace netloc rst_ps8_0_99M_peripheral_aresetn 1 1 4 400 880 1040 800 1720 920 2080J
+preplace netloc testbench_pattern_gen_0_wr_en 1 2 4 1060 840 NJ 840 2140 1100 2510
+preplace netloc util_reduced_logic_0_Res 1 3 1 NJ 180
+preplace netloc util_vector_logic_0_Res 1 4 1 NJ 400
+preplace netloc util_vector_logic_0_Res_1 1 4 1 N 1000
+preplace netloc util_vector_logic_1_Res 1 4 1 2100 120n
+preplace netloc util_vector_logic_2_Res 1 4 1 NJ 180
+preplace netloc zynq_ultra_ps_e_0_pl_clk0 1 0 5 20 780 380 780 920 1120 1700 1280 2100
+preplace netloc zynq_ultra_ps_e_0_pl_resetn0 1 0 4 40 920 NJ 920 NJ 920 1700
+preplace netloc driver_ctrl_M00_AXI 1 2 1 900 520n
+preplace netloc ps8_0_axi_periph_M00_AXI 1 4 1 N 1160
+preplace netloc zynq_ultra_ps_e_0_M_AXI_HPM0_LPD 1 3 1 1740 1020n
+levelinfo -pg 1 0 210 660 1380 1910 2330 2550
+pagesize -pg 1 -db -bbox -sgen 0 0 2690 1440
+",
+   "Reduced Jogs_ScaleFactor":"0.345886",
+   "Reduced Jogs_TopLeft":"-422,3",
+   "guistr":"# # String gsaved with Nlview 7.5.8 2022-09-21 7111 VDI=41 GEI=38 GUI=JA:10.0
+#  -string -flagsOSRD
+preplace portBus dout_0 -pg 1 -lvl 10 -x 3450 -y 910 -defaultsOSRD
+preplace inst zynq_ultra_ps_e_0 -pg 1 -lvl 5 -x 1820 -y 660 -defaultsOSRD
+preplace inst rst_ps8_0_99M -pg 1 -lvl 1 -x 190 -y 480 -swap {0 1 2 3 4 5 6 7 9 8} -defaultsOSRD
+preplace inst ps8_0_axi_periph -pg 1 -lvl 6 -x 2290 -y 700 -defaultsOSRD
+preplace inst fifo_generator_0 -pg 1 -lvl 9 -x 3250 -y 770 -defaultsOSRD
+preplace inst util_vector_logic_0 -pg 1 -lvl 8 -x 2870 -y 850 -defaultsOSRD
+preplace inst util_vector_logic_1 -pg 1 -lvl 8 -x 2870 -y 540 -defaultsOSRD
+preplace inst c_counter_binary_0 -pg 1 -lvl 6 -x 2290 -y 980 -defaultsOSRD
+preplace inst util_reduced_logic_0 -pg 1 -lvl 7 -x 2570 -y 980 -defaultsOSRD
+preplace inst util_vector_logic_2 -pg 1 -lvl 8 -x 2870 -y 980 -defaultsOSRD
+preplace inst fifo_generator_1 -pg 1 -lvl 9 -x 3250 -y 450 -defaultsOSRD
+preplace inst util_vector_logic_3 -pg 1 -lvl 8 -x 2870 -y 650 -defaultsOSRD
+preplace inst system_ila_0 -pg 1 -lvl 5 -x 1820 -y 170 -swap {0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 47 42 46 43 45 41 48 49 50 44 51} -defaultsOSRD
+preplace inst system_ila_1 -pg 1 -lvl 3 -x 790 -y 450 -defaultsOSRD
+preplace inst util_vector_logic_4 -pg 1 -lvl 9 -x 3250 -y 260 -defaultsOSRD
+preplace inst master_custom_v1_0_M_0 -pg 1 -lvl 4 -x 1210 -y 510 -defaultsOSRD
+preplace inst custom_slave_v1_0_S0_0 -pg 1 -lvl 3 -x 790 -y 290 -defaultsOSRD
+preplace inst axi_vip_0 -pg 1 -lvl 2 -x 470 -y 430 -defaultsOSRD
+preplace netloc c_counter_binary_0_Q 1 6 1 NJ 980
+preplace netloc custom_slave_0_start_read_tx 1 3 2 1000 140 NJ
+preplace netloc custom_slave_0_target_base_addr 1 3 6 980J 280 1420 390 NJ 390 NJ 390 NJ 390 NJ
+preplace netloc custom_slave_v1_0_S0_0_wready 1 3 6 N 290 1470J 350 2140J 270 NJ 270 NJ 270 NJ
+preplace netloc custom_slave_v1_0_S0_0_wvalid 1 3 6 N 270 1480J 360 2120J 250 NJ 250 NJ 250 NJ
+preplace netloc fifo_generator_0_dout 1 4 6 1520 820 NJ 820 NJ 820 2700J 780 3060 910 NJ
+preplace netloc fifo_generator_0_dout_1 1 3 6 1030 350 1460 460 NJ 460 NJ 460 NJ 460 3050J
+preplace netloc fifo_generator_0_empty 1 3 6 1020 320 1490 450 NJ 450 NJ 450 NJ 450 NJ
+preplace netloc full 1 3 6 1010 310 1500 370 NJ 370 NJ 370 NJ 370 3060J
+preplace netloc master_custom_0_arvalid 1 4 5 1430 470 NJ 470 NJ 470 NJ 470 3020J
+preplace netloc master_custom_0_output_data 1 4 5 1400 440 NJ 440 NJ 440 NJ 440 3040J
+preplace netloc master_custom_v1_0_M_0_rready 1 4 4 N 550 NJ 550 NJ 550 NJ
+preplace netloc master_custom_v1_0_M_0_rvalid 1 4 4 N 530 NJ 530 NJ 530 NJ
+preplace netloc rst_ps8_0_99M_peripheral_aresetn 1 1 7 370 510 600 180 970 260 1450 380 2140 580 NJ 580 2710
+preplace netloc testbench_pattern_gen_0_wr_en 1 3 6 NJ 330 1510 410 NJ 410 NJ 410 NJ 410 NJ
+preplace netloc util_reduced_logic_0_Res 1 7 1 NJ 980
+preplace netloc util_vector_logic_0_Res 1 8 1 NJ 850
+preplace netloc util_vector_logic_0_Res_1 1 8 1 3030J 530n
+preplace netloc util_vector_logic_1_Res 1 8 1 3020 540n
+preplace netloc util_vector_logic_2_Res 1 8 1 3070 810n
+preplace netloc zynq_ultra_ps_e_0_pl_clk0 1 0 9 20 380 360 350 610 190 960 200 1390 750 2130 830 NJ 830 2720J 790 3050
+preplace netloc zynq_ultra_ps_e_0_pl_resetn0 1 0 6 10 170 NJ 170 NJ 170 NJ 170 1440J 400 2120
+preplace netloc driver_ctrl_M00_AXI 1 4 1 1410 60n
+preplace netloc ps8_0_axi_periph_M00_AXI 1 2 1 620 270n
+preplace netloc zynq_ultra_ps_e_0_M_AXI_HPM0_LPD 1 5 1 N 640
+preplace netloc ps8_0_axi_periph_M00_AXI1 1 1 6 370 160 NJ 160 990J 340 NJ 340 NJ 340 2440
+levelinfo -pg 1 -10 190 470 790 1210 1820 2290 2570 2870 3250 3450
+pagesize -pg 1 -db -bbox -sgen -10 0 3600 1040
+"
+}
+{
+   "da_axi4_cnt":"5",
+   "da_board_cnt":"4",
+   "da_clkrst_cnt":"14",
+   "da_zynq_ultra_ps_e_cnt":"1"
+}

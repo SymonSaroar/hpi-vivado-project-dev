@@ -1,0 +1,275 @@
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Tue Apr  2 13:30:22 2024
+# Process ID: 4056
+# Current directory: C:/larry_delivery/Latest
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent18932 C:\larry_delivery\Latest\Latest.xpr
+# Log file: C:/larry_delivery/Latest/vivado.log
+# Journal file: C:/larry_delivery/Latest\vivado.jou
+# Running On: LAPTOP-81E1PH83, OS: Windows, CPU Frequency: 3194 MHz, CPU Physical cores: 16, Host memory: 33551 MB
+#-----------------------------------------------------------
+start_guioopen_project C:/larry_delivery/Latest/Latest.xprupdate_compile_order -fileset sources_1
+generate_target Simulation [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd]
+export_ip_user_files -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -no_script -sync -force -quiet
+export_simulation -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -directory C:/larry_delivery/Latest/Latest.ip_user_files/sim_scripts -ip_user_files_dir C:/larry_delivery/Latest/Latest.ip_user_files -ipstatic_source_dir C:/larry_delivery/Latest/Latest.ip_user_files/ipstatic -lib_map_path [list {modelsim=C:/larry_delivery/Latest/Latest.cache/compile_simlib/modelsim} {questa=C:/larry_delivery/Latest/Latest.cache/compile_simlib/questa} {riviera=C:/larry_delivery/Latest/Latest.cache/compile_simlib/riviera} {activehdl=C:/larry_delivery/Latest/Latest.cache/compile_simlib/activehdl}] -use_ip_compiled_libs -force -quiet
+launch_simulation
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+save_wave_config {C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+save_wave_config {C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg}
+close_sim
+launch_simulation
+launch_simulation
+set_property file_type SystemVerilog [get_files  C:/larry_delivery/Driver/driver_cntrl.v]
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+save_wave_config {C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg}
+save_wave_config {C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+save_wave_config {C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg}
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+save_wave_config {C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+save_wave_config {C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+close_sim
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+add_files -norecurse C:/larry_delivery/Driver/driver_monitor.v
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+generate_target all [get_files  C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd]
+catch { config_ip_cache -export [get_ips -all design_1_system_ila_0_1] }
+catch { config_ip_cache -export [get_ips -all design_1_system_ila_1_1] }
+catch { config_ip_cache -export [get_ips -all design_1_custom_slave_v1_0_S0_0_0] }
+export_ip_user_files -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -no_script -sync -force -quiet
+create_ip_run [get_files -of_objects [get_fileset sources_1] C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd]
+launch_runs design_1_custom_slave_v1_0_S0_0_0_synth_1 -jobs 16
+wait_on_run design_1_custom_slave_v1_0_S0_0_0_synth_1
+export_simulation -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -directory C:/larry_delivery/Latest/Latest.ip_user_files/sim_scripts -ip_user_files_dir C:/larry_delivery/Latest/Latest.ip_user_files -ipstatic_source_dir C:/larry_delivery/Latest/Latest.ip_user_files/ipstatic -lib_map_path [list {modelsim=C:/larry_delivery/Latest/Latest.cache/compile_simlib/modelsim} {questa=C:/larry_delivery/Latest/Latest.cache/compile_simlib/questa} {riviera=C:/larry_delivery/Latest/Latest.cache/compile_simlib/riviera} {activehdl=C:/larry_delivery/Latest/Latest.cache/compile_simlib/activehdl}] -use_ip_compiled_libs -force -quiet
+open_bd_design {C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd}
+set_property file_type SystemVerilog [get_files  C:/larry_delivery/Driver/driver_monitor.v]
+update_module_reference design_1_custom_slave_v1_0_S0_0_0
+close_sim
+generate_target Simulation [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd]
+export_ip_user_files -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -no_script -sync -force -quiet
+export_simulation -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -directory C:/larry_delivery/Latest/Latest.ip_user_files/sim_scripts -ip_user_files_dir C:/larry_delivery/Latest/Latest.ip_user_files -ipstatic_source_dir C:/larry_delivery/Latest/Latest.ip_user_files/ipstatic -lib_map_path [list {modelsim=C:/larry_delivery/Latest/Latest.cache/compile_simlib/modelsim} {questa=C:/larry_delivery/Latest/Latest.cache/compile_simlib/questa} {riviera=C:/larry_delivery/Latest/Latest.cache/compile_simlib/riviera} {activehdl=C:/larry_delivery/Latest/Latest.cache/compile_simlib/activehdl}] -use_ip_compiled_libs -force -quiet
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+restart
+run 100 ns
+run all
+save_wave_config {C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg}
+open_bd_design {C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd}
+startgroup
+set_property CONFIG.INTERFACE_MODE {PASS_THROUGH} [get_bd_cells axi_vip_0]
+endgroup
+connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ps8_0_axi_periph/M00_AXI] [get_bd_intf_pins axi_vip_0/S_AXI]
+save_bd_design
+close_sim
+generate_target Simulation [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd]
+export_ip_user_files -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -no_script -sync -force -quiet
+export_simulation -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -directory C:/larry_delivery/Latest/Latest.ip_user_files/sim_scripts -ip_user_files_dir C:/larry_delivery/Latest/Latest.ip_user_files -ipstatic_source_dir C:/larry_delivery/Latest/Latest.ip_user_files/ipstatic -lib_map_path [list {modelsim=C:/larry_delivery/Latest/Latest.cache/compile_simlib/modelsim} {questa=C:/larry_delivery/Latest/Latest.cache/compile_simlib/questa} {riviera=C:/larry_delivery/Latest/Latest.cache/compile_simlib/riviera} {activehdl=C:/larry_delivery/Latest/Latest.cache/compile_simlib/activehdl}] -use_ip_compiled_libs -force -quiet
+launch_simulation
+generate_target all [get_files  C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd]
+catch { config_ip_cache -export [get_ips -all design_1_system_ila_0_1] }
+catch { config_ip_cache -export [get_ips -all design_1_system_ila_1_1] }
+catch { config_ip_cache -export [get_ips -all design_1_custom_slave_v1_0_S0_0_0] }
+catch { config_ip_cache -export [get_ips -all design_1_axi_vip_0_0] }
+catch { [ delete_ip_run [get_ips -all design_1_axi_vip_0_0] ] }
+export_ip_user_files -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -no_script -sync -force -quiet
+create_ip_run [get_files -of_objects [get_fileset sources_1] C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd]
+launch_runs design_1_custom_slave_v1_0_S0_0_0_synth_1 -jobs 16
+launch_simulation
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+open_bd_design {C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd}
+assign_bd_address
+close_sim
+save_bd_design
+generate_target Simulation [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd]
+export_ip_user_files -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -no_script -sync -force -quiet
+export_simulation -of_objects [get_files C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd] -directory C:/larry_delivery/Latest/Latest.ip_user_files/sim_scripts -ip_user_files_dir C:/larry_delivery/Latest/Latest.ip_user_files -ipstatic_source_dir C:/larry_delivery/Latest/Latest.ip_user_files/ipstatic -lib_map_path [list {modelsim=C:/larry_delivery/Latest/Latest.cache/compile_simlib/modelsim} {questa=C:/larry_delivery/Latest/Latest.cache/compile_simlib/questa} {riviera=C:/larry_delivery/Latest/Latest.cache/compile_simlib/riviera} {activehdl=C:/larry_delivery/Latest/Latest.cache/compile_simlib/activehdl}] -use_ip_compiled_libs -force -quiet
+launch_simulation
+open_wave_config C:/larry_delivery/Latest/design_1_wrapper_behav.wcfg
+source testbench.tcl
+open_bd_design {C:/larry_delivery/Latest/Latest.srcs/sources_1/bd/design_1/design_1.bd}
+save_project_as 128bit_with_driver C:/128bit_with_driver/128bit_with_driver -force
+import_files
+reset_run synth_1
+launch_runs impl_1 -jobs 16
+wait_on_run impl_1
+open_run impl_1
+launch_runs impl_1 -to_step write_bitstream -jobs 16
+wait_on_run impl_1
+open_hw_manager
+connect_hw_server -allow_non_jtag
+open_hw_target
+set_property PROGRAM.FILE {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.runs/impl_1/design_1_wrapper.bit} [get_hw_devices xczu9_0]
+set_property PROBES.FILE {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.runs/impl_1/design_1_wrapper.ltx} [get_hw_devices xczu9_0]
+set_property FULL_PROBES.FILE {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.runs/impl_1/design_1_wrapper.ltx} [get_hw_devices xczu9_0]
+current_hw_device [get_hw_devices xczu9_0]
+refresh_hw_device [lindex [get_hw_devices xczu9_0] 0]
+current_hw_device [get_hw_devices arm_dap_1]
+refresh_hw_device -update_hw_probes false [lindex [get_hw_devices arm_dap_1] 0]
+current_hw_device [get_hw_devices xczu9_0]
+set_property PROBES.FILE {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.runs/impl_1/design_1_wrapper.ltx} [get_hw_devices xczu9_0]
+set_property FULL_PROBES.FILE {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.runs/impl_1/design_1_wrapper.ltx} [get_hw_devices xczu9_0]
+set_property PROGRAM.FILE {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.runs/impl_1/design_1_wrapper.bit} [get_hw_devices xczu9_0]
+program_hw_devices [get_hw_devices xczu9_0]
+refresh_hw_device [lindex [get_hw_devices xczu9_0] 0]
+display_hw_ila_data [ get_hw_ila_data hw_ila_data_1 -of_objects [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_0/inst/ila_lib"}]]
+display_hw_ila_data [ get_hw_ila_data hw_ila_data_2 -of_objects [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_1/inst/ila_lib"}]]
+set_property PROBES.FILE {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.runs/impl_1/design_1_wrapper.ltx} [get_hw_devices xczu9_0]
+set_property FULL_PROBES.FILE {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.runs/impl_1/design_1_wrapper.ltx} [get_hw_devices xczu9_0]
+set_property PROGRAM.FILE {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.runs/impl_1/design_1_wrapper.bit} [get_hw_devices xczu9_0]
+program_hw_devices [get_hw_devices xczu9_0]
+refresh_hw_device [lindex [get_hw_devices xczu9_0] 0]
+display_hw_ila_data [ get_hw_ila_data hw_ila_data_1 -of_objects [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_0/inst/ila_lib"}]]
+display_hw_ila_data [ get_hw_ila_data hw_ila_data_2 -of_objects [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_1/inst/ila_lib"}]]
+run_hw_ila [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_0/inst/ila_lib"}]
+wait_on_hw_ila [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_0/inst/ila_lib"}]
+display_hw_ila_data [upload_hw_ila_data [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_0/inst/ila_lib"}]]
+run_hw_ila [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_0/inst/ila_lib"}]
+wait_on_hw_ila [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_0/inst/ila_lib"}]
+display_hw_ila_data [upload_hw_ila_data [get_hw_ilas -of_objects [get_hw_devices xczu9_0] -filter {CELL_NAME=~"design_1_i/system_ila_0/inst/ila_lib"}]]
+close_sim
+save_wave_config {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.hw/hw_1/wave/hw_ila_data_2/hw_ila_data_2.wcfg}
+save_wave_config {C:/128bit_with_driver/128bit_with_driver/128bit_with_driver.hw/hw_1/wave/hw_ila_data_1/hw_ila_data_1.wcfg}
