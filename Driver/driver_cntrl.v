@@ -8,7 +8,9 @@ module driver_cntrl(
   input        [15:0] addr_mon_cnts[15:0],
   output reg   [31:0] slave_data_out,
   output reg   [31:0] addr_fifo_din,
-  output reg          addr_fifo_wr
+  output reg          addr_fifo_wr,
+  output reg          end_program,
+  output reg          active_program
 );
 
 reg [31:0] driver_status;
@@ -27,6 +29,16 @@ reg abort_program;
 reg freeze_program;
 reg freeze_addr_fifo;
 reg freeze_vector_fifo;
+
+always @(posedge clk ) 
+  if(reset == 1'b0) 
+    active_program <= 1'b0;
+  else if(abort_program || end_program)
+    active_program <= 1'b0;
+  else if (run_program) 
+    active_program <= 1'b1;
+  else 
+    active_program <= active_program;
 
 always @(posedge clk ) begin
   if(reset == 1'b0) begin

@@ -1,0 +1,12 @@
+# compile verilog/system verilog design source files
+sv xil_defaultlib  \
+"../../../../../driver.v" \
+"../../../../../driver_cntrl.v" \
+"../../../../../driver_monitor.v" \
+"../../../../../driver_tb.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

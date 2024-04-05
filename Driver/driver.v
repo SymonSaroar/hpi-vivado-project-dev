@@ -13,6 +13,7 @@ module driver (
 );
 
 wire [15:0] addr_mon_cnts[15:0];
+wire active_program, end_program;
 
 driver_cntrl driver_cntrl_0(
   .clk(clk),
@@ -24,12 +25,16 @@ driver_cntrl driver_cntrl_0(
   .slave_data_out(slave_data_out),
   .addr_fifo_din(addr_fifo_din),
   .addr_fifo_wr(addr_fifo_wr),
-  .addr_mon_cnts(addr_mon_cnts)
+  .addr_mon_cnts(addr_mon_cnts),
+  .end_program(end_program),
+  .active_program(active_program)
 );
   
 driver_monitor driver_monitor_0(
   .clk(clk),
   .reset(reset),
+  .end_program(end_program),
+  .active_program(active_program),
   .addr_fifo_wr(addr_fifo_wr),
   .addr_mon_cnts(addr_mon_cnts)
 );
