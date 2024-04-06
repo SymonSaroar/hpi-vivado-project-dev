@@ -4,6 +4,7 @@
 !/*.v
 !/*.sv
 !/*.tcl
+!/*.ila
 !/Driver/*.v
 !/Driver/*.sv
 !/Driver/*.tcl
