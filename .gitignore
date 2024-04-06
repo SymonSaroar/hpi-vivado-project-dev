@@ -1,1 +1,10 @@
-Latest/
+/*
+
+!/.gitignore
+!/*.v
+!/*.sv
+!/*.tcl
+!/Driver/*.v
+!/Driver/*.sv
+!/Driver/*.tcl
+!/README.md
