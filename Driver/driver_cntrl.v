@@ -5,15 +5,20 @@ module driver_cntrl(
   input               slave_rd,
   input               slave_wr,
   input        [31:0] slave_data_in,
+  input        [15:0] addr_cycle_cnt,
   input        [15:0] addr_mon_cnts[15:0],
+  input        [15:0] vctr_cycle_cnt,
+  input        [15:0] vctr_mon_cnts[15:0],
+  input        [15:0] words_in_addr_fifo,
+  input        [15:0] words_in_vctr_fifo,
   output reg   [31:0] slave_data_out,
   output reg   [31:0] addr_fifo_din,
   output reg          addr_fifo_wr,
   output reg          end_program,
+  output reg          run_program,
   output reg          active_program
 );
 
-reg [31:0] driver_status;
 reg [31:0] vctor_addr;
 reg [15:0] driver_cntrl_rsvd;
 reg [7:0] consec_count;
@@ -23,8 +28,6 @@ reg driver_cntrl_rsvd5;
 reg driver_cntrl_rsvd4;
 reg driver_cntrl_rsvd3;
 reg send_consec_addr;
-reg end_program;
-reg run_program;
 reg abort_program;
 reg freeze_program;
 reg freeze_addr_fifo;
@@ -69,7 +72,7 @@ always @(posedge clk ) begin
     end_program <= 1'b0;
     run_program <= 1'b0;
   end
-  else if ((slave_addr == 32'h0000_0001) && slave_wr) begin
+  else if ((slave_addr == 32'h0000_0004) && slave_wr) begin
     driver_cntrl_rsvd <= slave_data_in[31:16];
     consec_count <= slave_data_in[15:8];
     send_consec_addr   <= slave_data_in[7];
@@ -83,9 +86,11 @@ always @(posedge clk ) begin
   end
 end
 
-wire [15:0] driver_cntrl_word = {driver_cntrl_rsvd, consec_count, 
+wire [31:0] driver_cntrl_word = {driver_cntrl_rsvd, consec_count, 
   send_consec_addr, driver_cntrl_rsvd6, driver_cntrl_rsvd5, freeze_vector_fifo, 
   freeze_addr_fifo, abort_program,      end_program,        run_program};
+
+wire [31:0] driver_status = 32'd0;
 
 always @(posedge clk ) begin
   if(reset == 1'b0) begin
@@ -97,22 +102,42 @@ always @(posedge clk ) begin
       'h0000_0000: slave_data_out <= addr_fifo_din;
       'h0000_0004: slave_data_out <= driver_cntrl_word;
       'h0000_0100: slave_data_out <= driver_status;
-      'h0000_1000: slave_data_out <= addr_mon_cnts[0];
-      'h0001_1004: slave_data_out <= addr_mon_cnts[1];
-      'h0001_1008: slave_data_out <= addr_mon_cnts[2];
-      'h0001_100C: slave_data_out <= addr_mon_cnts[3];
-      'h0001_1010: slave_data_out <= addr_mon_cnts[4];
-      'h0001_1014: slave_data_out <= addr_mon_cnts[5];
-      'h0001_1018: slave_data_out <= addr_mon_cnts[6];
-      'h0001_101C: slave_data_out <= addr_mon_cnts[7];
-      'h0001_1020: slave_data_out <= addr_mon_cnts[8];
-      'h0001_1024: slave_data_out <= addr_mon_cnts[9];
-      'h0001_1028: slave_data_out <= addr_mon_cnts[10];
-      'h0001_102C: slave_data_out <= addr_mon_cnts[11];
-      'h0001_1030: slave_data_out <= addr_mon_cnts[12];
-      'h0001_1034: slave_data_out <= addr_mon_cnts[13];
-      'h0001_1038: slave_data_out <= addr_mon_cnts[14];
-      'h0001_103C: slave_data_out <= addr_mon_cnts[15];
+      'h0000_0104: slave_data_out <= {16'h0000,addr_cycle_cnt};
+      'h0000_0108: slave_data_out <= {16'h0000,words_in_addr_fifo};
+      'h0000_010C: slave_data_out <= {16'h0000,vctr_cycle_cnt};
+      'h0000_0110: slave_data_out <= {16'h0000,words_in_vctr_fifo};
+      'h0001_1000: slave_data_out <= {16'h0000,addr_mon_cnts[0]};
+      'h0001_1004: slave_data_out <= {16'h0000,addr_mon_cnts[1]};
+      'h0001_1008: slave_data_out <= {16'h0000,addr_mon_cnts[2]};
+      'h0001_100C: slave_data_out <= {16'h0000,addr_mon_cnts[3]};
+      'h0001_1010: slave_data_out <= {16'h0000,addr_mon_cnts[4]};
+      'h0001_1014: slave_data_out <= {16'h0000,addr_mon_cnts[5]};
+      'h0001_1018: slave_data_out <= {16'h0000,addr_mon_cnts[6]};
+      'h0001_101C: slave_data_out <= {16'h0000,addr_mon_cnts[7]};
+      'h0001_1020: slave_data_out <= {16'h0000,addr_mon_cnts[8]};
+      'h0001_1024: slave_data_out <= {16'h0000,addr_mon_cnts[9]};
+      'h0001_1028: slave_data_out <= {16'h0000,addr_mon_cnts[10]};
+      'h0001_102C: slave_data_out <= {16'h0000,addr_mon_cnts[11]};
+      'h0001_1030: slave_data_out <= {16'h0000,addr_mon_cnts[12]};
+      'h0001_1034: slave_data_out <= {16'h0000,addr_mon_cnts[13]};
+      'h0001_1038: slave_data_out <= {16'h0000,addr_mon_cnts[14]};
+      'h0001_103C: slave_data_out <= {16'h0000,addr_mon_cnts[15]};
+      'h0001_2000: slave_data_out <= {16'h0000,vctr_mon_cnts[0]};
+      'h0001_2004: slave_data_out <= {16'h0000,vctr_mon_cnts[1]};
+      'h0001_2008: slave_data_out <= {16'h0000,vctr_mon_cnts[2]};
+      'h0001_200C: slave_data_out <= {16'h0000,vctr_mon_cnts[3]};
+      'h0001_2010: slave_data_out <= {16'h0000,vctr_mon_cnts[4]};
+      'h0001_2014: slave_data_out <= {16'h0000,vctr_mon_cnts[5]};
+      'h0001_2018: slave_data_out <= {16'h0000,vctr_mon_cnts[6]};
+      'h0001_201C: slave_data_out <= {16'h0000,vctr_mon_cnts[7]};
+      'h0001_2020: slave_data_out <= {16'h0000,vctr_mon_cnts[8]};
+      'h0001_2024: slave_data_out <= {16'h0000,vctr_mon_cnts[9]};
+      'h0001_2028: slave_data_out <= {16'h0000,vctr_mon_cnts[10]};
+      'h0001_202C: slave_data_out <= {16'h0000,vctr_mon_cnts[11]};
+      'h0001_2030: slave_data_out <= {16'h0000,vctr_mon_cnts[12]};
+      'h0001_2034: slave_data_out <= {16'h0000,vctr_mon_cnts[13]};
+      'h0001_2038: slave_data_out <= {16'h0000,vctr_mon_cnts[14]};
+      'h0001_203C: slave_data_out <= {16'h0000,vctr_mon_cnts[15]};
       default: slave_data_out <= 32'h0000_0000;
       endcase
     end

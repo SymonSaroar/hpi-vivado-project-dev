@@ -11,12 +11,28 @@ module top;
   reg [31:0]  slave_data_in;
   reg [31:0]  reg_addr;
   reg [31:0]  reg_data;
+  reg [63:0]  sim_count;
+  reg [63:0]  mod_sim_count;
+  reg         vctr_fifo_wr;
+  reg         vctr_fifo_rd;
+  reg         addr_fifo_rd;
 
-//wire [31:0]  master_add;
-  wire [31:0]  slave_data_out;
-//wire         master_rd;
-  integer i;
+//wire [31:0] master_add;
+  wire [31:0] slave_data_out;
+  wire [31:0] addr_fifo_din;
+//wire        master_rd;
+  integer i,j,k,l;
+  integer fd;
   
+ 
+  initial begin
+  // Dump waves
+    $dumpfile("dump.vcd");
+    $dumpvars(6);
+
+    fd = $fopen("verlog.log", "w");  
+  end 
+ 
   initial begin
     reset_l = 1'b1;
 //  master_data_in     = 32'h0000_0000;
@@ -30,13 +46,33 @@ module top;
 //  slave_data_out_val =   1'b0;
     reg_addr           = 32'h0000_00000;
     reg_data           = 32'h0000_00000;
-    i = 0;
+    vctr_fifo_wr       = 1'b0;
+    vctr_fifo_rd       = 1'b0;
+    addr_fifo_rd       = 1'b0;
+    i = 0; j = 0; k = 0; l = 0;
   end
     
   initial begin
     clk = 1'b0;
     forever begin
-      #(50) clk = ~clk;
+      #(2000) clk = ~clk;
+    end
+  end
+
+  initial begin
+    sim_count= 64'd0;
+    mod_sim_count = 64'd0;
+    forever begin 
+      @(negedge clk) begin
+        sim_count +=1;
+	mod_sim_count = sim_count % 64'd10;
+//      25,000 ~ 100 us
+	if ((sim_count % 25000) == 1'b0) begin
+          $display("time: %0t ps ******************************************",$time);
+          $display("time: %0t ps Another 100 us sim_count = %0d            ",$time,sim_count);
+          $display("time: %0t ps ******************************************",$time);
+	end
+      end
     end
   end
   
@@ -52,84 +88,255 @@ module top;
   end
   
   initial begin
+
     repeat (10) @(negedge clk);
-    reg_addr = 32'h0001; 
-    reg_data = 32'h0001; 
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Write driver control to start program     ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    reg_addr = 32'h0000_0004; 
+    reg_data = 32'h0000_0001; 
     slave_write(reg_addr,reg_data); 
+    
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Test read address register                ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    repeat (10) @(negedge clk);
+    reg_addr = 32'h0004; 
+    slave_read(reg_addr,reg_data); 
+
     repeat (20) @(negedge clk);
-    reg_addr = 32'h0001; 
-    reg_data = 32'h0000; 
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Write driver control clear start program  ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    reg_addr = 32'h0000_0004; 
+    reg_data = 32'h0000_0000; 
     slave_write(reg_addr,reg_data); 
     repeat (10) @(negedge clk);
-    reg_addr = 32'h0000; 
-    reg_data = 32'h0001; 
-    /*
-    repeat(15) begin
-      slave_write(reg_addr,reg_data); 
-      reg_data = reg_data+32'h0001; 
-    end
-    repeat (16) begin 
-      slave_write(reg_addr, reg_data); 
-      reg_data = reg_data+32'h0001; 
-      i = i + 8;
-      repeat (i) @(negedge clk);
-    end
-    */
+    reg_addr = 32'h0000_0000; 
+    reg_data = 32'h0000_0001; 
 
+    fork 
+    ///////////////////////////////////////////////////////////////////////////////
+    // fork to test addr fifo write cycle in parrallel
+    ///////////////////////////////////////////////////////////////////////////////
+    begin
+      $display("time: %0t ps Simulation addr thread START                  ",$time);
+      reg_data = 32'h0000_1000;                                      // uniqued data
+      slave_write(reg_addr, reg_data);                               // prime the pump
+      for(int j =0; j < 16; j+=1) begin
+        for(int i=0; i < (16*8) - j*8 ; i+=8) begin
+          $display("time: %0t ps loop 1: j=%0d  i=%0d                      ",$time,j,i);
+          repeat (i) @(negedge clk);
+          reg_data = reg_data+32'h0000_0001; 
+          slave_write(reg_addr, reg_data); 
+        end //
+      end  
+/* 
+      for(int j =0; j < 65540 ; j+=1) begin
+        for(int i=0; i < 1; i+=8) begin
+          $display("time: %0t ps loop 2: j=%0d  i=%0d                      ",$time,j,i);
+          repeat (i) @(negedge clk);
+          reg_data = reg_data+32'h0000_0001; 
+          slave_write(reg_addr, reg_data); 
+        end
+      end */
 
-    for(int j =0; j < 66000; j+=1) begin
-      for(int i=0; i < 128; i+=8) begin
-        $display("time: %0t ******************************************",$time);
-        $display("time: %0t j=%d  i=%d                                ",$time,j,i);
-        $display("time: %0t ******************************************",$time);
-        repeat (i) @(negedge clk);
-        reg_data = reg_data+32'h0001; 
-        slave_write(reg_addr, reg_data); 
+      repeat (100) @(negedge clk);
+      $display("time: %0t ps Simulation addr thread END                    ",$time); 
+      repeat (10) @(negedge clk);
+    end //
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // fork to test vector fifo write cycle in parrallel
+    ///////////////////////////////////////////////////////////////////////////////
+    begin
+      $display("time: %0t ps Simulation vector thread START         ",$time);
+
+      repeat (10) @(negedge clk);  // First to prime the pump
+      vctr_fifo_wr = 1'b1;
+      repeat (1) @(negedge clk);
+      vctr_fifo_wr = 1'b0;
+      repeat (1) @(negedge clk);
+
+      for(int l = 0; l < 10; l+=1) begin
+        for(int k = 1; k < (16*8) ; k+=8) begin
+          $display("time: %0t ps loop 1: l=%0d  k=%0d                      ",$time,l,k);
+          repeat (k) @(negedge clk);
+          vctr_fifo_wr = 1'b1;
+          repeat (1) @(negedge clk);
+          vctr_fifo_wr = 1'b0;
+          $display("time: %0t ps ******************************************",$time);
+          $display("time: %0t ps 1st vector fifo write loop l=%0d k=%0d    ",$time,k,l);
+          $display("time: %0t ps ******************************************",$time);
+        end //
+      end  
+
+      repeat (10) @(negedge clk);  
+      vctr_fifo_wr = 1'b1;
+      repeat (1) @(negedge clk);
+      vctr_fifo_wr = 1'b0;
+      repeat (1) @(negedge clk);
+
+      for(int l = 0; l < 16; l+=1) begin
+        for(int k = 1; k < (16*8) - l*8 ; k+=8) begin
+          $display("time: %0t ps loop 1: l=%0d  k=%0d                      ",$time,l,k);
+          repeat (k) @(negedge clk);
+          vctr_fifo_wr = 1'b1;
+          repeat (1) @(negedge clk);
+          vctr_fifo_wr = 1'b0;
+          $display("time: %0t ps ******************************************",$time);
+          $display("time: %0t ps 2nd vector fifo write loop l=%0d k=%0d    ",$time,k,l);
+          $display("time: %0t ps ******************************************",$time);
+        end //
+      end  
+// comment this section out to remove the long loop verctor cycle count and
+// vector monitor count max out
+      k = 10;
+      repeat (65535) begin         
+        repeat (1) @(negedge clk);
+        vctr_fifo_wr = 1'b1;
+        $display("time: %0t ps ******************************************",$time);
+        $display("time: %0t ps 3rd vector fifo write loop =%0d           ",$time,k);
+        $display("time: %0t ps ******************************************",$time);
+        repeat (1) @(negedge clk);
+        vctr_fifo_wr = 1'b0;
+        k = k + 1;
       end
+
+      /////////////////////////////////////////////////////////////////////////////
+      // long wait in order to max out vector cycle count
+      /////////////////////////////////////////////////////////////////////////////
+      repeat (65526) @(negedge clk);
+  
+      $display("time: %0t ps ******************************************",$time);
+      $display("time: %0t ps Made it after long delay vector fork      ",$time);
+      $display("time: %0t ps ******************************************",$time);
+      repeat (10) @(negedge clk);
+      $display("time: %0t ps Simulation vector thread END              ",$time);
+      repeat (10) @(negedge clk);
+    end 
+
+  ///////////////////////////////////////////////////////////////////////////////
+  // Join the two threads
+  ///////////////////////////////////////////////////////////////////////////////
+  join
+    $display("time: %0t ps Simulation joined                           ",$time);
+
+    repeat (10) @(negedge clk);
+    reg_addr = 32'h0000_0001; 
+    slave_write(reg_addr,reg_data); 
+    repeat (10) @(negedge clk);
+
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Readint out all registers                 ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    // FIXME neeed to add register read data checking
+
+    repeat (10) @(negedge clk);
+    reg_addr = 32'h0000_0000; 
+    slave_read(reg_addr,reg_data); 
+    repeat (1) @(negedge clk);
+    reg_addr = reg_addr + 32'h0000_0004; 
+    slave_read(reg_addr,reg_data); 
+    repeat (10) @(negedge clk);
+
+    reg_addr = 32'h0000_0100; 
+    repeat(5) begin
+      slave_read(reg_addr,reg_data); 
+      repeat (1) @(negedge clk);
+      reg_addr = reg_addr + 32'h0000_0004; 
     end
 
-    repeat (1000) @(negedge clk);
-    reg_addr = 32'h0001; 
-    reg_data = 32'h0002; 
-    slave_write(reg_addr,reg_data); 
-    repeat (150) @(negedge clk);
+    repeat (10) @(negedge clk);
+    reg_addr = 32'h0001_1000; 
+    repeat(15) begin
+      slave_read(reg_addr,reg_data); 
+      repeat (1) @(negedge clk);
+      reg_addr = reg_addr + 32'h0000_0004; 
+    end
 
-    repeat (140) @(negedge clk);
-    $display("time: %0t ******************************************",$time);
-    $display("time: %0t Simulation reached its natural end        ",$time);
-    $display("time: %0t ******************************************",$time);
+    repeat (10) @(negedge clk);
+    reg_addr = 32'h0001_2000; 
+    repeat(15) begin
+      slave_read(reg_addr,reg_data); 
+      repeat (1) @(negedge clk);
+      reg_addr = reg_addr + 32'h0000_0004; 
+    end
+
+    repeat (10) @(negedge clk);
+
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Testing the word fifo decraments          ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    vctr_fifo_wr = 1'b1;
+    vctr_fifo_rd = 1'b1;
+    repeat (1) @(negedge clk);
+    vctr_fifo_wr = 1'b0;
+    vctr_fifo_rd = 1'b0;
+    repeat (1) @(negedge clk);
+
+    vctr_fifo_rd = 1'b1;
+    addr_fifo_rd = 1'b1;
+    repeat (1) @(negedge clk);
+    vctr_fifo_rd = 1'b0;
+    addr_fifo_rd = 1'b0;
+    repeat (1) @(negedge clk);
+
+    reg_addr = 32'h0000_0108; 
+    slave_read(reg_addr,reg_data); 
+    repeat (1) @(negedge clk);
+    reg_addr = 32'h0000_0110; 
+    slave_read(reg_addr,reg_data); 
+
+    repeat (10) @(negedge clk);
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Simulation reached its natural end        ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    $fclose(fd); 
     $finish;    
-  end
-  
-//  always @(posedge clk) $display count;
- 
-//initial begin
-// Dump waves
-//   $dumpvars("dump.vcd", top);
-//  end 
 
-initial begin
-// Dump waves
-  $dumpfile("dump.vcd");
-  $dumpvars(4);
-end 
- 
+  end 
+  
 task slave_write;
   input [31:0] addr;
   input [31:0] data; 
   begin
     repeat (1) @(negedge clk);
-//  $display("time: %0t ******************************************",$time);
-//  $display("time: %0t Beginning slave Write ",$time);
-//  $display("time: %0t ******************************************",$time);
+//  $display("time: %0t ps ******************************************",$time);
+//  $display("time: %0t ps Beginning slave Write ",$time                    );
+//  $display("time: %0t ps ******************************************",$time);
     slave_addr = addr; 
     slave_data_in = data; 
     slave_wr   =   1'b1; 
-    $display("time=%0t: Write to REG: %h,%0h",$time,addr,data);
+    $display("time: %0t ps ******************************************",$time);
+    $display("time=%0t ps: Write to REG: %h,%h                       ",$time,addr,data);
+    $display("time: %0t ps ******************************************",$time);
     repeat (1) @(negedge clk);
     slave_wr   =   1'b0; 
     
-//  $display("time: %0t Ending slave write",$time);
+//  $display("time: %0t ps Ending slave write",$time);
+  end
+endtask
+
+task slave_read;
+  input [31:0] addr;
+  output [31:0] data; 
+  begin
+    repeat (1) @(negedge clk);
+//  $display("time: %0t ps ******************************************",$time);
+//  $display("time: %0t ps Beginning slave Read                      ",$time);
+//  $display("time: %0t ps ******************************************",$time);
+    slave_addr = addr; 
+    slave_rd   =   1'b1; 
+    repeat (1) @(negedge clk);
+    slave_rd   =   1'b0; 
+    data = slave_data_out; 
+    repeat (1) @(negedge clk);
+    $display("time: %0t ps ****************************************************",$time);
+    $display("time: %0t ps slave read addr: %h data: %h : %0d                  ",$time, addr, data, data);
+    $display("time: %0t ps ****************************************************",$time);
+    
+//  $display("time: %0t ps Ending slave read",$time);
   end
 endtask
   
@@ -147,7 +354,10 @@ driver driver_0(
   .slave_data_in(slave_data_in),
   .slave_data_out(slave_data_out),
   .addr_fifo_din(addr_fifo_din),
-  .addr_fifo_wr(addr_fifo_wr)
+  .addr_fifo_wr(addr_fifo_wr),
+  .addr_fifo_rd(addr_fifo_rd),
+  .vctr_fifo_wr(vctr_fifo_wr),
+  .vctr_fifo_rd(vctr_fifo_rd)
 );
   
 endmodule: top
