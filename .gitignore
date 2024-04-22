@@ -10,3 +10,5 @@
 !/Driver/*.sv
 !/Driver/*.tcl
 !/README.md
+!/*.txt
+!/Driver/*.txt
