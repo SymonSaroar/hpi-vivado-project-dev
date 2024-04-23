@@ -9,15 +9,15 @@
 		// Do not modify the parameters beyond this line
 
 		// Base address of targeted slave
-		parameter  C_M_TARGET_SLAVE_BASE_ADDR	= 32'h40000000,
+//		parameter  C_M_TARGET_SLAVE_BASE_ADDR	= 32'h40000000,
 		// Burst Length. Supports 1, 2, 4, 8, 16, 32, 64, 128, 256 burst lengths
-		parameter integer C_M_AXI_BURST_LEN	= 1,
+		parameter integer C_M_AXI_BURST_LEN	= 1, // Must be 1 for CC transactions
 		// Thread ID Width
 		parameter integer C_M_AXI_ID_WIDTH	= 1,
 		// Width of Address Bus
 		parameter integer C_M_AXI_ADDR_WIDTH	= 32,
 		// Width of Data Bus
-		parameter integer C_M_AXI_DATA_WIDTH	= 64,
+		parameter integer C_M_AXI_DATA_WIDTH	= 64, // Must be 128 (16 bytes) for CC transaction
 		// Width of User Write Address Bus
 		parameter integer C_M_AXI_AWUSER_WIDTH	= 1,
 		// Width of User Read Address Bus
@@ -196,7 +196,7 @@
 
 	// Burst length for transactions, in C_M_AXI_DATA_WIDTHs.
 	// Non-2^n lengths will eventually cause bursts across 4K address boundaries.
-	 localparam integer C_MASTER_LENGTH	= 12;
+	 localparam integer C_MASTER_LENGTH	= 8;
 	// total number of burst transfers is master length divided by burst length and burst size
 	 localparam integer C_NO_BURSTS_REQ = C_MASTER_LENGTH-clogb2((C_M_AXI_BURST_LEN*C_M_AXI_DATA_WIDTH/8)-1);
 	// Example State machine to initialize counter, initialize write transactions, 
@@ -232,7 +232,7 @@
 	//read beat count in a burst
 	reg [C_TRANSACTIONS_NUM : 0] 	read_index;
 	//size of C_M_AXI_BURST_LEN length burst in bytes
-	wire [31 : 0] 	burst_size_bytes;
+	wire [C_TRANSACTIONS_NUM+2 : 0] 	burst_size_bytes;
 	//The burst counters are used to track the number of burst transfers of C_M_AXI_BURST_LEN burst length needed to transfer 2^C_MASTER_LENGTH bytes of data.
 	reg [C_NO_BURSTS_REQ : 0] 	write_burst_counter;
 	reg [C_NO_BURSTS_REQ : 0] 	read_burst_counter;
@@ -258,7 +258,7 @@
 	reg  	init_txn_edge;
 	wire  	run_program_pulse;
 	wire	end_program_pulse;
-
+	reg 	addr_cnt;
 
 	// I/O Connections assignments
 
@@ -291,8 +291,8 @@
 	assign M_AXI_BREADY	= axi_bready;
 	//Read Address (AR)
 	assign M_AXI_ARID	= 'b0;
-//	assign M_AXI_ARADDR	= target_base_addr + axi_araddr;
-    assign M_AXI_ARADDR = read_addr;
+	assign M_AXI_ARADDR	= read_addr + axi_araddr;
+//    assign M_AXI_ARADDR = read_addr;
 	//Burst LENgth is number of transaction beats, minus 1
 	assign M_AXI_ARLEN	= C_M_AXI_BURST_LEN - 1;
 	//Size should be C_M_AXI_DATA_WIDTH, in 2^n bytes, otherwise narrow bursts are used
@@ -571,7 +571,9 @@
 	    else                                                             
 	      axi_arvalid <= axi_arvalid;                                    
 	  end                                                                
-	                                                                     
+	
+	// address count logic for reading two addresses
+	                                                      
 	                                                                     
 	// Next address after ARREADY indicates previous address acceptance  
 	  always @(posedge M_AXI_ACLK)                                       
@@ -581,9 +583,13 @@
 	        axi_araddr <= 'b0;                                           
 	      end                                                            
 	    else if (M_AXI_ARREADY && axi_arvalid)                           
-	      begin                                                          
-//	        axi_araddr <= axi_araddr + add_val;                 
-            axi_araddr <= read_addr;
+	      begin
+	      	if(axi_araddr == 'b0) begin                                                          
+	        	axi_araddr <= axi_araddr + burst_size_bytes;
+	        end else begin
+	        	axi_araddr <= 'b0;
+	        end                
+//            axi_araddr <= read_addr;
 	      end                                                            
 	    else                                                             
 	      axi_araddr <= axi_araddr;                                      
@@ -845,7 +851,7 @@
 	                  begin                                                                                     
 	                    start_single_burst_read <= 1'b1;                                                        
 	                  end                                                                                       
-	               else                                                                                         
+	               else if(start_single_burst_read && end_program_pulse == 1'b1)                                                                                         
 	                 begin                                                                                      
 	                   start_single_burst_read <= 1'b0; //Negate to generate a pulse                            
 	                 end                                                                                        
@@ -950,7 +956,7 @@
     assign arvalid = axi_arvalid;
     assign arready = M_AXI_ARREADY;
 	
-	assign addr_fifo_rd = (axi_arvalid);
+	assign addr_fifo_rd = (axi_araddr == 0)? 1'b1: 1'b0;
 
     assign vctr_fifo_wr = (rvalid && rready);
 
