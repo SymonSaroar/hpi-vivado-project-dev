@@ -44,6 +44,12 @@
         output wire run_program,
         output wire end_program,
         output wire active_program,
+        
+        //debug ports
+        output wire [31:0] addr_cycle_cnt,
+		output wire [15:0] vctr_cycle_cnt,
+		output wire [15:0] words_in_addr_fifo,
+		output wire [15:0] words_in_vctr_fifo,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -692,7 +698,11 @@
     .run_program(run_program),
     .end_program(end_program),
     .addr_fifo_rd(addr_fifo_rd),
-    .active_program(active_program)
+    .active_program(active_program),
+    .addr_cycle_cnt(addr_cycle_cnt),
+    .vctr_cycle_cnt(vctr_cycle_cnt),
+    .words_in_addr_fifo(words_in_addr_fifo),
+    .words_in_vctr_fifo(words_in_vctr_fifo)
   );
   
 endmodule// custom_slave_v1_0_S00_AXI
