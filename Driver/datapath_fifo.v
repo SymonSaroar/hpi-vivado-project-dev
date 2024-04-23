@@ -12,6 +12,7 @@ module datapath_fifo #(
     input wire wr,
     input wire rd,
     input wire [INPUT_DATA_WIDTH - 1 : 0] data_in,
+    output wire rd_en_100ns,
     output wire [OUTPUT_DATA_WIDTH - 1 : 0] data_out,
     output wire full,
     output wire empty,
@@ -81,6 +82,7 @@ module datapath_fifo #(
     end
     
     assign rd_en = (~empty_reg) && rd && rd_clk;
+    assign rd_en_100ns = rd_en;
     always @(posedge clk or negedge rstn) begin
         if(~rstn)
             r_ptr <= 0;

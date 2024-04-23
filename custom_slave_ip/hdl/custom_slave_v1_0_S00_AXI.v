@@ -33,11 +33,17 @@
 	(
 		// Users to add ports here
 //        output wire [31:0] read_addr,
-        output wire start_read_tx,
+		input wire vector_fifo_wr,
+		input wire vector_fifo_rd,
+		input wire addr_fifo_rd,
+//        output wire start_read_tx,
         output wire wvalid,
         output wire wready,
         output wire [31:0] addr_fifo_din,
         output wire addr_fifo_wr,
+        output wire run_program,
+        output wire end_program,
+        output wire active_program,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -679,8 +685,14 @@
     .slave_wr(slave_wr),
     .slave_data_in(slave_data_in),
     .slave_data_out(slave_data_out),
+    .vctr_fifo_wr(vctr_fifo_wr),
+    .vctr_fifo_rd(vctr_fifo_rd),
     .addr_fifo_din(addr_fifo_din),
-    .addr_fifo_wr(addr_fifo_wr)
+    .addr_fifo_wr(addr_fifo_wr),
+    .run_program(run_program),
+    .end_program(end_program),
+    .addr_fifo_rd(addr_fifo_rd),
+    .active_program(active_program)
   );
   
 endmodule// custom_slave_v1_0_S00_AXI

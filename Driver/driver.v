@@ -20,13 +20,16 @@ module driver #(
   input               vctr_fifo_rd,
   output       [31:0] addr_fifo_din,
   output              addr_fifo_wr,
-  input               addr_fifo_rd
+  input               addr_fifo_rd,
+  output			  active_program,
+  output			  end_program,
+  output 			  run_program
 );
 
 wire [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0];
-wire active_program, end_program, run_program;
+//wire active_program, end_program, run_program;
 wire [31:0] addr_cycle_cnt;
-wire [15:0] vctr_mon_cnts[15:0];
+wire [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0];
 wire [15:0] vctr_cycle_cnt;
 wire [15:0] words_in_addr_fifo;
 wire [15:0] words_in_vctr_fifo;

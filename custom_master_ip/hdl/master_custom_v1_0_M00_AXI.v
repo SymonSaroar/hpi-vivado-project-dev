@@ -38,8 +38,6 @@
 	)
 	(
 		// Users to add ports here
-	    output wire [C_M_AXI_ADDR_WIDTH - 1 : 0] debug_addr,
-	    output wire [C_M_AXI_ADDR_WIDTH - 1 : 0] debug_add_bytes,
 //		input wire [C_M_AXI_ADDR_WIDTH - 1 : 0] target_base_addr,
 		input wire [C_M_AXI_ADDR_WIDTH - 1 : 0] read_addr,
 		input wire addr_fifo_empty,
@@ -50,12 +48,17 @@
 		output wire [VECTOR_DATA_WIDTH-1 : 0] output_data,
 		output wire rvalid,
 		output wire rready,
-		output wire [31: 0] debug_tx_num,
+		output wire addr_fifo_rd,
+		output wire vctr_fifo_rd,
+		output wire vctr_fifo_wr,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
 		// Initiate AXI transactions
-		input wire  INIT_AXI_TXN,
+		input wire  run_program,
+		// Stop AXI transactions
+		input wire end_program,
+		
 		// Asserts when transaction is complete
 		output wire  TXN_DONE,
 		// Asserts when ERROR is detected
@@ -201,7 +204,7 @@
 	// written data words.
 	parameter [1:0] IDLE = 2'b00, // This state initiates AXI4Lite transaction 
 			// after the state machine changes state to INIT_WRITE 
-			// when there is 0 to 1 transition on INIT_AXI_TXN
+			// when there is 0 to 1 transition on run_program
 		INIT_WRITE   = 2'b01, // This state initializes write transaction,
 			// once writes are done, the state machine 
 			// changes state to INIT_READ 
@@ -248,10 +251,13 @@
 	wire  	read_resp_error;
 	wire  	wnext;
 	wire  	rnext;
-	reg  	init_txn_ff;
-	reg  	init_txn_ff2;
+	reg  	run_program_ff;
+	reg		end_program_ff;
+	reg		end_program_ff2;
+	reg  	run_program_ff2;
 	reg  	init_txn_edge;
-	wire  	init_txn_pulse;
+	wire  	run_program_pulse;
+	wire	end_program_pulse;
 
 
 	// I/O Connections assignments
@@ -306,7 +312,8 @@
 	assign TXN_DONE	= compare_done;
 	//Burst size in bytes
 	assign burst_size_bytes	= C_M_AXI_BURST_LEN * C_M_AXI_DATA_WIDTH/8;
-	assign init_txn_pulse	= (!init_txn_ff2) && init_txn_ff;
+	assign run_program_pulse	= (!run_program_ff2) && run_program_ff;
+	assign end_program_pulse	= (!end_program_ff2) && end_program_ff;
 
 
 	//Generate a pulse to initiate AXI transaction.
@@ -315,13 +322,17 @@
 	    // Initiates AXI transaction delay    
 	    if (M_AXI_ARESETN == 0 )                                                   
 	      begin                                                                    
-	        init_txn_ff <= 1'b0;                                                   
-	        init_txn_ff2 <= 1'b0;                                                   
+	        run_program_ff <= 1'b0;                                                   
+	        run_program_ff2 <= 1'b0;                                                    
+	        end_program_ff2 <= 1'b0;                                                    
+	        end_program_ff2 <= 1'b0;                                                   
 	      end                                                                               
 	    else                                                                       
 	      begin  
-	        init_txn_ff <= INIT_AXI_TXN && (~(addr_fifo_empty || vector_fifo_full));
-	        init_txn_ff2 <= init_txn_ff;                                                                 
+	        run_program_ff <= run_program && (~(addr_fifo_empty || vector_fifo_full));
+	        end_program_ff <= end_program;
+	        run_program_ff2 <= run_program_ff;                                                                 
+	        end_program_ff2 <= end_program_ff;                                                                 
 	      end                                                                      
 	  end     
 
@@ -342,7 +353,7 @@
 	  always @(posedge M_AXI_ACLK)                                   
 	  begin                                                                
 	                                                                       
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 )                                           
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 )                                           
 	      begin                                                            
 	        axi_awvalid <= 1'b0;                                           
 	      end                                                              
@@ -365,7 +376,7 @@
 	// Next address after AWREADY indicates previous address acceptance    
 	  always @(posedge M_AXI_ACLK)                                         
 	  begin                                                                
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                                            
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                            
 	      begin                                                            
 	        axi_awaddr <= 'b0;                                             
 	      end                                                              
@@ -407,7 +418,7 @@
 	// WVALID logic, similar to the axi_awvalid always block above                      
 	  always @(posedge M_AXI_ACLK)                                                      
 	  begin                                                                             
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 )                                                        
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 )                                                        
 	      begin                                                                         
 	        axi_wvalid <= 1'b0;                                                         
 	      end                                                                           
@@ -430,7 +441,7 @@
 	// WVALID logic, similar to the axi_awvalid always block above                      
 	  always @(posedge M_AXI_ACLK)                                                      
 	  begin                                                                             
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 )                                                        
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 )                                                        
 	      begin                                                                         
 	        axi_wlast <= 1'b0;                                                          
 	      end                                                                           
@@ -457,7 +468,7 @@
 	 count to reduce decode logic */                                                    
 	  always @(posedge M_AXI_ACLK)                                                      
 	  begin                                                                             
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 || start_single_burst_write == 1'b1)    
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 || start_single_burst_write == 1'b1)    
 	      begin                                                                         
 	        write_index <= 0;                                                           
 	      end                                                                           
@@ -474,7 +485,7 @@
 	 Data pattern is only a simple incrementing count from 0 for each burst  */         
 	  always @(posedge M_AXI_ACLK)                                                      
 	  begin                                                                             
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                                                         
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                                         
 	      axi_wdata <= 'b1;                                                             
 	    //else if (wnext && axi_wlast)                                                  
 	    //  axi_wdata <= 'b0;                                                           
@@ -505,7 +516,7 @@
 
 	  always @(posedge M_AXI_ACLK)                                     
 	  begin                                                                 
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 )                                            
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 )                                            
 	      begin                                                             
 	        axi_bready <= 1'b0;                                             
 	      end                                                               
@@ -543,8 +554,8 @@
 	  always @(posedge M_AXI_ACLK)                                 
 	  begin                                                              
 	                                                                     
-//	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 )                                         
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 )                                         
+//	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 )                                         
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 )                                         
 	      begin                                                          
 	        axi_arvalid <= 1'b0;                                         
 	      end                                                            
@@ -565,7 +576,7 @@
 	// Next address after ARREADY indicates previous address acceptance  
 	  always @(posedge M_AXI_ACLK)                                       
 	  begin                                                              
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                                          
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                          
 	      begin                                                          
 	        axi_araddr <= 'b0;                                           
 	      end                                                            
@@ -591,7 +602,7 @@
 	// terminal count to reduce decode logic                                
 	  always @(posedge M_AXI_ACLK)                                          
 	  begin                                                                 
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 || start_single_burst_read)                  
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 || start_single_burst_read)                  
 	      begin                                                             
 	        read_index <= 0;                                                
 	      end                                                               
@@ -612,7 +623,7 @@
 	 */                                                                     
 	  always @(posedge M_AXI_ACLK)                                          
 	  begin                                                                 
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 )                  
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 )                  
 	      begin                                                             
 	        axi_rready <= 1'b0;                                             
 	      end                                                               
@@ -635,7 +646,7 @@
 	//Check received read data against data generator                       
 //	  always @(posedge M_AXI_ACLK)                                          
 //	  begin                                                                 
-//	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                   
+//	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                   
 //	      begin                                                             
 //	        read_mismatch <= 1'b0;                                          
 //	      end                                                               
@@ -660,7 +671,7 @@
 
 //	  always @(posedge M_AXI_ACLK)                     
 //	  begin                                                  
-//		if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)// || M_AXI_RLAST)             
+//		if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)// || M_AXI_RLAST)             
 //			expected_rdata <= 'b1;                            
 //		else if (M_AXI_RVALID && axi_rready)                  
 //			expected_rdata <= expected_rdata + 1;             
@@ -677,7 +688,7 @@
 
 //	  always @(posedge M_AXI_ACLK)                                 
 //	  begin                                                              
-//	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                                          
+//	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                          
 //	      begin                                                          
 //	        error_reg <= 1'b0;                                           
 //	      end                                                            
@@ -718,7 +729,7 @@
 	 // against the number of burst transactions the master needs to initiate                                   
 //	  always @(posedge M_AXI_ACLK)                                                                              
 //	  begin                                                                                                     
-//	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1 )                                                                                 
+//	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1 )                                                                                 
 //	      begin                                                                                                 
 //	        write_burst_counter <= 'b0;                                                                         
 //	      end                                                                                                   
@@ -738,7 +749,7 @@
 	 // against the number of burst transactions the master needs to initiate                                   
 	  always @(posedge M_AXI_ACLK)                                                                              
 	  begin                                                                                                     
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                                                                                 
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                                                                 
 	      begin                                                                                                 
 	        read_burst_counter <= 'b0;                                                                          
 	      end                                                                                                   
@@ -778,7 +789,7 @@
 	          IDLE:                                                                                     
 	            // This state is responsible to wait for user defined C_M_START_COUNT                           
 	            // number of clock cycles.                                                                      
-	            if (init_txn_pulse == 1'b1)                                                      
+	            if (run_program == 1'b1 && (~(addr_fifo_empty || vector_fifo_full)))
 	              begin                                                                                         
 	                mst_exec_state  <= INIT_READ;                                                              
 //	                mst_exec_state  <= INIT_WRITE;                                                              
@@ -818,7 +829,7 @@
 	            // initiate a read transaction. Read transactions will be                                       
 	            // issued until burst_read_active signal is asserted.                                           
 	            // read controller                                                                              
-	            if (addr_fifo_empty || vector_fifo_full)                                                                                 
+	            if (end_program_pulse == 1'b1 || addr_fifo_empty || vector_fifo_full)                                                                                 
 	              begin                                                                                         
 ////	                mst_exec_state <= INIT_COMPARE;                                                             
 	                mst_exec_state <= IDLE;  
@@ -864,7 +875,7 @@
 	  // signal remains asserted until the burst write is accepted by the slave                                 
 	  always @(posedge M_AXI_ACLK)                                                                              
 	  begin                                                                                                     
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                                                                                 
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                                                                 
 	      burst_write_active <= 1'b0;                                                                           
 	                                                                                                            
 	    //The burst_write_active is asserted when a write burst transaction is initiated                        
@@ -882,7 +893,7 @@
 	                                                                                                            
 	  always @(posedge M_AXI_ACLK)                                                                              
 	  begin                                                                                                     
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                                                                                 
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                                                                 
 	      writes_done <= 1'b0;                                                                                  
 	                                                                                                            
 	    //The writes_done should be associated with a bready response                                           
@@ -898,7 +909,7 @@
 	  // signal remains asserted until the burst read is accepted by the master                                 
 	  always @(posedge M_AXI_ACLK)                                                                              
 	  begin                                                                                                     
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                                                                                 
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                                                                 
 	      burst_read_active <= 1'b0;                                                                            
 	                                                                                                            
 	    //The burst_write_active is asserted when a write burst transaction is initiated                        
@@ -917,7 +928,7 @@
 	                                                                                                            
 	  always @(posedge M_AXI_ACLK)                                                                              
 	  begin                                                                                                     
-	    if (M_AXI_ARESETN == 0 || init_txn_pulse == 1'b1)                                                                                 
+	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                                                                 
 	      reads_done <= 1'b0;                                                                                   
 	                                                                                                            
 	    //The reads_done should be associated with a rready response                                            
@@ -938,10 +949,10 @@
     assign rvalid = M_AXI_RVALID;
     assign arvalid = axi_arvalid;
     assign arready = M_AXI_ARREADY;
+	
+	assign addr_fifo_rd = (axi_arvalid);
 
-    wire wr;
-
-    assign wr = (rvalid && rready);
+    assign vctr_fifo_wr = (rvalid && rready);
 
     datapath_fifo #(
     	.INPUT_DATA_WIDTH(C_M_AXI_DATA_WIDTH),
@@ -952,8 +963,9 @@
     ) datapath_fifo_0 (
     	.clk(M_AXI_ACLK),
     	.rstn(M_AXI_ARESETN),
-    	.wr(wr),
+    	.wr(vctr_fifo_wr),
     	.rd(1'b1),
+    	.rd_en_100ns(vctr_fifo_rd),
     	.data_in(M_AXI_RDATA),
     	.data_out(output_data),
     	.full(vector_fifo_full),
