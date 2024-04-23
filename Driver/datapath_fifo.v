@@ -25,7 +25,7 @@ module datapath_fifo #(
     reg [64-1 : 0] mem1 [DEPTH-1: 0];
     reg [64-1 : 0] mem2 [DEPTH-1: 0];
     reg [OUTPUT_DATA_WIDTH-1 : 0] data_out_reg;
-    reg [DEPTH_SIZE : 0] w_ptr01, w_ptr2;
+    reg [DEPTH_SIZE : 0] w_ptr1, w_ptr2;
     reg [DEPTH_SIZE : 0] r_ptr;
     reg full_reg, empty_reg, threshold_reg, overflow_reg, underflow_reg;
 //    reg almost_full_reg, almost_empty_reg;
@@ -66,16 +66,16 @@ module datapath_fifo #(
     assign wr_en = (~full_reg) && wr;
     always @(posedge clk or negedge rstn) begin
         if(~rstn) begin
-            w_ptr01 <= 1'b0;
+            w_ptr1 <= 1'b0;
             w_ptr2 <= 1'b0;
             cnt <= 1'b1;
         end
         else if(wr_en) begin
-            w_ptr01 <= w_ptr01 + cnt;
+            w_ptr1 <= w_ptr1 + cnt;
             w_ptr2 <= w_ptr2 + !cnt;
             cnt <= cnt + 1;
         end else begin
-            w_ptr01 <= w_ptr01;
+            w_ptr1 <= w_ptr1;
             w_ptr2 <= w_ptr2;
         end
     end
@@ -100,25 +100,25 @@ module datapath_fifo #(
     always @(posedge clk) begin
         if(wr_en) begin
             if(cnt) begin
-                mem0[w_ptr01[DEPTH_SIZE-1:0]] <= data_in[63:0];
-                mem1[w_ptr01[DEPTH_SIZE-1:0]] <= data_in[127:64];
+                mem0[w_ptr1[DEPTH_SIZE-1:0]] <= data_in[127:64];      // last 64 bits of first 128 bit data
             end else
-                mem2[w_ptr2[DEPTH_SIZE-1:0]] <= data_in[63:0];
+                mem1[w_ptr2[DEPTH_SIZE-1:0]] <= data_in[127:64];		// last 64 bits of 2nd 128 bits data
+                mem2[w_ptr2[DEPTH_SIZE-1:0]] <= data_in[63:0];			// first 64 bits of 2nd 128 bits data
         end
     end
     always @(posedge clk or negedge rstn) begin
         if(~rstn)
             data_out_reg <= 0;
         else if(rd_en) begin
-            data_out_reg[191:128] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[191:128] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
             data_out_reg[127:64] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[63:0] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[63:0] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
         end else
             data_out_reg <= data_out_reg;
     end
     
-    assign first_bit = w_ptr01 ^ r_ptr;
-    assign equal_full = (w_ptr01[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0]);
+    assign first_bit = w_ptr1 ^ r_ptr;
+    assign equal_full = (w_ptr1[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0]);
 //    assign almost_equal_full = (w_ptr_masked3 == r_ptr_masked0 || w_ptr_masked4 == r_ptr_masked0 || w_ptr_masked5 == r_ptr_masked0);
     assign equal_empty = (w_ptr2[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0]);
 //    assign almost_equal_empty = (r_ptr_masked3 == w_ptr_masked0 || r_ptr_masked4 == w_ptr_masked0 || r_ptr_masked5 == w_ptr_masked0);
