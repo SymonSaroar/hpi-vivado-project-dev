@@ -1,6 +1,14 @@
 //`include "design.sv"
 
-module driver (
+module driver #(
+    parameter integer ADDR_MON_CNT_RANGE = 8,
+    parameter integer ADDR_MON_CNT_SIZE = 16,
+    parameter integer MAX_ADDR_CYCLE_CNT = 128,
+	parameter integer VCTR_MON_CNT_RANGE = 8,
+	parameter integer VCTR_MON_CNT_SIZE = 16,
+	parameter integer MAX_VCTR_CYCLE_CNT = 128
+)
+(
   input               clk,
   input               reset,
   input        [31:0] slave_addr,
@@ -15,16 +23,23 @@ module driver (
   input               addr_fifo_rd
 );
 
-wire [15:0] addr_mon_cnts[15:0];
-wire [15:0] addr_cycle_cnt;
+wire [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0];
+wire active_program, end_program, run_program;
+wire [31:0] addr_cycle_cnt;
 wire [15:0] vctr_mon_cnts[15:0];
 wire [15:0] vctr_cycle_cnt;
 wire [15:0] words_in_addr_fifo;
 wire [15:0] words_in_vctr_fifo;
 
-wire active_program, end_program, run_program;
 
-driver_cntrl driver_cntrl_0(
+driver_cntrl #(
+	.ADDR_MON_CNT_RANGE(ADDR_MON_CNT_RANGE),
+	.ADDR_MON_CNT_SIZE(ADDR_MON_CNT_SIZE),
+	.MAX_ADDR_CYCLE_CNT(MAX_ADDR_CYCLE_CNT),
+	.VCTR_MON_CNT_RANGE(VCTR_MON_CNT_RANGE),
+	.VCTR_MON_CNT_SIZE(VCTR_MON_CNT_SIZE),
+	.MAX_VCTR_CYCLE_CNT(MAX_VCTR_CYCLE_CNT)
+) driver_cntrl_0(
   .clk(clk),
   .reset(reset),
   .slave_addr(slave_addr),
@@ -45,7 +60,14 @@ driver_cntrl driver_cntrl_0(
   .active_program(active_program)
 );
   
-driver_monitor driver_monitor_0(
+driver_monitor #(
+	.ADDR_MON_CNT_RANGE(ADDR_MON_CNT_RANGE),
+	.ADDR_MON_CNT_SIZE(ADDR_MON_CNT_SIZE),
+	.MAX_ADDR_CYCLE_CNT(MAX_ADDR_CYCLE_CNT),
+	.VCTR_MON_CNT_RANGE(VCTR_MON_CNT_RANGE),
+	.VCTR_MON_CNT_SIZE(VCTR_MON_CNT_SIZE),
+	.MAX_VCTR_CYCLE_CNT(MAX_VCTR_CYCLE_CNT)
+) driver_monitor_0(
   .clk(clk),
   .reset(reset),
   .end_program(end_program),
@@ -73,7 +95,7 @@ driver_dp driver_dp_0(
   .master_data_in_val(1'b0),
   .test_vector_addr(addr_fifo_din),
   .get_vector(addr_fifo_wr),
-  .master_addr(addr_fifo_din),
+  .master_addr(master_addr),
   .master_rd(master_rd)
 );
    

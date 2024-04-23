@@ -4,7 +4,12 @@
 	module custom_slave_v1_0_S00_AXI #
 	(
 		// Users to add parameters here
-
+        parameter integer ADDR_MON_CNT_RANGE = 8,
+        parameter integer ADDR_MON_CNT_SIZE = 16,
+        parameter integer MAX_ADDR_CYCLE_CNT = 128,
+		parameter integer VCTR_MON_CNT_RANGE = 8,
+		parameter integer VCTR_MON_CNT_SIZE = 16,
+		parameter integer MAX_VCTR_CYCLE_CNT = 128,
 		// User parameters ends
 		// Do not modify the parameters beyond this line
 
@@ -659,7 +664,14 @@
   assign slave_data_in = S_AXI_WDATA;
 
 
-  driver driver_0(
+  driver #(
+    .ADDR_MON_CNT_RANGE(ADDR_MON_CNT_RANGE),
+	.ADDR_MON_CNT_SIZE(ADDR_MON_CNT_SIZE),
+	.MAX_ADDR_CYCLE_CNT(MAX_ADDR_CYCLE_CNT),
+	.VCTR_MON_CNT_RANGE(VCTR_MON_CNT_RANGE),
+	.VCTR_MON_CNT_SIZE(VCTR_MON_CNT_SIZE),
+	.MAX_VCTR_CYCLE_CNT(MAX_VCTR_CYCLE_CNT)
+  ) driver_0(
     .clk(clk),
     .reset(reset),
     .slave_addr(slave_addr),
@@ -671,42 +683,7 @@
     .addr_fifo_wr(addr_fifo_wr)
   );
   
-endmodule// custom_slave_v1_0_S00_AXI 
-
-module driver (
-  input         clk,
-  input         reset,
-  input  [31:0] slave_addr,
-  input         slave_rd,
-  input         slave_wr,
-  input  [31:0] slave_data_in,
-  output [31:0] slave_data_out,
-  output [31:0] addr_fifo_din,
-  output        addr_fifo_wr
-);
-
-wire [15:0] addr_mon_cnts[15:0];
-
-driver_cntrl driver_cntrl_0(
-  .clk(clk),
-  .reset(reset),
-  .slave_addr(slave_addr),
-  .slave_rd(slave_rd),
-  .slave_wr(slave_wr),
-  .slave_data_in(slave_data_in),
-  .slave_data_out(slave_data_out),
-  .addr_fifo_din(addr_fifo_din),
-  .addr_fifo_wr(addr_fifo_wr),
-  .addr_mon_cnts(addr_mon_cnts)
-);
-  
-driver_monitor driver_monitor_0(
-  .clk(clk),
-  .reset(reset),
-  .addr_fifo_wr(addr_fifo_wr),
-  .addr_mon_cnts(addr_mon_cnts)
-);
-endmodule // driver
+endmodule// custom_slave_v1_0_S00_AXI
    
 
 // located at: C:/larry_delivery/Driver

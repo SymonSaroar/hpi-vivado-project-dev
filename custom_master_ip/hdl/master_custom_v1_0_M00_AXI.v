@@ -30,7 +30,11 @@
 		parameter integer C_M_AXI_BUSER_WIDTH	= 1,
 		parameter add_val = 16,
 		parameter cache_value = 3,
-		parameter axi_prot = 0
+		parameter axi_prot = 0,
+		parameter integer VECTOR_DATA_WIDTH = 192,
+		parameter integer VECTOR_FIFO_DEPTH = 1024,
+		parameter integer VECTOR_FIFO_DEPTH_SIZE = 10,
+		parameter integer VECTOR_DATA_PERIOD_CYCLE = 30
 	)
 	(
 		// Users to add ports here
@@ -39,10 +43,11 @@
 //		input wire [C_M_AXI_ADDR_WIDTH - 1 : 0] target_base_addr,
 		input wire [C_M_AXI_ADDR_WIDTH - 1 : 0] read_addr,
 		input wire addr_fifo_empty,
-		input wire vector_fifo_full,
+		output wire vector_fifo_full, vector_fifo_empty,
+    	output wire vector_fifo_threshold, vector_fifo_overflow, vector_fifo_underflow,
 		output wire arvalid,
 		output wire arready,
-		output wire [C_M_AXI_DATA_WIDTH-1 : 0] output_data,
+		output wire [VECTOR_DATA_WIDTH-1 : 0] output_data,
 		output wire rvalid,
 		output wire rready,
 		output wire [31: 0] debug_tx_num,
@@ -924,15 +929,39 @@
 	    end                                                                                                     
 
 	// Add user logic here
-    assign output_data = M_AXI_RDATA;
+//    assign output_data = M_AXI_RDATA;
     assign read_data_ready = M_AXI_RVALID;
-    assign debug_addr = axi_araddr;
-    assign debug_add_bytes = burst_size_bytes;
-    assign debug_tx_num = C_TRANSACTIONS_NUM;
+//    assign debug_addr = axi_araddr;
+//    assign debug_add_bytes = burst_size_bytes;
+//    assign debug_tx_num = C_TRANSACTIONS_NUM;
     assign rready = axi_rready;
     assign rvalid = M_AXI_RVALID;
     assign arvalid = axi_arvalid;
     assign arready = M_AXI_ARREADY;
+
+    wire wr;
+
+    assign wr = (rvalid && rready);
+
+    datapath_fifo #(
+    	.INPUT_DATA_WIDTH(C_M_AXI_DATA_WIDTH),
+    	.OUTPUT_DATA_WIDTH(192),
+    	.DEPTH(1024),
+    	.DEPTH_SIZE(10),
+    	.CLK_DIV(30)
+    ) datapath_fifo_0 (
+    	.clk(M_AXI_ACLK),
+    	.rstn(M_AXI_ARESETN),
+    	.wr(wr),
+    	.rd(1'b1),
+    	.data_in(M_AXI_RDATA),
+    	.data_out(output_data),
+    	.full(vector_fifo_full),
+    	.empty(vector_fifo_empty),
+    	.threshold(vector_fifo_threshold),
+    	.overflow(vector_fifo_overflow),
+    	.underflow(vector_fifo_underflow)
+    );
 	// User logic ends
 
 	endmodule

@@ -1,4 +1,11 @@
-module driver_cntrl(
+module driver_cntrl #(
+	parameter integer ADDR_MON_CNT_RANGE = 8,
+	parameter integer ADDR_MON_CNT_SIZE = 16,
+	parameter integer MAX_ADDR_CYCLE_CNT = 128,
+	parameter integer VCTR_MON_CNT_RANGE = 8,
+	parameter integer VCTR_MON_CNT_SIZE = 16,
+	parameter integer MAX_VCTR_CYCLE_CNT = 128
+)(
   input               clk,
   input               reset,
   input        [31:0] slave_addr,
@@ -6,9 +13,9 @@ module driver_cntrl(
   input               slave_wr,
   input        [31:0] slave_data_in,
   input        [15:0] addr_cycle_cnt,
-  input        [15:0] addr_mon_cnts[15:0],
+  input        [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0],
   input        [15:0] vctr_cycle_cnt,
-  input        [15:0] vctr_mon_cnts[15:0],
+  input        [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0],
   input        [15:0] words_in_addr_fifo,
   input        [15:0] words_in_vctr_fifo,
   output reg   [31:0] slave_data_out,
@@ -19,6 +26,10 @@ module driver_cntrl(
   output reg          active_program
 );
 
+localparam addr_cnt_iterations = (MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE);
+localparam vctr_cnt_iterations = (MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE);
+
+reg [31:0] driver_status;
 reg [31:0] vctor_addr;
 reg [15:0] driver_cntrl_rsvd;
 reg [7:0] consec_count;
@@ -28,6 +39,8 @@ reg driver_cntrl_rsvd5;
 reg driver_cntrl_rsvd4;
 reg driver_cntrl_rsvd3;
 reg send_consec_addr;
+//reg end_program;
+//reg run_program;
 reg abort_program;
 reg freeze_program;
 reg freeze_addr_fifo;
@@ -106,39 +119,53 @@ always @(posedge clk ) begin
       'h0000_0108: slave_data_out <= {16'h0000,words_in_addr_fifo};
       'h0000_010C: slave_data_out <= {16'h0000,vctr_cycle_cnt};
       'h0000_0110: slave_data_out <= {16'h0000,words_in_vctr_fifo};
-      'h0001_1000: slave_data_out <= {16'h0000,addr_mon_cnts[0]};
-      'h0001_1004: slave_data_out <= {16'h0000,addr_mon_cnts[1]};
-      'h0001_1008: slave_data_out <= {16'h0000,addr_mon_cnts[2]};
-      'h0001_100C: slave_data_out <= {16'h0000,addr_mon_cnts[3]};
-      'h0001_1010: slave_data_out <= {16'h0000,addr_mon_cnts[4]};
-      'h0001_1014: slave_data_out <= {16'h0000,addr_mon_cnts[5]};
-      'h0001_1018: slave_data_out <= {16'h0000,addr_mon_cnts[6]};
-      'h0001_101C: slave_data_out <= {16'h0000,addr_mon_cnts[7]};
-      'h0001_1020: slave_data_out <= {16'h0000,addr_mon_cnts[8]};
-      'h0001_1024: slave_data_out <= {16'h0000,addr_mon_cnts[9]};
-      'h0001_1028: slave_data_out <= {16'h0000,addr_mon_cnts[10]};
-      'h0001_102C: slave_data_out <= {16'h0000,addr_mon_cnts[11]};
-      'h0001_1030: slave_data_out <= {16'h0000,addr_mon_cnts[12]};
-      'h0001_1034: slave_data_out <= {16'h0000,addr_mon_cnts[13]};
-      'h0001_1038: slave_data_out <= {16'h0000,addr_mon_cnts[14]};
-      'h0001_103C: slave_data_out <= {16'h0000,addr_mon_cnts[15]};
-      'h0001_2000: slave_data_out <= {16'h0000,vctr_mon_cnts[0]};
-      'h0001_2004: slave_data_out <= {16'h0000,vctr_mon_cnts[1]};
-      'h0001_2008: slave_data_out <= {16'h0000,vctr_mon_cnts[2]};
-      'h0001_200C: slave_data_out <= {16'h0000,vctr_mon_cnts[3]};
-      'h0001_2010: slave_data_out <= {16'h0000,vctr_mon_cnts[4]};
-      'h0001_2014: slave_data_out <= {16'h0000,vctr_mon_cnts[5]};
-      'h0001_2018: slave_data_out <= {16'h0000,vctr_mon_cnts[6]};
-      'h0001_201C: slave_data_out <= {16'h0000,vctr_mon_cnts[7]};
-      'h0001_2020: slave_data_out <= {16'h0000,vctr_mon_cnts[8]};
-      'h0001_2024: slave_data_out <= {16'h0000,vctr_mon_cnts[9]};
-      'h0001_2028: slave_data_out <= {16'h0000,vctr_mon_cnts[10]};
-      'h0001_202C: slave_data_out <= {16'h0000,vctr_mon_cnts[11]};
-      'h0001_2030: slave_data_out <= {16'h0000,vctr_mon_cnts[12]};
-      'h0001_2034: slave_data_out <= {16'h0000,vctr_mon_cnts[13]};
-      'h0001_2038: slave_data_out <= {16'h0000,vctr_mon_cnts[14]};
-      'h0001_203C: slave_data_out <= {16'h0000,vctr_mon_cnts[15]};
-      default: slave_data_out <= 32'h0000_0000;
+//      'h0001_1000: slave_data_out <= {16'h0000,addr_mon_cnts[0]};
+//      'h0001_1004: slave_data_out <= {16'h0000,addr_mon_cnts[1]};
+//      'h0001_1008: slave_data_out <= {16'h0000,addr_mon_cnts[2]};
+//      'h0001_100C: slave_data_out <= {16'h0000,addr_mon_cnts[3]};
+//      'h0001_1010: slave_data_out <= {16'h0000,addr_mon_cnts[4]};
+//      'h0001_1014: slave_data_out <= {16'h0000,addr_mon_cnts[5]};
+//      'h0001_1018: slave_data_out <= {16'h0000,addr_mon_cnts[6]};
+//      'h0001_101C: slave_data_out <= {16'h0000,addr_mon_cnts[7]};
+//      'h0001_1020: slave_data_out <= {16'h0000,addr_mon_cnts[8]};
+//      'h0001_1024: slave_data_out <= {16'h0000,addr_mon_cnts[9]};
+//      'h0001_1028: slave_data_out <= {16'h0000,addr_mon_cnts[10]};
+//      'h0001_102C: slave_data_out <= {16'h0000,addr_mon_cnts[11]};
+//      'h0001_1030: slave_data_out <= {16'h0000,addr_mon_cnts[12]};
+//      'h0001_1034: slave_data_out <= {16'h0000,addr_mon_cnts[13]};
+//      'h0001_1038: slave_data_out <= {16'h0000,addr_mon_cnts[14]};
+//      'h0001_103C: slave_data_out <= {16'h0000,addr_mon_cnts[15]};
+//      'h0001_2000: slave_data_out <= {16'h0000,vctr_mon_cnts[0]};
+//      'h0001_2004: slave_data_out <= {16'h0000,vctr_mon_cnts[1]};
+//      'h0001_2008: slave_data_out <= {16'h0000,vctr_mon_cnts[2]};
+//      'h0001_200C: slave_data_out <= {16'h0000,vctr_mon_cnts[3]};
+//      'h0001_2010: slave_data_out <= {16'h0000,vctr_mon_cnts[4]};
+//      'h0001_2014: slave_data_out <= {16'h0000,vctr_mon_cnts[5]};
+//      'h0001_2018: slave_data_out <= {16'h0000,vctr_mon_cnts[6]};
+//      'h0001_201C: slave_data_out <= {16'h0000,vctr_mon_cnts[7]};
+//      'h0001_2020: slave_data_out <= {16'h0000,vctr_mon_cnts[8]};
+//      'h0001_2024: slave_data_out <= {16'h0000,vctr_mon_cnts[9]};
+//      'h0001_2028: slave_data_out <= {16'h0000,vctr_mon_cnts[10]};
+//      'h0001_202C: slave_data_out <= {16'h0000,vctr_mon_cnts[11]};
+//      'h0001_2030: slave_data_out <= {16'h0000,vctr_mon_cnts[12]};
+//      'h0001_2034: slave_data_out <= {16'h0000,vctr_mon_cnts[13]};
+//      'h0001_2038: slave_data_out <= {16'h0000,vctr_mon_cnts[14]};
+//      'h0001_203C: slave_data_out <= {16'h0000,vctr_mon_cnts[15]};
+      default: begin
+          if(slave_addr >= 'h0001_1000 && slave_addr < 'h0001_1FFF) begin
+			for (int i = 0; i < addr_cnt_iterations; i += 1) begin
+				if (slave_addr == 'h0001_1000 + i * 'h4)
+					slave_data_out <= {16'h0000, addr_mon_cnts[i]};
+			end
+          end else if (slave_addr >= 'h0001_2000 && slave_addr < 'h0001_2FFF) begin
+          	for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
+				if (slave_addr == 'h0001_2000 + i * 'h4)
+					slave_data_out <= {16'h0000, vctr_mon_cnts[i]};
+			end
+          end else begin
+          	slave_data_out <= 32'h0000_0000;
+          end
+      end
       endcase
     end
   end
