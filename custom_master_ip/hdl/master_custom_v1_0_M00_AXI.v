@@ -835,7 +835,7 @@
 	            // initiate a read transaction. Read transactions will be                                       
 	            // issued until burst_read_active signal is asserted.                                           
 	            // read controller                                                                              
-	            if (end_program_pulse == 1'b1 || addr_fifo_empty || vector_fifo_full)                                                                                 
+	            if (~burst_read_active && (end_program_pulse == 1'b1 || addr_fifo_empty || vector_fifo_full) )                                                                                
 	              begin                                                                                         
 ////	                mst_exec_state <= INIT_COMPARE;                                                             
 	                mst_exec_state <= IDLE;  
