@@ -259,6 +259,7 @@
 	wire  	run_program_pulse;
 	wire	end_program_pulse;
 	reg 	addr_cnt;
+	reg	[C_M_AXI_ADDR_WIDTH - 1 : 0]	read_addr_reg;
 
 	// I/O Connections assignments
 
@@ -266,7 +267,7 @@
 	assign M_AXI_AWID	= 'b0;
 	//The AXI address is a concatenation of the target base address + active offset range
 //	assign M_AXI_AWADDR	= target_base_addr + axi_awaddr;
-	assign M_AXI_AWADDR = read_addr;
+	assign M_AXI_AWADDR = read_addr_reg;
 	//Burst LENgth is number of transaction beats, minus 1
 	assign M_AXI_AWLEN	= C_M_AXI_BURST_LEN - 1;
 	//Size should be C_M_AXI_DATA_WIDTH, in 2^SIZE bytes, otherwise narrow bursts are used
@@ -291,7 +292,7 @@
 	assign M_AXI_BREADY	= axi_bready;
 	//Read Address (AR)
 	assign M_AXI_ARID	= 'b0;
-	assign M_AXI_ARADDR	= read_addr + axi_araddr;
+	assign M_AXI_ARADDR	= read_addr_reg + axi_araddr;
 //    assign M_AXI_ARADDR = read_addr;
 	//Burst LENgth is number of transaction beats, minus 1
 	assign M_AXI_ARLEN	= C_M_AXI_BURST_LEN - 1;
@@ -316,6 +317,17 @@
 	assign end_program_pulse	= (!end_program_ff2) && end_program_ff;
 
 
+	//Register Read addr because now, its not directly reading from fifo
+	always @(posedge M_AXI_ACLK) begin
+		if(M_AXI_ARESETN == 0) begin
+			read_addr_reg <= 'd0;
+		end else if(axi_araddr == 0) begin
+			read_addr_reg <= read_addr;
+		end else begin
+			read_addr_reg <= read_addr_reg;
+		end
+	end
+	
 	//Generate a pulse to initiate AXI transaction.
 	always @(posedge M_AXI_ACLK)										      
 	  begin                                                                        
@@ -584,10 +596,10 @@
 	      end                                                            
 	    else if (M_AXI_ARREADY && axi_arvalid)                           
 	      begin
-	      	if(axi_araddr == 'b0) begin                                                          
-	        	axi_araddr <= axi_araddr + burst_size_bytes;
+	      	if(axi_araddr == 0) begin                                                          
+	        	axi_araddr <= axi_araddr + add_val;
 	        end else begin
-	        	axi_araddr <= 'b0;
+	        	axi_araddr <= 'd0;
 	        end                
 //            axi_araddr <= read_addr;
 	      end                                                            
@@ -835,7 +847,7 @@
 	            // initiate a read transaction. Read transactions will be                                       
 	            // issued until burst_read_active signal is asserted.                                           
 	            // read controller                                                                              
-	            if (~burst_read_active && (end_program_pulse == 1'b1 || addr_fifo_empty || vector_fifo_full) )                                                                                
+	            if (M_AXI_ARREADY && axi_arvalid && axi_araddr != 0 && (end_program_pulse == 1'b1 || addr_fifo_empty || vector_fifo_full) )                                                                                
 	              begin                                                                                         
 ////	                mst_exec_state <= INIT_COMPARE;                                                             
 	                mst_exec_state <= IDLE;  
@@ -847,11 +859,12 @@
 	                mst_exec_state  <= INIT_READ;                                                               
 	                                                                                                            
 //	                if (~axi_arvalid && ~burst_read_active && ~start_single_burst_read)   
+//                    if (~axi_arvalid && ~start_single_burst_read && ~(end_program_pulse == 1'b1 || addr_fifo_empty || vector_fifo_full))                      
                     if (~axi_arvalid && ~start_single_burst_read)                      
 	                  begin                                                                                     
 	                    start_single_burst_read <= 1'b1;                                                        
 	                  end                                                                                       
-	               else if(start_single_burst_read && end_program_pulse == 1'b1)                                                                                         
+	               else if(start_single_burst_read)                                                                                         
 	                 begin                                                                                      
 	                   start_single_burst_read <= 1'b0; //Negate to generate a pulse                            
 	                 end                                                                                        
@@ -922,7 +935,7 @@
 	    else if (start_single_burst_read)                                                                       
 	      burst_read_active <= 1'b1;                                                                            
 	    else if (M_AXI_RVALID && axi_rready && M_AXI_RLAST)                                                     
-	      burst_read_active <= 0;                                                                               
+	      burst_read_active <= 1'b0;                                                                               
 	    end                                                                                                     
 	                                                                                                            
 	                                                                                                            
@@ -935,12 +948,14 @@
 	  always @(posedge M_AXI_ACLK)                                                                              
 	  begin                                                                                                     
 	    if (M_AXI_ARESETN == 0 || run_program_pulse == 1'b1)                                                                                 
-	      reads_done <= 1'b0;                                                                                   
+//	      reads_done <= 1'b0;                                                                                   
+	      reads_done <= 1'b1;                                                                                   
 	                                                                                                            
 	    //The reads_done should be associated with a rready response                                            
 	    //else if (M_AXI_BVALID && axi_bready && (write_burst_counter == {(C_NO_BURSTS_REQ-1){1}}) && axi_wlast)
-	    else if (M_AXI_RVALID && axi_rready && (read_index == C_M_AXI_BURST_LEN-1) && (read_burst_counter[C_NO_BURSTS_REQ]))
-	      reads_done <= 1'b1;                                                                                   
+//	    else if (M_AXI_RVALID && axi_rready && (read_index == C_M_AXI_BURST_LEN-1) && (read_burst_counter[C_NO_BURSTS_REQ]))
+	    else if (M_AXI_RVALID && axi_rready && M_AXI_WLAST)
+	      reads_done <= ~reads_done;                                                                                   
 	    else                                                                                                    
 	      reads_done <= reads_done;                                                                             
 	    end                                                                                                     
@@ -956,7 +971,7 @@
     assign arvalid = axi_arvalid;
     assign arready = M_AXI_ARREADY;
 	
-	assign addr_fifo_rd = (axi_araddr == 0)? 1'b1: 1'b0;
+	assign addr_fifo_rd = (axi_araddr == 0 && axi_arvalid)? 1'b1: 1'b0;
 
     assign vctr_fifo_wr = (rvalid && rready);
 
