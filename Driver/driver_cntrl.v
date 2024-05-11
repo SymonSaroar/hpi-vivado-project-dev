@@ -14,8 +14,10 @@ module driver_cntrl #(
   input        [31:0] slave_data_in,
   input        [15:0] addr_cycle_cnt,
   input        [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0],
+  input        [ADDR_MON_CNT_SIZE-1:0] addr_fifo_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0],
   input        [15:0] vctr_cycle_cnt,
   input        [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0],
+  input        [VCTR_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0],
   input        [15:0] words_in_addr_fifo,
   input        [15:0] words_in_vctr_fifo,
   output reg   [31:0] slave_data_out,
@@ -118,17 +120,31 @@ always @(posedge clk ) begin
       'h0000_0110: slave_data_out <= {16'h0000,words_in_vctr_fifo};
       default: begin
           if(slave_addr >= 'h0001_1000 && slave_addr < 'h0001_1FFF) begin
-			for (int i = 0; i < addr_cnt_iterations; i += 1) begin
-				if (slave_addr == 'h0001_1000 + i * 'h4)
-					slave_data_out <= {16'h0000, addr_mon_cnts[i]};
-			end
-          end else if (slave_addr >= 'h0001_2000 && slave_addr < 'h0001_2FFF) begin
-          	for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
-				if (slave_addr == 'h0001_2000 + i * 'h4)
-					slave_data_out <= {16'h0000, vctr_mon_cnts[i]};
-			end
-          end else begin
-          	slave_data_out <= 32'h0000_0000;
+            for (int i = 0; i < addr_cnt_iterations; i += 1) begin
+                if (slave_addr == 'h0001_1000 + i * 'h4)
+                  slave_data_out <= {16'h0000, addr_mon_cnts[i]};
+            end
+          end 
+          else if(slave_addr >= 'h0001_2000 && slave_addr < 'h0001_2FFF) begin
+            for (int i = 0; i < addr_cnt_iterations; i += 1) begin
+                if (slave_addr == 'h0001_2000 + i * 'h4)
+                  slave_data_out <= {16'h0000, addr_fifo_mon_cnts[i]};
+            end
+          end 
+          else if (slave_addr >= 'h0001_3000 && slave_addr < 'h0001_3FFF) begin
+            for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
+                if (slave_addr == 'h0001_3000 + i * 'h4)
+                  slave_data_out <= {16'h0000, vctr_mon_cnts[i]};
+            end
+          end 
+          else if (slave_addr >= 'h0001_4000 && slave_addr < 'h0001_4FFF) begin
+            for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
+                if (slave_addr == 'h0001_4000 + i * 'h4)
+                  slave_data_out <= {16'h0000, vctr_fifo_mon_cnts[i]};
+            end
+          end 
+          else begin
+            slave_data_out <= 32'h0000_0000;
           end
       end
       endcase

@@ -16,10 +16,12 @@ module driver_monitor#(
   input             addr_fifo_rd,
   output reg [15:0] addr_cycle_cnt,
   output reg [ADDR_MON_CNT_SIZE-1 : 0] addr_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1 : 0],
+  output reg [ADDR_MON_CNT_SIZE-1 : 0] addr_fifo_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1 : 0],
   input             vctr_fifo_wr,
   input             vctr_fifo_rd,
   output reg [15:0] vctr_cycle_cnt,
   output reg [VCTR_MON_CNT_SIZE-1 : 0] vctr_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1 : 0],
+  output reg [VCTR_MON_CNT_SIZE-1 : 0] vctr_fifo_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1 : 0],
   output reg [15:0] words_in_addr_fifo,
   output reg [15:0] words_in_vctr_fifo
 );
@@ -104,6 +106,35 @@ always @(posedge clk ) begin
   end      
 end
 
+///////////////////////////////////////////////////////////////////////////////
+// Statistics to minitor address fifo words 
+///////////////////////////////////////////////////////////////////////////////
+always @(posedge clk ) begin
+  if(reset == 1'b0 ) begin
+    for (int i = 0; i < addr_cnt_iterations; i += 1) begin
+      addr_fifo_mon_cnts[i] <= 16'd0;
+    end
+  end 
+  else if(run_program && !active_program) begin
+    for (int i = 0; i < addr_cnt_iterations; i += 1) begin
+      addr_fifo_mon_cnts[i] <= 16'd0;
+    end
+  end 
+  else if(addr_fifo_wr && active_program && addr_first_write) begin
+    for (int i = 0; i < addr_cnt_iterations; i += 1) begin
+      if(words_in_addr_fifo <= 16'd8                               && addr_fifo_mon_cnts[0] < MAX_COUNT) begin
+        addr_fifo_mon_cnts[0] <= addr_fifo_mon_cnts[0] + 16'd1; 
+      end
+      else if(words_in_addr_fifo > 16'd120                         && addr_fifo_mon_cnts[15] < MAX_COUNT) begin
+        addr_fifo_mon_cnts[15] <= addr_fifo_mon_cnts[15] + 16'd1; 
+      end
+      else if (words_in_addr_fifo >= i * ADDR_MON_CNT_RANGE && words_in_addr_fifo < (i + 1) * ADDR_MON_CNT_RANGE && addr_fifo_mon_cnts[i] < MAX_COUNT)  begin
+        addr_fifo_mon_cnts[i] <= addr_fifo_mon_cnts[i] + 16'd1;
+      end
+    end     
+  end      
+end
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //  First section monitors the vector fifo write 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,6 +202,35 @@ always @(posedge clk ) begin
       end
       else if ((vctr_cycle_cnt >= i*VCTR_MON_CNT_RANGE) && (vctr_cycle_cnt < (i+1)*VCTR_MON_CNT_RANGE) && vctr_mon_cnts[i] < MAX_COUNT) begin
         vctr_mon_cnts[i] <= vctr_mon_cnts[i] + 16'd1;
+      end
+    end     
+  end      
+end
+
+///////////////////////////////////////////////////////////////////////////////
+// Statistics to minitor vector fifo words
+///////////////////////////////////////////////////////////////////////////////
+always @(posedge clk ) begin
+  if(reset == 1'b0 ) begin
+    for (int i = 0; i < 16; i += 1) begin
+      vctr_fifo_mon_cnts[i] <= 16'd0;
+    end
+  end 
+  else if(run_program && !active_program) begin
+    for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
+      vctr_fifo_mon_cnts[i] <= 16'd0;
+    end
+  end 
+  else if(vctr_fifo_wr && active_program && vctr_first_write) begin
+    for (int i = 0; i < vctr_cnt_iterations; i += 1) begin 
+      if(words_in_vctr_fifo <= 16'd8                               && vctr_fifo_mon_cnts[0] < MAX_COUNT) begin
+        vctr_fifo_mon_cnts[0] <= vctr_fifo_mon_cnts[0] + 16'd1; 
+      end
+      else if(words_in_vctr_fifo > 16'd120                         && vctr_fifo_mon_cnts[15] < MAX_COUNT) begin // FIXME is this really paramaterized?
+        vctr_fifo_mon_cnts[15] <= vctr_fifo_mon_cnts[15] + 16'd1; 
+      end
+      else if ((words_in_vctr_fifo >= i*VCTR_MON_CNT_RANGE) && (words_in_vctr_fifo < (i+1)*VCTR_MON_CNT_RANGE) && vctr_fifo_mon_cnts[i] < MAX_COUNT) begin
+        vctr_fifo_mon_cnts[i] <= vctr_fifo_mon_cnts[i] + 16'd1;
       end
     end     
   end      

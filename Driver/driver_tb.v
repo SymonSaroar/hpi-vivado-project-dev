@@ -265,11 +265,11 @@ module top;
     repeat (10) @(negedge clk);
 
     /////////////////////////////////////////////////////////////////////////////
-    // reading Stats Registers
+    // reading Monitor Status Registers
     /////////////////////////////////////////////////////////////////////////////
-    $display("time: %0t ps ******************************************",$time);
-    $display("time: %0t ps Reading Monitor Status Registers          ",$time);
-    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps *******************************************",$time);
+    $display("time: %0t ps Reading Addr Cycle Monitor Registers       ",$time);
+    $display("time: %0t ps *******************************************",$time);
     reg_addr = 32'h0001_1000; expected_data = 32'h0000_0010;
     repeat(15) begin
       slave_read(reg_addr,expected_data); 
@@ -277,19 +277,59 @@ module top;
       reg_addr += 32'h0000_0004; expected_data -= 32'h0000_0001;
     end
 
+    repeat (10) @(negedge clk);
+
     $display("time: %0t ps ******************************************",$time);
-    $display("time: %0t ps Reading Vector Status Registers           ",$time);
+    $display("time: %0t ps Reading Addr FIFO Monitor Registers        ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    reg_addr = 32'h0001_2000; expected_data = 32'h0000_0008;
+    repeat(15) begin
+      if( reg_addr == 32'h0001_2004) begin
+      //$display("time: %0t ps *  MADE It 1    **************************",$time);
+        expected_data = 32'h0000_0007;
+      end
+      else begin
+        expected_data = 32'h0000_0008;
+      //$display("time: %0t ps *  MADE It 2    **************************",$time);
+      end
+      slave_read(reg_addr,expected_data); 
+      repeat (1) @(negedge clk);
+      reg_addr += 32'h0000_0004; 
+    end
+
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Reading Vector Cycle Monitor Registers    ",$time);
     $display("time: %0t ps ******************************************",$time);
     repeat (10) @(negedge clk);
-    reg_addr = 32'h0001_2000; expected_data = 32'h0000_FFFF;
+    reg_addr = 32'h0001_3000; expected_data = 32'h0000_FFFF;
     slave_read(reg_addr,expected_data); 
-    reg_addr = 32'h0001_2004; expected_data = 32'h0000_001A;
+    reg_addr = 32'h0001_3004; expected_data = 32'h0000_001A;
     slave_read(reg_addr,expected_data); 
-    reg_addr = 32'h0001_2008; expected_data = 32'h0000_0018;
+    reg_addr = 32'h0001_3008; expected_data = 32'h0000_0018;
     repeat(14) begin
       slave_read(reg_addr,expected_data); 
       repeat (1) @(negedge clk);
       reg_addr += 32'h0000_0004; expected_data -= 32'h0000_0001;
+    end
+
+    repeat (10) @(negedge clk);
+
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Reading Addr FIFO Monitor Registers        ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    reg_addr = 32'h0001_4000; expected_data = 32'h0000_0008;
+    repeat(15) begin
+      if( reg_addr == 32'h0001_4004) begin
+      //$display("time: %0t ps *  MADE It 1    **************************",$time);
+        expected_data = 32'h0000_0007;
+      end
+      else begin
+        expected_data = 32'h0000_0008;
+      //$display("time: %0t ps *  MADE It 2    **************************",$time);
+      end
+      slave_read(reg_addr,expected_data); 
+      repeat (1) @(negedge clk);
+      reg_addr += 32'h0000_0004; 
     end
 
     repeat (10) @(negedge clk);
@@ -379,7 +419,14 @@ task slave_read;
 //  $display("time: %0t ps Ending slave read",$time);
   end
 endtask
-  
+
+wire active_program; 
+wire end_program; 
+wire run_program;
+wire [15:0] addr_cycle_cnt;
+wire [15:0] vctr_cycle_cnt;
+wire [15:0] words_in_addr_fifo;
+wire [15:0] words_in_vctr_fifo;
   
 driver driver_0(
   .clk(clk),
@@ -397,7 +444,14 @@ driver driver_0(
   .addr_fifo_wr(addr_fifo_wr),
   .addr_fifo_rd(addr_fifo_rd),
   .vctr_fifo_wr(vctr_fifo_wr),
-  .vctr_fifo_rd(vctr_fifo_rd)
+  .vctr_fifo_rd(vctr_fifo_rd),
+  .active_program(active_program),
+  .end_program(end_program),
+  .run_program(run_program),
+  .addr_cycle_cnt(addr_cycle_cnt),
+  .vctr_cycle_cnt(vctr_cycle_cnt),
+  .words_in_addr_fifo(words_in_addr_fifo),
+  .words_in_vctr_fifo(words_in_vctr_fifo)
 );
   
 endmodule: top
