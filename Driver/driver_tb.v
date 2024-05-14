@@ -10,8 +10,10 @@ module top;
   reg         slave_wr;
   reg [31:0]  slave_data_in;
   reg [31:0]  reg_addr;
-  reg [31:0]  reg_data;
+  reg [31:0]  reg_wr_data;
+  reg [31:0]  expected_data;
   reg [63:0]  sim_count;
+  reg [63:0]  error_count;
   reg [63:0]  mod_sim_count;
   reg         vctr_fifo_wr;
   reg         vctr_fifo_rd;
@@ -45,7 +47,8 @@ module top;
 //  slave_data_out     = 32'h0000_0000;
 //  slave_data_out_val =   1'b0;
     reg_addr           = 32'h0000_00000;
-    reg_data           = 32'h0000_00000;
+    reg_wr_data        = 32'h0000_00000;
+    expected_data      = 32'h0000_00000;
     vctr_fifo_wr       = 1'b0;
     vctr_fifo_rd       = 1'b0;
     addr_fifo_rd       = 1'b0;
@@ -61,17 +64,18 @@ module top;
 
   initial begin
     sim_count= 64'd0;
+    error_count= 64'd0;
     mod_sim_count = 64'd0;
     forever begin 
       @(negedge clk) begin
         sim_count +=1;
-	mod_sim_count = sim_count % 64'd10;
+        mod_sim_count = sim_count % 64'd10;
 //      25,000 ~ 100 us
-	if ((sim_count % 25000) == 1'b0) begin
+        if ((sim_count % 25000) == 1'b0) begin
           $display("time: %0t ps ******************************************",$time);
           $display("time: %0t ps Another 100 us sim_count = %0d            ",$time,sim_count);
           $display("time: %0t ps ******************************************",$time);
-	end
+        end
       end
     end
   end
@@ -94,26 +98,26 @@ module top;
     $display("time: %0t ps Write driver control to start program     ",$time);
     $display("time: %0t ps ******************************************",$time);
     reg_addr = 32'h0000_0004; 
-    reg_data = 32'h0000_0001; 
-    slave_write(reg_addr,reg_data); 
+    reg_wr_data = 32'h0000_0001; 
+    slave_write(reg_addr,reg_wr_data); 
     
     $display("time: %0t ps ******************************************",$time);
     $display("time: %0t ps Test read address register                ",$time);
     $display("time: %0t ps ******************************************",$time);
     repeat (10) @(negedge clk);
-    reg_addr = 32'h0004; 
-    slave_read(reg_addr,reg_data); 
+    reg_addr = 32'h0004; expected_data = 32'h0000_0001;
+    slave_read(reg_addr, expected_data); 
 
     repeat (20) @(negedge clk);
     $display("time: %0t ps ******************************************",$time);
     $display("time: %0t ps Write driver control clear start program  ",$time);
     $display("time: %0t ps ******************************************",$time);
     reg_addr = 32'h0000_0004; 
-    reg_data = 32'h0000_0000; 
-    slave_write(reg_addr,reg_data); 
+    reg_wr_data = 32'h0000_0000; 
+    slave_write(reg_addr,reg_wr_data); 
     repeat (10) @(negedge clk);
     reg_addr = 32'h0000_0000; 
-    reg_data = 32'h0000_0001; 
+    reg_wr_data = 32'h0000_0001; 
 
     fork 
     ///////////////////////////////////////////////////////////////////////////////
@@ -121,14 +125,14 @@ module top;
     ///////////////////////////////////////////////////////////////////////////////
     begin
       $display("time: %0t ps Simulation addr thread START                  ",$time);
-      reg_data = 32'h0000_1000;                                      // uniqued data
-      slave_write(reg_addr, reg_data);                               // prime the pump
+      reg_wr_data = 32'h0000_1000;                                      // uniqued data
+      slave_write(reg_addr, reg_wr_data);                               // prime the pump
       for(int j =0; j < 16; j+=1) begin
         for(int i=0; i < (16*8) - j*8 ; i+=8) begin
           $display("time: %0t ps loop 1: j=%0d  i=%0d                      ",$time,j,i);
           repeat (i) @(negedge clk);
-          reg_data = reg_data+32'h0000_0001; 
-          slave_write(reg_addr, reg_data); 
+          reg_wr_data = reg_wr_data+32'h0000_0001; 
+          slave_write(reg_addr, reg_wr_data); 
         end //
       end  
 /* 
@@ -136,8 +140,8 @@ module top;
         for(int i=0; i < 1; i+=8) begin
           $display("time: %0t ps loop 2: j=%0d  i=%0d                      ",$time,j,i);
           repeat (i) @(negedge clk);
-          reg_data = reg_data+32'h0000_0001; 
-          slave_write(reg_addr, reg_data); 
+          reg_wr_data = reg_wr_data+32'h0000_0001; 
+          slave_write(reg_addr, reg_wr_data); 
         end
       end */
 
@@ -200,7 +204,7 @@ module top;
         $display("time: %0t ps ******************************************",$time);
         repeat (1) @(negedge clk);
         vctr_fifo_wr = 1'b0;
-        k = k + 1;
+        k+=1;
       end
 
       /////////////////////////////////////////////////////////////////////////////
@@ -223,44 +227,69 @@ module top;
     $display("time: %0t ps Simulation joined                           ",$time);
 
     repeat (10) @(negedge clk);
-    reg_addr = 32'h0000_0001; 
-    slave_write(reg_addr,reg_data); 
+    reg_addr = 32'h0000_0004; reg_wr_data = 32'h0000_0002;
+    slave_write(reg_addr,reg_wr_data); 
     repeat (10) @(negedge clk);
 
     $display("time: %0t ps ******************************************",$time);
-    $display("time: %0t ps Readint out all registers                 ",$time);
+    $display("time: %0t ps Reading out all registers                 ",$time);
     $display("time: %0t ps ******************************************",$time);
-    // FIXME neeed to add register read data checking
 
+    /////////////////////////////////////////////////////////////////////////////
+    // reading control registers
+    /////////////////////////////////////////////////////////////////////////////
     repeat (10) @(negedge clk);
-    reg_addr = 32'h0000_0000; 
-    slave_read(reg_addr,reg_data); 
+    reg_addr = 32'h0000_0000; expected_data = 32'h0000_1088;
+    slave_read(reg_addr,expected_data); 
     repeat (1) @(negedge clk);
-    reg_addr = reg_addr + 32'h0000_0004; 
-    slave_read(reg_addr,reg_data); 
+    reg_addr = 32'h0000_0004; expected_data = 32'h0000_0002;
+    slave_read(reg_addr,expected_data); 
     repeat (10) @(negedge clk);
 
-    reg_addr = 32'h0000_0100; 
-    repeat(5) begin
-      slave_read(reg_addr,reg_data); 
+    /////////////////////////////////////////////////////////////////////////////
+    // reading status registers
+    /////////////////////////////////////////////////////////////////////////////
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Reading Status Registers                  ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    reg_addr = 32'h0000_0100; expected_data = 32'h0000_0000;
+    slave_read(reg_addr,expected_data); 
+    reg_addr = 32'h0000_0104; expected_data = 32'h0000_0000;
+    slave_read(reg_addr,expected_data); 
+    reg_addr = 32'h0000_0108; expected_data = 32'h0000_0089;
+    slave_read(reg_addr,expected_data); 
+    reg_addr = 32'h0000_010C; expected_data = 32'h0000_0000;
+    slave_read(reg_addr,expected_data); 
+    reg_addr = 32'h0000_0110; expected_data = 32'h0000_ffff;
+    slave_read(reg_addr,expected_data); 
+    repeat (10) @(negedge clk);
+
+    /////////////////////////////////////////////////////////////////////////////
+    // reading Stats Registers
+    /////////////////////////////////////////////////////////////////////////////
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Reading Monitor Status Registers          ",$time);
+    $display("time: %0t ps ******************************************",$time);
+    reg_addr = 32'h0001_1000; expected_data = 32'h0000_0010;
+    repeat(15) begin
+      slave_read(reg_addr,expected_data); 
       repeat (1) @(negedge clk);
-      reg_addr = reg_addr + 32'h0000_0004; 
+      reg_addr += 32'h0000_0004; expected_data -= 32'h0000_0001;
     end
 
+    $display("time: %0t ps ******************************************",$time);
+    $display("time: %0t ps Reading Vector Status Registers           ",$time);
+    $display("time: %0t ps ******************************************",$time);
     repeat (10) @(negedge clk);
-    reg_addr = 32'h0001_1000; 
-    repeat(15) begin
-      slave_read(reg_addr,reg_data); 
+    reg_addr = 32'h0001_2000; expected_data = 32'h0000_FFFF;
+    slave_read(reg_addr,expected_data); 
+    reg_addr = 32'h0001_2004; expected_data = 32'h0000_001A;
+    slave_read(reg_addr,expected_data); 
+    reg_addr = 32'h0001_2008; expected_data = 32'h0000_0018;
+    repeat(14) begin
+      slave_read(reg_addr,expected_data); 
       repeat (1) @(negedge clk);
-      reg_addr = reg_addr + 32'h0000_0004; 
-    end
-
-    repeat (10) @(negedge clk);
-    reg_addr = 32'h0001_2000; 
-    repeat(15) begin
-      slave_read(reg_addr,reg_data); 
-      repeat (1) @(negedge clk);
-      reg_addr = reg_addr + 32'h0000_0004; 
+      reg_addr += 32'h0000_0004; expected_data -= 32'h0000_0001;
     end
 
     repeat (10) @(negedge clk);
@@ -282,15 +311,16 @@ module top;
     addr_fifo_rd = 1'b0;
     repeat (1) @(negedge clk);
 
-    reg_addr = 32'h0000_0108; 
-    slave_read(reg_addr,reg_data); 
-    repeat (1) @(negedge clk);
+    reg_addr = 32'h0000_0108; expected_data = 32'h0000_0088;
+    slave_read(reg_addr,expected_data); 
+    repeat (1) @(negedge clk); expected_data = 32'h0000_FFFE;
     reg_addr = 32'h0000_0110; 
-    slave_read(reg_addr,reg_data); 
+    slave_read(reg_addr,expected_data); 
 
     repeat (10) @(negedge clk);
     $display("time: %0t ps ******************************************",$time);
     $display("time: %0t ps Simulation reached its natural end        ",$time);
+    $display("time: %0t ps Simulation Error Couint = %0d             ",$time,error_count);
     $display("time: %0t ps ******************************************",$time);
     $fclose(fd); 
     $finish;    
@@ -320,8 +350,10 @@ endtask
 
 task slave_read;
   input [31:0] addr;
-  output [31:0] data; 
+  input [31:0] expected_data; 
   begin
+    reg [31:0] data;
+    data = 32'hFFFF_FFFF;
     repeat (1) @(negedge clk);
 //  $display("time: %0t ps ******************************************",$time);
 //  $display("time: %0t ps Beginning slave Read                      ",$time);
@@ -330,11 +362,19 @@ task slave_read;
     slave_rd   =   1'b1; 
     repeat (1) @(negedge clk);
     slave_rd   =   1'b0; 
+    repeat (1) @(negedge clk);
     data = slave_data_out; 
     repeat (1) @(negedge clk);
     $display("time: %0t ps ****************************************************",$time);
     $display("time: %0t ps slave read addr: %h data: %h : %0d                  ",$time, addr, data, data);
     $display("time: %0t ps ****************************************************",$time);
+    if(data != expected_data) begin
+      error_count +=1;
+      $display("time: %0t ps !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",$time);
+      $display("time: %0t ps slave read ERROR exected: %h actual: %h ERR CNT = %0d   ",$time, expected_data, data, error_count);
+      $display("time: %0t ps !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",$time);
+    end
+
     
 //  $display("time: %0t ps Ending slave read",$time);
   end

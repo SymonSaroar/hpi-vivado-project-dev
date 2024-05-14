@@ -25,19 +25,15 @@ module driver #(
   output			  end_program,
   output 			  run_program,
   
-  	output wire [31:0] addr_cycle_cnt,
-	output wire [15:0] vctr_cycle_cnt,
-	output wire [15:0] words_in_addr_fifo,
-	output wire [15:0] words_in_vctr_fifo
+  output wire [15:0] addr_cycle_cnt,
+  output wire [15:0] vctr_cycle_cnt,
+  output wire [15:0] words_in_addr_fifo,
+  output wire [15:0] words_in_vctr_fifo
 );
 
 wire [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0];
 //wire active_program, end_program, run_program;
-//wire [31:0] addr_cycle_cnt;
 wire [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0];
-//wire [15:0] vctr_cycle_cnt;
-//wire [15:0] words_in_addr_fifo;
-//wire [15:0] words_in_vctr_fifo;
 
 
 driver_cntrl #(
