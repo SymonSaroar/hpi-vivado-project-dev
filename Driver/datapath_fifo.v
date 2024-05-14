@@ -12,6 +12,7 @@ module datapath_fifo #(
     input wire wr,
     input wire rd,
     input wire [INPUT_DATA_WIDTH - 1 : 0] data_in,
+    output wire [DEPTH_SIZE - 1: 0] data_count,
     output wire rd_en_100ns,
     output wire [OUTPUT_DATA_WIDTH - 1 : 0] data_out,
     output wire full,
@@ -33,6 +34,7 @@ module datapath_fifo #(
     wire wr_en, rd_en;
     wire equal_full, equal_empty, first_bit, overflow_en, underflow_en;
     wire [DEPTH_SIZE : 0] diff;
+    reg [DEPTH_SIZE - 1: 0] data_count_reg;
     reg cnt;
     reg [5:0] rd_clk_counter;
     wire rd_clk;
@@ -102,19 +104,19 @@ module datapath_fifo #(
     always @(posedge clk) begin
         if(wr_en) begin
             if(cnt) begin
-                mem0[w_ptr1[DEPTH_SIZE-1:0]] <= data_in[127:64];      // last 64 bits of first 128 bit data
+                mem0[w_ptr1[DEPTH_SIZE-1:0]] <= data_in[63:0];      // first 64 bits of first 128 bit data
+                mem1[w_ptr1[DEPTH_SIZE-1:0]] <= data_in[127:64];
             end else
-                mem1[w_ptr2[DEPTH_SIZE-1:0]] <= data_in[127:64];		// last 64 bits of 2nd 128 bits data
-                mem2[w_ptr2[DEPTH_SIZE-1:0]] <= data_in[63:0];			// first 64 bits of 2nd 128 bits data
+                mem2[w_ptr2[DEPTH_SIZE-1:0]] <= data_in[63:0];          // first 64 bits of 2nd 128 bits data
         end
     end
     always @(posedge clk or negedge rstn) begin
         if(~rstn)
             data_out_reg <= 0;
         else if(rd_en) begin
-            data_out_reg[191:128] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[191:128] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
             data_out_reg[127:64] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[63:0] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[63:0] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
         end else
             data_out_reg <= data_out_reg;
     end
@@ -169,9 +171,24 @@ module datapath_fifo #(
             underflow_reg <= underflow_reg;
     end
     
+    always @(posedge clk or negedge rstn) begin
+        if(~rstn)
+            data_count_reg <= 0;
+        else if(wr_en && ~rd_en && data_count_reg != {DEPTH_SIZE{1'b1}})
+            data_count_reg <= data_count + 1;
+        else if(~wr_en && rd_en && data_count_reg != {DEPTH_SIZE{1'b0}})
+            data_count_reg <= data_count - 1;
+        else if(wr_en && rd_en) begin
+            data_count_reg <= data_count_reg;
+        end else begin
+            data_count_reg <= data_count_reg;
+        end
+    end
+    
     assign full = full_reg;
     assign empty = empty_reg;
     assign threshold = threshold_reg;
     assign underflow = underflow_reg;
     assign overflow = overflow_reg;
+    assign data_count = data_count_reg;
 endmodule

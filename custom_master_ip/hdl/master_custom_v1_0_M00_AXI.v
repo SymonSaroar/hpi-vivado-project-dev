@@ -46,6 +46,7 @@
 		output wire arvalid,
 		output wire arready,
 		output wire [VECTOR_DATA_WIDTH-1 : 0] output_data,
+		output wire [VECTOR_FIFO_DEPTH_SIZE-1: 0] vector_fifo_data_count,
 		output wire rvalid,
 		output wire rready,
 		output wire addr_fifo_rd,
@@ -993,7 +994,8 @@
     	.empty(vector_fifo_empty),
     	.threshold(vector_fifo_threshold),
     	.overflow(vector_fifo_overflow),
-    	.underflow(vector_fifo_underflow)
+    	.underflow(vector_fifo_underflow),
+    	.data_count(vector_fifo_data_count)
     );
 	// User logic ends
 
