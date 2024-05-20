@@ -35,7 +35,7 @@
 		parameter integer VECTOR_FIFO_DEPTH = 1024,
 		parameter integer VECTOR_FIFO_DEPTH_SIZE = 10,
 		parameter integer VECTOR_DATA_PERIOD_CYCLE = 30,
-		parameter integer TRACE_BUF_DATA_WIDTH = 255,
+		parameter integer TRACE_BUF_DATA_WIDTH = 256,
 		parameter integer TRACE_BUF_ADDR_WIDTH = 15
 	)
 	(
