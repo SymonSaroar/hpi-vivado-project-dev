@@ -52,6 +52,9 @@
 		output wire addr_fifo_rd,
 		output wire vctr_fifo_rd,
 		output wire vctr_fifo_wr,
+		
+		input wire [31:0] trace_buf_bram_addr_slave,
+		output wire [255:0] trace_buf_bram_data,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -975,7 +978,11 @@
 	assign addr_fifo_rd = (axi_araddr == 0 && axi_arvalid)? 1'b1: 1'b0;
 
     assign vctr_fifo_wr = (rvalid && rready);
-
+    
+    wire vctr_data_rdy_pulse;
+    wire trace_buf_we;
+    wire trace_buf_en;
+    
     datapath_fifo #(
     	.INPUT_DATA_WIDTH(C_M_AXI_DATA_WIDTH),
     	.OUTPUT_DATA_WIDTH(192),
@@ -995,8 +1002,28 @@
     	.threshold(vector_fifo_threshold),
     	.overflow(vector_fifo_overflow),
     	.underflow(vector_fifo_underflow),
-    	.data_count(vector_fifo_data_count)
+    	.data_count(vector_fifo_data_count),
+    	.data_rdy_pulse(vctr_data_rdy_pulse)
     );
-	// User logic ends
-
+    
+    trace_buffer_bram trace_buffer (
+      .clka(M_AXI_ACLK),    // input wire clka
+      .ena(trace_buf_en),      // input wire ena
+      .wea(trace_buf_we),      // input wire [0 : 0] wea
+      .addra(trace_buf_bram_addr),  // input wire [3 : 0] addra
+      .dina({{(256 - VECTOR_DATA_WIDTH){1'b0}}, output_data}),    // input wire [255 : 0] dina
+      .douta(trace_buf_bram_data)  // output wire [255 : 0] douta
+    );
+	
+    driver_trace_buf_bram driver_trace_buffer (
+        .clk(M_AXI_ACLK),
+        .rstn(M_AXI_RESETN),
+        .rd_en_100ns(vctr_fifo_rd),
+        .trace_buf_bram_addr_slave(trace_buf_bram_addr_slave),
+        .trace_buf_bram_addr(trace_buf_bram_addr),
+        .trace_buf_we(trace_buf_we),
+        .trace_buf_en(trace_buf_en)
+    );    
+    
+    // User logic ends
 	endmodule
