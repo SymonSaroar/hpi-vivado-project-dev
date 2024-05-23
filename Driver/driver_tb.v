@@ -18,6 +18,11 @@ module top;
   reg         vctr_fifo_wr;
   reg         vctr_fifo_rd;
   reg         addr_fifo_rd;
+  reg         vector_fifo_underrun;
+  reg         vector_fifo_overrun;
+  reg         addr_fifo_underrun;
+  reg         addr_fifo_overrun;
+  reg         addr_fifo_almost_full;
 
 //wire [31:0] master_add;
   wire [31:0] slave_data_out;
@@ -36,22 +41,27 @@ module top;
   end 
  
   initial begin
-    reset_l = 1'b1;
-//  master_data_in     = 32'h0000_0000;
-//  master_data_in_val =   1'b0;
-    slave_addr         = 32'h0000_0000;
-    slave_rd           =   1'b0;
-    slave_wr           =   1'b0;
-    slave_data_in      = 32'h0000_0000;
-//  slave_data_in_val  =   1'b0;
-//  slave_data_out     = 32'h0000_0000;
-//  slave_data_out_val =   1'b0;
-    reg_addr           = 32'h0000_00000;
-    reg_wr_data        = 32'h0000_00000;
-    expected_data      = 32'h0000_00000;
-    vctr_fifo_wr       = 1'b0;
-    vctr_fifo_rd       = 1'b0;
-    addr_fifo_rd       = 1'b0;
+    reset_l                = 1'b1;
+//  master_data_in         = 32'h0000_0000;
+//  master_data_in_val     = 1'b0;
+    slave_addr             = 32'h0000_0000;
+    slave_rd               = 1'b0;
+    slave_wr               = 1'b0;
+    slave_data_in          = 32'h0000_0000;
+//  slave_data_in_val      = 1'b0;
+//  slave_data_out         = 32'h0000_0000;
+//  slave_data_out_val     = 1'b0;
+    reg_addr               = 32'h0000_00000;
+    reg_wr_data            = 32'h0000_00000;
+    expected_data          = 32'h0000_00000;
+    vctr_fifo_wr           = 1'b0;
+    vctr_fifo_rd           = 1'b0;
+    addr_fifo_rd           = 1'b0;
+    vector_fifo_underrun   = 1'b0;  // FIXME need to test these bits and error gets set
+    vector_fifo_overrun    = 1'b0;
+    addr_fifo_underrun     = 1'b0;
+    addr_fifo_overrun      = 1'b0;
+    addr_fifo_almost_full  = 1'b0;
     i = 0; j = 0; k = 0; l = 0;
   end
     
@@ -427,6 +437,8 @@ wire [15:0] addr_cycle_cnt;
 wire [15:0] vctr_cycle_cnt;
 wire [15:0] words_in_addr_fifo;
 wire [15:0] words_in_vctr_fifo;
+wire [15:0] addr_fifo_threshold; // FIXME check that this fifo works
+wire [15:0] vector_fifo_threshold;
   
 driver driver_0(
   .clk(clk),
@@ -446,6 +458,13 @@ driver driver_0(
   .vctr_fifo_wr(vctr_fifo_wr),
   .vctr_fifo_rd(vctr_fifo_rd),
   .active_program(active_program),
+  .vector_fifo_underrun(vector_fifo_underrun),
+  .vector_fifo_overrun(vector_fifo_overrun),
+  .vector_fifo_threshold(vector_fifo_threshold),
+  .addr_fifo_overrun(addr_fifo_overrun),
+  .addr_fifo_underrun(addr_fifo_underrun),
+  .addr_fifo_threshold(addr_fifo_threshold),
+  .addr_fifo_almost_full(addr_fifo_almost_full),
   .end_program(end_program),
   .run_program(run_program),
   .addr_cycle_cnt(addr_cycle_cnt),

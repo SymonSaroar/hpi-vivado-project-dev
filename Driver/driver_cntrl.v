@@ -1,10 +1,10 @@
 module driver_cntrl #(
-	parameter integer ADDR_MON_CNT_RANGE = 8,
-	parameter integer ADDR_MON_CNT_SIZE = 16,
-	parameter integer MAX_ADDR_CYCLE_CNT = 128,
-	parameter integer VCTR_MON_CNT_RANGE = 8,
-	parameter integer VCTR_MON_CNT_SIZE = 16,
-	parameter integer MAX_VCTR_CYCLE_CNT = 128
+  parameter integer ADDR_MON_CNT_RANGE = 8,
+  parameter integer ADDR_MON_CNT_SIZE = 16,
+  parameter integer MAX_ADDR_CYCLE_CNT = 128,
+  parameter integer VCTR_MON_CNT_RANGE = 8,
+  parameter integer VCTR_MON_CNT_SIZE = 16,
+  parameter integer MAX_VCTR_CYCLE_CNT = 128
 )(
   input               clk,
   input               reset,
@@ -23,6 +23,13 @@ module driver_cntrl #(
   output reg   [31:0] slave_data_out,
   output reg   [31:0] addr_fifo_din,
   output reg          addr_fifo_wr,
+  input               vector_fifo_underrun,
+  input               vector_fifo_overrun,
+  output reg   [15:0] vector_fifo_threshold,
+  input               addr_fifo_underrun,
+  input               addr_fifo_overrun,
+  input               addr_fifo_almost_full,
+  output reg   [15:0] addr_fifo_threshold,
   output reg          end_program,
   output reg          run_program,
   output reg          active_program
@@ -44,11 +51,17 @@ reg abort_program;
 reg freeze_program;
 reg freeze_addr_fifo;
 reg freeze_vector_fifo;
+reg program_error;
+reg addr_fifo_full;
+reg addr_fifo_empty;
+reg vector_fifo_full;
+reg vector_fifo_empty;
+reg program_start;
 
 always @(posedge clk ) 
   if(reset == 1'b0) 
     active_program <= 1'b0;
-  else if(abort_program || end_program)
+  else if(program_error || abort_program || end_program)
     active_program <= 1'b0;
   else if (run_program) 
     active_program <= 1'b1;
@@ -83,6 +96,9 @@ always @(posedge clk ) begin
     freeze_program <= 1'b0;
     end_program <= 1'b0;
     run_program <= 1'b0;
+
+    addr_fifo_threshold <= 16'd820;
+    vector_fifo_threshold <= 16'd7500;
   end
   else if ((slave_addr == 32'h0000_0004) && slave_wr) begin
     driver_cntrl_rsvd <= slave_data_in[31:16];
@@ -96,13 +112,41 @@ always @(posedge clk ) begin
     end_program        <= slave_data_in[1];
     run_program        <= slave_data_in[0];
   end
+  else if ((slave_addr == 32'h0000_0008) && slave_wr) begin
+    addr_fifo_threshold <= slave_data_in[15:0];
+  end
+  else if ((slave_addr == 32'h0000_000C) && slave_wr) begin
+    vector_fifo_threshold <= slave_data_in[15:0];
+  end
 end
 
-wire [31:0] driver_cntrl_word = {driver_cntrl_rsvd, consec_count, 
-  send_consec_addr, driver_cntrl_rsvd6, driver_cntrl_rsvd5, freeze_vector_fifo, 
-  freeze_addr_fifo, abort_program,      end_program,        run_program};
+always @(posedge clk ) begin
+  if(reset == 1'b0) begin
+    program_start <= 1'b0;
+    program_error  <= 1'b0;
+  end
+  else begin
+    program_start <= run_program && !program_start && !active_program;
+    if(program_start)
+      program_error <= 1'b0;
+    else if(active_program && vector_fifo_overrun && vector_fifo_underrun && addr_fifo_overrun && addr_fifo_underrun)
+      program_error <= 1'b1;
+  end
+end
 
-wire [31:0] driver_status = 32'd0;
+wire [31:0] driver_cntrl_word = 
+ {driver_cntrl_rsvd,  consec_count,       send_consec_addr, driver_cntrl_rsvd6, 
+  driver_cntrl_rsvd5, freeze_vector_fifo, freeze_addr_fifo, abort_program,      
+  end_program,        run_program};
+
+wire interupt = 1'b0;   // FIXME
+wire [31:0] driver_status = 
+ {interupt,              program_error,      addr_fifo_full,  addr_fifo_empty, 
+  vector_fifo_full,      vector_fifo_empty,  2'b00,
+  8'h00,
+  addr_fifo_almost_full, 3'b000,
+  8'h00,
+  3'b000,                active_program};
 
 always @(posedge clk ) begin
   if(reset == 1'b0) begin
@@ -113,6 +157,8 @@ always @(posedge clk ) begin
       case (slave_addr)
       'h0000_0000: slave_data_out <= addr_fifo_din;
       'h0000_0004: slave_data_out <= driver_cntrl_word;
+      'h0000_0008: slave_data_out <= {addr_fifo_threshold};
+      'h0000_000C: slave_data_out <= {vector_fifo_threshold};
       'h0000_0100: slave_data_out <= driver_status;
       'h0000_0104: slave_data_out <= {16'h0000,addr_cycle_cnt};
       'h0000_0108: slave_data_out <= {16'h0000,words_in_addr_fifo};
