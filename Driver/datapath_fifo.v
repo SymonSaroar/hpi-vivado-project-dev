@@ -15,6 +15,7 @@ module datapath_fifo #(
     output wire [DEPTH_SIZE - 1: 0] data_count,
     output wire rd_en_100ns,
     output wire [OUTPUT_DATA_WIDTH - 1 : 0] data_out,
+    output wire data_rdy_pulse,
     output wire full,
     output wire empty,
     output wire threshold,
@@ -37,6 +38,7 @@ module datapath_fifo #(
     reg [DEPTH_SIZE - 1: 0] data_count_reg;
     reg cnt;
     reg [5:0] rd_clk_counter;
+    reg data_rdy_pulse_reg;
     wire rd_clk;
     
 //    wire [DEPTH_SIZE - 1 : 0] w_ptr_masked0, w_ptr_masked1, w_ptr_masked2;
@@ -119,6 +121,17 @@ module datapath_fifo #(
             data_out_reg[63:0] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
         end else
             data_out_reg <= data_out_reg;
+    end
+    
+    assign data_rdy_pulse = data_rdy_pulse_reg;
+    always @(posedge clk or negedge rstn) begin
+        if(~rstn) begin
+            data_rdy_pulse_reg <= 1'b0;
+        end else if(rd_en) begin
+            data_rdy_pulse_reg <= 1'b1;
+        end else begin
+            data_rdy_pulse_reg <= 1'b0;
+        end
     end
     
     assign first_bit = w_ptr1 ^ r_ptr;

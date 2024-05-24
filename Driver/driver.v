@@ -35,7 +35,10 @@ module driver #(
   output wire [15:0] addr_cycle_cnt,
   output wire [15:0] vctr_cycle_cnt,
   output wire [15:0] words_in_addr_fifo,
-  output wire [15:0] words_in_vctr_fifo
+  output wire [15:0] words_in_vctr_fifo,
+  
+  input  wire [255:0] trace_buf_bram_data,
+  output wire [31:0]  trace_buf_bram_addr
 );
 
 wire [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0];
@@ -78,7 +81,9 @@ driver_cntrl #(
   .addr_fifo_threshold(addr_fifo_threshold),
   .addr_fifo_almost_full(addr_fifo_almost_full),
   .run_program(run_program),
-  .active_program(active_program)
+  .active_program(active_program),
+  .trace_buf_bram_data(trace_buf_bram_data),
+  .trace_buf_bram_addr(trace_buf_bram_addr)
 );
   
 driver_monitor #(

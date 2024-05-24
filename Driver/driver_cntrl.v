@@ -20,6 +20,8 @@ module driver_cntrl #(
   input        [VCTR_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0],
   input        [15:0] words_in_addr_fifo,
   input        [15:0] words_in_vctr_fifo,
+  input        [255:0] trace_buf_bram_data,
+  output reg   [31:0] trace_buf_bram_addr,
   output reg   [31:0] slave_data_out,
   output reg   [31:0] addr_fifo_din,
   output reg          addr_fifo_wr,
@@ -118,6 +120,9 @@ always @(posedge clk ) begin
   else if ((slave_addr == 32'h0000_000C) && slave_wr) begin
     vector_fifo_threshold <= slave_data_in[15:0];
   end
+  else if ((slave_addr == 32'h0000_0200) && slave_wr) begin
+    trace_buf_bram_addr <= slave_data_in;
+  end
 end
 
 always @(posedge clk ) begin
@@ -164,6 +169,17 @@ always @(posedge clk ) begin
       'h0000_0108: slave_data_out <= {16'h0000,words_in_addr_fifo};
       'h0000_010C: slave_data_out <= {16'h0000,vctr_cycle_cnt};
       'h0000_0110: slave_data_out <= {16'h0000,words_in_vctr_fifo};
+      
+      'h0000_0200: slave_data_out <= trace_buf_bram_addr;
+      'h0000_0210: slave_data_out <= trace_buf_bram_data[31 :0  ];
+      'h0000_0214: slave_data_out <= trace_buf_bram_data[63 :32 ];
+      'h0000_0218: slave_data_out <= trace_buf_bram_data[95 :64 ];
+      'h0000_021C: slave_data_out <= trace_buf_bram_data[127:96 ];
+      'h0000_0220: slave_data_out <= trace_buf_bram_data[159:128];
+      'h0000_0224: slave_data_out <= trace_buf_bram_data[191:160];
+      'h0000_0228: slave_data_out <= trace_buf_bram_data[223:192];
+      'h0000_022C: slave_data_out <= trace_buf_bram_data[255:224];
+      
       default: begin
           if(slave_addr >= 'h0001_1000 && slave_addr < 'h0001_1FFF) begin
             for (int i = 0; i < addr_cnt_iterations; i += 1) begin
