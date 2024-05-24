@@ -108,21 +108,21 @@ always @(posedge clk ) begin
     freeze_program <= 1'b0;
     end_program <= 1'b0;
     run_program <= 1'b0;
-
+    trace_buf_bram_addr <= 32'h0;
     addr_fifo_threshold <= 16'd820;
     vector_fifo_threshold <= 16'd7500;
   end
   else if ((slave_addr == 32'h0000_0004) && slave_wr) begin
-    driver_cntrl_rsvd <= slave_data_in[31:16];
-    consec_count <= slave_data_in[15:8];
-    send_consec_addr   <= slave_data_in[7];
-    driver_cntrl_rsvd6 <= slave_data_in[6];
-    driver_cntrl_rsvd5 <= slave_data_in[5];
-    freeze_vector_fifo <= slave_data_in[4];
-    freeze_addr_fifo   <= slave_data_in[3];
-    abort_program      <= slave_data_in[2];
-    end_program        <= slave_data_in[1];
-    run_program        <= slave_data_in[0];
+    driver_cntrl_rsvd   <= slave_data_in[31:16];
+    consec_count        <= slave_data_in[15:8];
+    send_consec_addr    <= slave_data_in[7];
+    driver_cntrl_rsvd6  <= slave_data_in[6];
+    driver_cntrl_rsvd5  <= slave_data_in[5];
+    freeze_vector_fifo  <= slave_data_in[4];
+    freeze_addr_fifo    <= slave_data_in[3];
+    abort_program       <= slave_data_in[2];
+    end_program         <= slave_data_in[1];
+    run_program         <= slave_data_in[0];
   end
   else if ((slave_addr == 32'h0000_0008) && slave_wr) begin
     addr_fifo_threshold <= slave_data_in[15:0];
