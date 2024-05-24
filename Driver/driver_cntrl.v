@@ -87,6 +87,16 @@ end
 
 always @(posedge clk ) begin
   if(reset == 1'b0) begin
+    trace_buf_bram_addr <= 32'h0;
+  end else if(slave_addr == 32'h0000_0200) && slave_wr) begin
+    trace_buf_bram_addr <= slave_data_in;
+  end else begin
+    trace_buf_bram_addr <= trace_buf_bram_addr;
+  end
+end
+
+always @(posedge clk ) begin
+  if(reset == 1'b0) begin
     driver_cntrl_rsvd <= 16'h0000;
     consec_count <= 8'h00;
     send_consec_addr <= 1'b0;
@@ -119,9 +129,6 @@ always @(posedge clk ) begin
   end
   else if ((slave_addr == 32'h0000_000C) && slave_wr) begin
     vector_fifo_threshold <= slave_data_in[15:0];
-  end
-  else if ((slave_addr == 32'h0000_0200) && slave_wr) begin
-    trace_buf_bram_addr <= slave_data_in;
   end
 end
 

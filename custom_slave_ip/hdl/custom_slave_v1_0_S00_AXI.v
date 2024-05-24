@@ -264,13 +264,16 @@
 	reg wvalid_reg2;
 	wire wvalid_pulse = (wvalid_reg && ~wvalid_reg2);
 
+	wire [31:0] slave_data_out;
+
 	assign S_AXI_AWREADY	= axi_awready;
 	assign S_AXI_WREADY	= axi_wready;
 	assign S_AXI_BRESP	= axi_bresp;
 	assign S_AXI_BUSER	= axi_buser;
 	assign S_AXI_BVALID	= axi_bvalid;
 	assign S_AXI_ARREADY	= axi_arready;
-	assign S_AXI_RDATA	= axi_rdata;
+	// assign S_AXI_RDATA	= axi_rdata;
+	assign S_AXI_RDATA	= slave_data_out;
 	assign S_AXI_RRESP	= axi_rresp;
 	assign S_AXI_RLAST	= axi_rlast;
 	assign S_AXI_RUSER	= axi_ruser;
@@ -652,19 +655,19 @@
 
 	// Add user logic here
 //	assign read_addr = target_base_addr_reg;
-	assign start_read_tx = start_read_tx_reg;
+	// assign start_read_tx = start_read_tx_reg;
 	assign wvalid = S_AXI_WVALID;
 	assign wready = axi_wready;
 	
-    always @( posedge S_AXI_ACLK)
-    begin
-        if(axi_wready && S_AXI_WVALID) begin
-            case (S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB])
-                'b000: target_base_addr_reg <= S_AXI_WDATA; // offset 0x0
-                'b001: start_read_tx_reg <= S_AXI_WDATA[0]; // offset 0x4
-            endcase
-        end
-    end
+    // always @( posedge S_AXI_ACLK)
+    // begin
+    //     if(axi_wready && S_AXI_WVALID) begin
+    //         case (S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB])
+    //             'b000: target_base_addr_reg <= S_AXI_WDATA; // offset 0x0
+    //             'b001: start_read_tx_reg <= S_AXI_WDATA[0]; // offset 0x4
+    //         endcase
+    //     end
+    // end
     
     always @( posedge S_AXI_ACLK) begin
         if(S_AXI_ARESETN) begin
@@ -678,17 +681,17 @@
   // User logic ends
 
   wire [31:0] slave_addr; 
-  wire [31:0] slave_data_in; 
-  wire [31:0] slave_data_out; 
+  wire [31:0] slave_data_in;  
 //  wire [31:0] addr_fifo_din;
 //  wire addr_fifo_wr;
   wire slave_rd, slave_wr, clk;
   wire addr_fifo_over_run, addr_fifo_under_run, addr_fifo_full;
-  assign slave_rd = 1'b0;
+  assign slave_rd = axi_rvalid;
   assign slave_wr = axi_wready && S_AXI_WVALID;
   assign clk = S_AXI_ACLK;
   assign reset = S_AXI_ARESETN;
-  assign slave_addr = (S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]);
+  // assign slave_addr = (S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:0]);
+  assign slave_addr = {{(32-C_S_AXI_ADDR_WIDTH){1'b0}},(S_AXI_AWADDR[C_S_AXI_ADDR_WIDTH-1:0])};
   assign slave_data_in = S_AXI_WDATA;
 
 
