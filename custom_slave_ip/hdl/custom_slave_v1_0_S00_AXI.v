@@ -686,7 +686,7 @@
 //  wire addr_fifo_wr;
   wire slave_rd, slave_wr, clk;
   wire addr_fifo_over_run, addr_fifo_under_run, addr_fifo_full;
-  assign slave_rd = axi_rvalid;
+  assign slave_rd = S_AXI_ARVALID && axi_arready;
   assign slave_wr = axi_wready && S_AXI_WVALID;
   assign clk = S_AXI_ACLK;
   assign reset = S_AXI_ARESETN;
