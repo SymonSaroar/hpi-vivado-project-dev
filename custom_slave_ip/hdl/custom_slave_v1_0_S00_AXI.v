@@ -694,8 +694,8 @@
   assign slave_addr = {{(32-C_S_AXI_ADDR_WIDTH){1'b0}},(S_AXI_AWADDR[C_S_AXI_ADDR_WIDTH-1:0])};
   assign slave_data_in = S_AXI_WDATA;
 
-  assign words_in_vctr_fifo = module_vector_fifo_data_count[0+:16];
-  assign words_in_addr_fifo = module_addr_fifo_data_count[0+:16];
+  assign words_in_vctr_fifo = {{(16 - 10){1'b0}}, module_vector_fifo_data_count[0+:10]};
+  assign words_in_addr_fifo = {{(16 - 14){1'b0}}, module_addr_fifo_data_count[0+:14]};
 
   driver #(
     .ADDR_MON_CNT_RANGE(ADDR_MON_CNT_RANGE),
