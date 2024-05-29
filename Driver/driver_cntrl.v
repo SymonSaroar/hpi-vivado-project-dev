@@ -29,7 +29,7 @@ module driver_cntrl #(
   input               vector_fifo_full,
   input               vector_fifo_empty,
   input               addr_fifo_full,
-  input               addr_fifo_empty.
+  input               addr_fifo_empty,
   input               vector_fifo_underrun,
   input               vector_fifo_overrun,
   output reg   [15:0] vector_fifo_threshold,
