@@ -88,7 +88,7 @@ end
 always @(posedge clk ) begin
   if(reset == 1'b0) begin
     trace_buf_bram_addr <= 32'h0;
-  end else if(slave_addr == 32'h0000_0200) && slave_wr) begin
+  end else if((slave_addr == 32'h0000_0200) && slave_wr) begin
     trace_buf_bram_addr <= slave_data_in;
   end else begin
     trace_buf_bram_addr <= trace_buf_bram_addr;

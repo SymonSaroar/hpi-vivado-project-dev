@@ -5,7 +5,7 @@
     "cell_name": "util_vector_logic_3",
     "component_reference": "xilinx.com:ip:util_vector_logic:2.0",
     "ip_revision": "3",
-    "gen_directory": "../../../../../../Latest.gen/sources_1/bd/design_1/ip/design_1_util_vector_logic_0_1",
+    "gen_directory": "../../../../../../192bit_with_driver.gen/sources_1/bd/design_1/ip/design_1_util_vector_logic_0_1",
     "parameters": {
       "component_parameters": {
         "Component_Name": [ { "value": "design_1_util_vector_logic_0_1", "resolve_type": "user", "usage": "all" } ],
@@ -34,7 +34,7 @@
         "IPCONTEXT": [ { "value": "IP_Integrator" } ],
         "IPREVISION": [ { "value": "3" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Latest.gen/sources_1/bd/design_1/ip/design_1_util_vector_logic_0_1" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../192bit_with_driver.gen/sources_1/bd/design_1/ip/design_1_util_vector_logic_0_1" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],

@@ -5,7 +5,7 @@
     "cell_name": "ps8_0_axi_periph",
     "component_reference": "xilinx.com:ip:axi_interconnect:2.1",
     "ip_revision": "30",
-    "gen_directory": "../../../../../../Latest.gen/sources_1/bd/design_1/ip/design_1_ps8_0_axi_periph_0",
+    "gen_directory": "../../../../../../192bit_with_driver.gen/sources_1/bd/design_1/ip/design_1_ps8_0_axi_periph_0",
     "parameters": {
       "component_parameters": {
         "NUM_SI": [ { "value": "1", "resolve_type": "user", "format": "long", "usage": "all" } ],
@@ -341,7 +341,7 @@
         "IPCONTEXT": [ { "value": "IP_Integrator_AppCore" } ],
         "IPREVISION": [ { "value": "30" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../Latest.gen/sources_1/bd/design_1/ip/design_1_ps8_0_axi_periph_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../192bit_with_driver.gen/sources_1/bd/design_1/ip/design_1_ps8_0_axi_periph_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
         "SWVERSION": [ { "value": "2023.2" } ],
