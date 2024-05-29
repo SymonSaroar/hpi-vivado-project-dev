@@ -11,7 +11,7 @@
 -- otherwise provided in a valid license issued to you by
 -- AMD, and to the maximum extent permitted by applicable
 -- law: (1) THESE MATERIALS ARE MADE AVAILABLE "AS IS" AND
--- WITH ALL FAULTS, AND XILINX HEREBY DISCLAIMS ALL WARRANTIES
+-- WITH ALL FAULTS, AND AMD HEREBY DISCLAIMS ALL WARRANTIES
 -- AND CONDITIONS, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING
 -- BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, NON-
 -- INFRINGEMENT, OR FITNESS FOR ANY PARTICULAR PURPOSE; and
@@ -46,7 +46,7 @@
 -- 
 -- DO NOT MODIFY THIS FILE.
 -- IP VLNV: xilinx.com:ip:blk_mem_gen:8.4
--- IP Revision: 6
+-- IP Revision: 7
 
 -- The following code must appear in the VHDL architecture header.
 
@@ -58,7 +58,13 @@ COMPONENT trace_buffer_bram
     wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
     addra : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
     dina : IN STD_LOGIC_VECTOR(255 DOWNTO 0);
-    douta : OUT STD_LOGIC_VECTOR(255 DOWNTO 0) 
+    douta : OUT STD_LOGIC_VECTOR(255 DOWNTO 0);
+    clkb : IN STD_LOGIC;
+    enb : IN STD_LOGIC;
+    web : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+    addrb : IN STD_LOGIC_VECTOR(14 DOWNTO 0);
+    dinb : IN STD_LOGIC_VECTOR(255 DOWNTO 0);
+    doutb : OUT STD_LOGIC_VECTOR(255 DOWNTO 0) 
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------
@@ -74,7 +80,13 @@ your_instance_name : trace_buffer_bram
     wea => wea,
     addra => addra,
     dina => dina,
-    douta => douta
+    douta => douta,
+    clkb => clkb,
+    enb => enb,
+    web => web,
+    addrb => addrb,
+    dinb => dinb,
+    doutb => doutb
   );
 -- INST_TAG_END ------ End INSTANTIATION Template ---------
 
