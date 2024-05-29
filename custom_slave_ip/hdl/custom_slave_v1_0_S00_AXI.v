@@ -33,8 +33,8 @@
 	(
 		// Users to add ports here
 //        output wire [31:0] read_addr,
-		input wire vector_fifo_wr,
-		input wire vector_fifo_rd,
+		input wire vctr_fifo_wr,
+		input wire vctr_fifo_rd,
 		input wire addr_fifo_rd,
         input wire module_vector_fifo_full,
         input wire module_vector_fifo_empty,
