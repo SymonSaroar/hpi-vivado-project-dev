@@ -15,7 +15,6 @@ module datapath_fifo #(
     output wire [DEPTH_SIZE - 1: 0] data_count,
     output wire rd_en_100ns,
     output wire [OUTPUT_DATA_WIDTH - 1 : 0] data_out,
-    output wire data_rdy_pulse,
     output wire full,
     output wire empty,
     output wire threshold,
@@ -24,11 +23,10 @@ module datapath_fifo #(
     );
     
     localparam ptr_mask = {DEPTH_SIZE{1'b1}};
-    reg [64-1 : 0] mem0 [DEPTH-1: 0];
-    reg [64-1 : 0] mem1 [DEPTH-1: 0];
-    reg [64-1 : 0] mem2 [DEPTH-1: 0];
+    reg [128-1 : 0] mem0 [DEPTH-1: 0];
+    reg [64-1 : 0]  mem1 [DEPTH-1: 0];
     reg [OUTPUT_DATA_WIDTH-1 : 0] data_out_reg;
-    reg [DEPTH_SIZE : 0] w_ptr1, w_ptr2;
+    reg [DEPTH_SIZE : 0] w_ptr;
     reg [DEPTH_SIZE : 0] r_ptr;
     reg full_reg, empty_reg, threshold_reg, overflow_reg, underflow_reg;
 //    reg almost_full_reg, almost_empty_reg;
@@ -38,25 +36,7 @@ module datapath_fifo #(
     reg [DEPTH_SIZE - 1: 0] data_count_reg;
     reg cnt;
     reg [5:0] rd_clk_counter;
-    reg data_rdy_pulse_reg;
     wire rd_clk;
-    
-//    wire [DEPTH_SIZE - 1 : 0] w_ptr_masked0, w_ptr_masked1, w_ptr_masked2;
-//    wire [DEPTH_SIZE - 1 : 0] w_ptr_masked3, w_ptr_masked4, w_ptr_masked5;
-//    wire [DEPTH_SIZE - 1 : 0] r_ptr_masked0, r_ptr_masked1, r_ptr_masked2;
-//    wire [DEPTH_SIZE - 1 : 0] r_ptr_masked3, r_ptr_masked4, r_ptr_masked5;
-//    assign w_ptr_masked0 = w_ptr & ptr_mask;
-//    assign w_ptr_masked1 = (w_ptr + 1) & ptr_mask;
-//    assign w_ptr_masked2 = (w_ptr + 2) & ptr_mask;
-//    assign w_ptr_masked3 = (w_ptr + 3) & ptr_mask;
-//    assign w_ptr_masked4 = (w_ptr + 4) & ptr_mask;
-//    assign w_ptr_masked5 = (w_ptr + 5) & ptr_mask;
-//    assign r_ptr_masked0 = r_ptr & ptr_mask;
-//    assign r_ptr_masked1 = (r_ptr + 1) & ptr_mask;
-//    assign r_ptr_masked2 = (r_ptr + 2) & ptr_mask;
-//    assign r_ptr_masked3 = (r_ptr + 3) & ptr_mask;
-//    assign r_ptr_masked4 = (r_ptr + 4) & ptr_mask;
-//    assign r_ptr_masked5 = (r_ptr + 5) & ptr_mask; 
     
     assign rd_clk = (rd_clk_counter == (CLK_DIV - 1));
     always @(posedge clk or negedge rstn) begin
@@ -71,17 +51,14 @@ module datapath_fifo #(
     assign wr_en = (~full_reg) && wr;
     always @(posedge clk or negedge rstn) begin
         if(~rstn) begin
-            w_ptr1 <= 1'b0;
-            w_ptr2 <= 1'b0;
-            cnt <= 1'b1;
+            w_ptr <= {(DEPTH_SIZE+1){1'b0}};
+            cnt <= 1'b0;
         end
         else if(wr_en) begin
-            w_ptr1 <= w_ptr1 + cnt;
-            w_ptr2 <= w_ptr2 + !cnt;
+            w_ptr <= w_ptr + cnt;
             cnt <= cnt + 1;
         end else begin
-            w_ptr1 <= w_ptr1;
-            w_ptr2 <= w_ptr2;
+            w_ptr <= w_ptr;
         end
     end
     
@@ -105,43 +82,28 @@ module datapath_fifo #(
     assign data_out = data_out_reg;
     always @(posedge clk) begin
         if(wr_en) begin
-            if(cnt) begin
-                mem0[w_ptr1[DEPTH_SIZE-1:0]] <= data_in[63:0];      // first 64 bits of first 128 bit data
-                mem1[w_ptr1[DEPTH_SIZE-1:0]] <= data_in[127:64];
+            if(!cnt) begin
+                mem0[w_ptr[DEPTH_SIZE-1:0]] <= data_in[127:0];
             end else
-                mem2[w_ptr2[DEPTH_SIZE-1:0]] <= data_in[63:0];          // first 64 bits of 2nd 128 bits data
+                mem1[w_ptr[DEPTH_SIZE-1:0]] <= data_in[63:0];          // first 64 bits of 2nd 128 bits data
         end
     end
     always @(posedge clk or negedge rstn) begin
         if(~rstn)
             data_out_reg <= 0;
         else if(rd_en) begin
-            data_out_reg[191:128] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[127:64] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[63:0] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[191:128] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[127:0] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
         end else
             data_out_reg <= data_out_reg;
     end
     
-    assign data_rdy_pulse = data_rdy_pulse_reg;
-    always @(posedge clk or negedge rstn) begin
-        if(~rstn) begin
-            data_rdy_pulse_reg <= 1'b0;
-        end else if(rd_en) begin
-            data_rdy_pulse_reg <= 1'b1;
-        end else begin
-            data_rdy_pulse_reg <= 1'b0;
-        end
-    end
-    
-    assign first_bit = w_ptr1 ^ r_ptr;
-    assign equal_full = (w_ptr1[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0]);
-//    assign almost_equal_full = (w_ptr_masked3 == r_ptr_masked0 || w_ptr_masked4 == r_ptr_masked0 || w_ptr_masked5 == r_ptr_masked0);
-    assign equal_empty = (w_ptr2[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0]);
-//    assign almost_equal_empty = (r_ptr_masked3 == w_ptr_masked0 || r_ptr_masked4 == w_ptr_masked0 || r_ptr_masked5 == w_ptr_masked0);
-    assign diff = w_ptr2 - r_ptr;
+    assign first_bit = w_ptr[DEPTH_SIZE] ^ r_ptr[DEPTH_SIZE];
+    assign equal = (w_ptr[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0])? 1'b1 : 1'b0;
+//  assign equal_empty = (w_ptr[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0]);
+    assign diff = w_ptr - r_ptr;
     assign overflow_en = full_reg & wr;
-    assign underflow_en = empty_reg & rd;
+    assign underflow_en = empty_reg & rd_clk;
     
 //    always @(posedge clk or negedge rstn) begin
 //      if(~rstn) 
@@ -157,9 +119,9 @@ module datapath_fifo #(
 //    end
     
     always @(*) begin
-        full_reg = first_bit & equal_full;
-        empty_reg = (~first_bit) & equal_empty;
-        threshold_reg = (diff[DEPTH_SIZE] || diff[DEPTH_SIZE - 1]);
+        full_reg = first_bit & equal;
+        empty_reg = (~first_bit) & equal;
+        threshold_reg = (diff[DEPTH_SIZE] || diff[DEPTH_SIZE - 1])? 1'b1: 1'b0;
     end
     
     always @(posedge clk or negedge rstn) begin
@@ -188,9 +150,9 @@ module datapath_fifo #(
         if(~rstn)
             data_count_reg <= 0;
         else if(wr_en && ~rd_en && data_count_reg != {DEPTH_SIZE{1'b1}})
-            data_count_reg <= data_count + 1;
+            data_count_reg <= data_count_reg + 1;
         else if(~wr_en && rd_en && data_count_reg != {DEPTH_SIZE{1'b0}})
-            data_count_reg <= data_count - 1;
+            data_count_reg <= data_count_reg - 1;
         else if(wr_en && rd_en) begin
             data_count_reg <= data_count_reg;
         end else begin
