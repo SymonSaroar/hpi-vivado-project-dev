@@ -56,7 +56,8 @@
 		output wire vctr_fifo_wr,
 		
 		input wire [31:0] trace_buf_bram_addr_slave,
-		output wire [255:0] trace_buf_bram_data,
+		output wire [TRACE_BUF_DATA_WIDTH-1:0] trace_buf_bram_data_a,
+		output wire [TRACE_BUF_DATA_WIDTH-1:0] trace_buf_bram_data,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -985,14 +986,15 @@
     wire trace_buf_we;
     wire trace_buf_en;
     wire [TRACE_BUF_DATA_WIDTH-1:0] trace_buf_bram_data_in;
-    wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addr_out;
+    wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra;
+    wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb;
     
     datapath_fifo #(
     	.INPUT_DATA_WIDTH(C_M_AXI_DATA_WIDTH),
-    	.OUTPUT_DATA_WIDTH(192),
-    	.DEPTH(1024),
-    	.DEPTH_SIZE(10),
-    	.CLK_DIV(30)
+    	.OUTPUT_DATA_WIDTH(VECTOR_DATA_WIDTH),
+    	.DEPTH(VECTOR_FIFO_DEPTH),
+    	.DEPTH_SIZE(VECTOR_FIFO_DEPTH),
+    	.CLK_DIV(VECTOR_DATA_PERIOD_CYCLE)
     ) datapath_fifo_0 (
     	.clk(M_AXI_ACLK),
     	.rstn(M_AXI_ARESETN),
@@ -1009,15 +1011,20 @@
     	.data_count(vector_fifo_data_count),
     	.data_rdy_pulse(vctr_data_rdy_pulse)
     );
-    
     trace_buffer_bram trace_buffer (
-      .clka(M_AXI_ACLK),    // input wire clka
-      .ena(trace_buf_en),      // input wire ena
-      .wea(trace_buf_we),      // input wire [0 : 0] wea
-      .addra(trace_buf_bram_addr_out),  // input wire [3 : 0] addra
-      .dina(trace_buf_bram_data_in),    // input wire [255 : 0] dina
-      .douta(trace_buf_bram_data)  // output wire [255 : 0] douta
-    );
+		.clka(M_AXI_ACLK),    // input wire clka
+		.ena(trace_buf_we),      // input wire ena
+		.wea(trace_buf_we),      // input wire [0 : 0] wea
+		.addra(trace_buf_bram_addra),  // input wire [14 : 0] addra
+		.dina(trace_buf_bram_data_in),    // input wire [255 : 0] dina
+		.douta(trace_buf_bram_data_a),  // output wire [255 : 0] douta
+		.clkb(M_AXI_ACLK),    // input wire clkb
+		.enb(trace_buf_en),      // input wire enb
+		.web(1'b0),      // input wire [0 : 0] web
+		.addrb(trace_buf_bram_addrb),  // input wire [14 : 0] addrb
+		.dinb({TRACE_BUF_DATA_WIDTH{1'b0}}),    // input wire [255 : 0] dinb
+		.doutb(trace_buf_bram_data)  // output wire [255 : 0] doutb
+	);
 	
     driver_trace_buffer #(
         .VECTOR_DATA_WIDTH(VECTOR_DATA_WIDTH),
@@ -1030,7 +1037,8 @@
         .trace_buf_bram_addr_slave(trace_buf_bram_addr_slave),
         .vctr_fifo_data_out(output_data),
         .trace_buf_bram_data_in(trace_buf_bram_data_in),
-        .trace_buf_bram_addr_out(trace_buf_bram_addr_out),
+        .trace_buf_bram_addra(trace_buf_bram_addra),
+        .trace_buf_bram_addrb(trace_buf_bram_addrb),
         .trace_buf_we(trace_buf_we),
         .trace_buf_en(trace_buf_en)
     ); 

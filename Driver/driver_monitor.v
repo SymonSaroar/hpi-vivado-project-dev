@@ -22,8 +22,8 @@ module driver_monitor#(
   output reg [15:0] vctr_cycle_cnt,
   output reg [VCTR_MON_CNT_SIZE-1 : 0] vctr_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1 : 0],
   output reg [VCTR_MON_CNT_SIZE-1 : 0] vctr_fifo_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1 : 0],
-  output reg [15:0] words_in_addr_fifo,
-  output reg [15:0] words_in_vctr_fifo
+  input      [15:0] words_in_addr_fifo,
+  input      [15:0] words_in_vctr_fifo
 );
 
 localparam MAX_COUNT = {ADDR_MON_CNT_SIZE{1'b1}};
@@ -44,20 +44,20 @@ always @(posedge clk )
 ///////////////////////////////////////////////////////////////////////////////
 // Words in Address FIFO counter
 ///////////////////////////////////////////////////////////////////////////////
-always @(posedge clk ) begin
-  if(reset == 1'b0) 
-    words_in_addr_fifo <= 16'h0000;
-  else if(run_program && !active_program)
-    words_in_addr_fifo <= 16'h0000;
-  else if( addr_fifo_wr && !addr_fifo_rd && words_in_addr_fifo != 16'hFFFF)
-    words_in_addr_fifo <= words_in_addr_fifo + 16'h0001;
-  else if(!addr_fifo_wr &&  addr_fifo_rd && words_in_addr_fifo != 16'h0000)
-    words_in_addr_fifo <= words_in_addr_fifo - 16'h0001;
-  else if( addr_fifo_wr &&  addr_fifo_rd)
-    words_in_addr_fifo <= words_in_addr_fifo;
-  else
-    words_in_addr_fifo <= words_in_addr_fifo;
-end
+// always @(posedge clk ) begin
+//   if(reset == 1'b0) 
+//     words_in_addr_fifo <= 16'h0000;
+//   else if(run_program && !active_program)
+//     words_in_addr_fifo <= 16'h0000;
+//   else if( addr_fifo_wr && !addr_fifo_rd && words_in_addr_fifo != 16'hFFFF)
+//     words_in_addr_fifo <= words_in_addr_fifo + 16'h0001;
+//   else if(!addr_fifo_wr &&  addr_fifo_rd && words_in_addr_fifo != 16'h0000)
+//     words_in_addr_fifo <= words_in_addr_fifo - 16'h0001;
+//   else if( addr_fifo_wr &&  addr_fifo_rd)
+//     words_in_addr_fifo <= words_in_addr_fifo;
+//   else
+//     words_in_addr_fifo <= words_in_addr_fifo;
+// end
 
 ///////////////////////////////////////////////////////////////////////////////
 // Statistics to minitor address fifo write cycle: Wr ......  Wr total clocks
@@ -147,19 +147,19 @@ always @(posedge clk )
 ///////////////////////////////////////////////////////////////////////////////
 // Words in Vector FIFO counter
 ///////////////////////////////////////////////////////////////////////////////
-always @(posedge clk ) 
-  if(reset == 1'b0) 
-    words_in_vctr_fifo <= 16'h0000;
-//else if(run_program && !active_program)
-//  words_in_vctr_fifo <= 16'h0000;
-  else if( vctr_fifo_wr && !vctr_fifo_rd && words_in_vctr_fifo != 16'hFFFF)
-    words_in_vctr_fifo <= words_in_vctr_fifo + 16'h0001;
-  else if(!vctr_fifo_wr &&  vctr_fifo_rd && words_in_vctr_fifo != 16'h0000)
-    words_in_vctr_fifo <= words_in_vctr_fifo - 16'h0001;
-  else if( vctr_fifo_wr &&  vctr_fifo_rd)
-    words_in_vctr_fifo <= words_in_vctr_fifo;
-  else
-    words_in_vctr_fifo <= words_in_vctr_fifo;
+// always @(posedge clk ) 
+//   if(reset == 1'b0) 
+//     words_in_vctr_fifo <= 16'h0000;
+// //else if(run_program && !active_program)
+// //  words_in_vctr_fifo <= 16'h0000;
+//   else if( vctr_fifo_wr && !vctr_fifo_rd && words_in_vctr_fifo != 16'hFFFF)
+//     words_in_vctr_fifo <= words_in_vctr_fifo + 16'h0001;
+//   else if(!vctr_fifo_wr &&  vctr_fifo_rd && words_in_vctr_fifo != 16'h0000)
+//     words_in_vctr_fifo <= words_in_vctr_fifo - 16'h0001;
+//   else if( vctr_fifo_wr &&  vctr_fifo_rd)
+//     words_in_vctr_fifo <= words_in_vctr_fifo;
+//   else
+//     words_in_vctr_fifo <= words_in_vctr_fifo;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Statistics to minitor vector fifo write cycle: Wr ......  Wr total clocks

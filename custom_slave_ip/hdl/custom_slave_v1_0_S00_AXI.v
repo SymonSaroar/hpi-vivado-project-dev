@@ -64,7 +64,8 @@
 		output wire [15:0] words_in_addr_fifo,
 		output wire [15:0] words_in_vctr_fifo,
 		
-		input  wire [255:0] trace_buf_bram_data,
+		input  wire [255:0] trace_buf_bram_data_a,
+        input  wire [255:0] trace_buf_bram_data,
 		output wire [31:0]  trace_buf_bram_addr,
 		// User ports ends
 		// Do not modify the ports beyond this line
@@ -685,7 +686,6 @@
 //  wire [31:0] addr_fifo_din;
 //  wire addr_fifo_wr;
   wire slave_rd, slave_wr, clk;
-  wire addr_fifo_over_run, addr_fifo_under_run, addr_fifo_full;
   assign slave_rd = S_AXI_ARVALID && axi_arready;
   assign slave_wr = axi_wready && S_AXI_WVALID;
   assign clk = S_AXI_ACLK;
@@ -694,6 +694,8 @@
   assign slave_addr = {{(32-C_S_AXI_ADDR_WIDTH){1'b0}},(S_AXI_AWADDR[C_S_AXI_ADDR_WIDTH-1:0])};
   assign slave_data_in = S_AXI_WDATA;
 
+  assign words_in_vctr_fifo = module_vector_fifo_data_count[0+:16];
+  assign words_in_addr_fifo = module_addr_fifo_data_count[0+:16];
 
   driver #(
     .ADDR_MON_CNT_RANGE(ADDR_MON_CNT_RANGE),
@@ -714,15 +716,27 @@
     .vctr_fifo_rd(vctr_fifo_rd),
     .addr_fifo_din(addr_fifo_din),
     .addr_fifo_wr(addr_fifo_wr),
-    .run_program(run_program),
-    .end_program(end_program),
     .addr_fifo_rd(addr_fifo_rd),
+    .vector_fifo_full(module_vector_fifo_full),
+    .vector_fifo_empty(module_vector_fifo_empty),
+    .addr_fifo_full(module_addr_fifo_full),
+    .addr_fifo_empty(module_addr_fifo_empty),
+    .vector_fifo_underrun(module_vector_fifo_underflow),
+    .vector_fifo_overrun(module_vector_fifo_overflow),
+    .vector_fifo_threshold(),
+    .addr_fifo_underrun(module_addr_fifo_underflow),
+    .addr_fifo_overrun(module_addr_fifo_overflow),
+    .addr_fifo_almost_full(module_addr_fifo_almost_full),
+    .addr_fifo_threshold(),
     .active_program(active_program),
+    .end_program(end_program),
+    .run_program(run_program),
     .addr_cycle_cnt(addr_cycle_cnt),
     .vctr_cycle_cnt(vctr_cycle_cnt),
-    .words_in_addr_fifo(words_in_addr_fifo),
-    .words_in_vctr_fifo(words_in_vctr_fifo),
+    .words_in_addr_fifo(module_addr_fifo_data_count),
+    .words_in_vctr_fifo(module_vector_fifo_data_count),
     .trace_buf_bram_data(trace_buf_bram_data),
+    .trace_buf_bram_data_a(trace_buf_bram_data_a),
     .trace_buf_bram_addr(trace_buf_bram_addr)
   );
   

@@ -21,6 +21,10 @@ module driver #(
   output       [31:0] addr_fifo_din,
   output              addr_fifo_wr,
   input               addr_fifo_rd,
+  input               vector_fifo_full,
+  input               vector_fifo_empty,
+  input               addr_fifo_full,
+  input               addr_fifo_empty,
   input               vector_fifo_underrun,
   input               vector_fifo_overrun,
   output reg   [15:0] vector_fifo_threshold,
@@ -34,10 +38,11 @@ module driver #(
   
   output wire [15:0] addr_cycle_cnt,
   output wire [15:0] vctr_cycle_cnt,
-  output wire [15:0] words_in_addr_fifo,
-  output wire [15:0] words_in_vctr_fifo,
+  input       [15:0] words_in_addr_fifo,
+  input       [15:0] words_in_vctr_fifo,
   
   input  wire [255:0] trace_buf_bram_data,
+  input  wire [255:0] trace_buf_bram_data_a,
   output wire [31:0]  trace_buf_bram_addr
 );
 
@@ -73,6 +78,10 @@ driver_cntrl #(
   .vctr_cycle_cnt(vctr_cycle_cnt),
   .words_in_addr_fifo(words_in_addr_fifo),
   .words_in_vctr_fifo(words_in_vctr_fifo),
+  .vector_fifo_full(vector_fifo_full),
+  .vector_fifo_empty(vector_fifo_empty),
+  .addr_fifo_full(addr_fifo_full),
+  .addr_fifo_empty(addr_fifo_empty),
   .vector_fifo_underrun(vector_fifo_underrun),
   .vector_fifo_overrun(vector_fifo_overrun),
   .vector_fifo_threshold(vector_fifo_threshold),
@@ -82,6 +91,7 @@ driver_cntrl #(
   .addr_fifo_almost_full(addr_fifo_almost_full),
   .run_program(run_program),
   .active_program(active_program),
+  .trace_buf_bram_data_a(trace_buf_bram_data_a),
   .trace_buf_bram_data(trace_buf_bram_data),
   .trace_buf_bram_addr(trace_buf_bram_addr)
 );
