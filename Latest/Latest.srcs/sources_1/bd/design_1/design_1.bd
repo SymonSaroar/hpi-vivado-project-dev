@@ -2520,11 +2520,12 @@
           },
           "PSU__PROTECTION__FPD_SEGMENTS": {
             "value": [
-              "SA:0xFD1A0000; SIZE:1280; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware| SA:0xFD000000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware|",
-              "SA:0xFD010000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware| SA:0xFD020000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware|",
-              "SA:0xFD030000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware| SA:0xFD040000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware|",
-              "SA:0xFD050000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware| SA:0xFD610000; SIZE:512; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware|",
-              "SA:0xFD5D0000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware|SA:0xFD1A0000 ; SIZE:1280; UNIT:KB; RegionTZ:Secure ; WrAllowed:Read/Write; subsystemId:Secure Subsystem"
+              "SA:0xFD1A0000; SIZE:1280; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |  SA:0xFD000000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |",
+              " SA:0xFD010000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |  SA:0xFD020000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware | ",
+              "SA:0xFD030000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |  SA:0xFD040000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware | ",
+              "SA:0xFD050000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware |  SA:0xFD610000; SIZE:512; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware | ",
+              "SA:0xFD5D0000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware | SA:0xFD1A0000 ; SIZE:1280; UNIT:KB; RegionTZ:Secure ; WrAllowed:Read/Write; subsystemId:Secure",
+              "Subsystem"
             ]
           },
           "PSU__PROTECTION__LPD_SEGMENTS": {
@@ -3873,6 +3874,12 @@
           }
         },
         "ports": {
+          "vctr_fifo_wr": {
+            "direction": "I"
+          },
+          "vctr_fifo_rd": {
+            "direction": "I"
+          },
           "addr_fifo_rd": {
             "direction": "I"
           },
@@ -3959,6 +3966,11 @@
             "left": "15",
             "right": "0"
           },
+          "trace_buf_bram_data_a": {
+            "direction": "I",
+            "left": "255",
+            "right": "0"
+          },
           "trace_buf_bram_data": {
             "direction": "I",
             "left": "255",
@@ -3996,12 +4008,6 @@
                 "value_src": "constant"
               }
             }
-          },
-          "vctr_fifo_wr": {
-            "direction": "I"
-          },
-          "vctr_fifo_rd": {
-            "direction": "I"
           }
         }
       },
@@ -4030,8 +4036,8 @@
       "master_custom_v1_0_M_1": {
         "vlnv": "xilinx.com:module_ref:master_custom_v1_0_M00_AXI:1.0",
         "ip_revision": "1",
-        "xci_name": "design_1_master_custom_v1_0_M_1_1",
-        "xci_path": "ip\\design_1_master_custom_v1_0_M_1_1\\design_1_master_custom_v1_0_M_1_1.xci",
+        "xci_name": "design_1_master_custom_v1_0_M_1_0",
+        "xci_path": "ip\\design_1_master_custom_v1_0_M_1_0_1\\design_1_master_custom_v1_0_M_1_0.xci",
         "inst_hier_path": "master_custom_v1_0_M_1",
         "parameters": {
           "C_M_AXI_BURST_LEN": {
@@ -4455,6 +4461,11 @@
             "left": "31",
             "right": "0"
           },
+          "trace_buf_bram_data_a": {
+            "direction": "O",
+            "left": "255",
+            "right": "0"
+          },
           "trace_buf_bram_data": {
             "direction": "O",
             "left": "255",
@@ -4797,6 +4808,12 @@
           "custom_slave_v1_0_S0_0/trace_buf_bram_data"
         ]
       },
+      "master_custom_v1_0_M_1_trace_buf_bram_data_a": {
+        "ports": [
+          "master_custom_v1_0_M_1/trace_buf_bram_data_a",
+          "custom_slave_v1_0_S0_0/trace_buf_bram_data_a"
+        ]
+      },
       "master_custom_v1_0_M_1_vctr_fifo_rd": {
         "ports": [
           "master_custom_v1_0_M_1/vctr_fifo_rd",
@@ -4913,10 +4930,10 @@
           "addr_fifo/clk",
           "system_ila_1/clk",
           "axi_vip_0/aclk",
-          "zynq_ultra_ps_e_0/maxihpm0_lpd_aclk",
-          "zynq_ultra_ps_e_0/saxiacp_fpd_aclk",
           "master_custom_v1_0_M_1/M_AXI_ACLK",
-          "custom_slave_v1_0_S0_0/S_AXI_ACLK"
+          "custom_slave_v1_0_S0_0/S_AXI_ACLK",
+          "zynq_ultra_ps_e_0/maxihpm0_lpd_aclk",
+          "zynq_ultra_ps_e_0/saxiacp_fpd_aclk"
         ]
       },
       "zynq_ultra_ps_e_0_pl_resetn0": {
