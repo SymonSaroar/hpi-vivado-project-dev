@@ -23,9 +23,12 @@ module datapath_fifo #(
     );
     
     localparam ptr_mask = {DEPTH_SIZE{1'b1}};
-    reg [64-1 : 0]  mem0 [DEPTH-1: 0];
-    reg [64-1 : 0]  mem1 [DEPTH-1: 0];
-    reg [64-1 : 0]  mem2 [DEPTH-1: 0];
+    reg [32-1 : 0]  mem0 [DEPTH-1: 0];
+    reg [32-1 : 0]  mem1 [DEPTH-1: 0];
+    reg [32-1 : 0]  mem2 [DEPTH-1: 0];
+    reg [32-1 : 0]  mem3 [DEPTH-1: 0];
+    reg [32-1 : 0]  mem4 [DEPTH-1: 0];
+    reg [32-1 : 0]  mem5 [DEPTH-1: 0];
     reg [OUTPUT_DATA_WIDTH-1 : 0] data_out_reg;
     reg [DEPTH_SIZE : 0] w_ptr;
     reg [DEPTH_SIZE : 0] r_ptr;
@@ -84,10 +87,13 @@ module datapath_fifo #(
     always @(posedge clk) begin
         if(wr_en) begin
             if(!cnt) begin
-                mem0[w_ptr[DEPTH_SIZE-1:0]] <= data_in[127:64];
-                mem1[w_ptr[DEPTH_SIZE-1:0]] <= data_in[63:0];
+                mem0[w_ptr[DEPTH_SIZE-1:0]] <= data_in[127:96];
+                mem1[w_ptr[DEPTH_SIZE-1:0]] <= data_in[95:64];
+                mem2[w_ptr[DEPTH_SIZE-1:0]] <= data_in[63:32];
+                mem3[w_ptr[DEPTH_SIZE-1:0]] <= data_in[31:0];
             end else begin
-                mem2[w_ptr[DEPTH_SIZE-1:0]] <= data_in[63:0];          // first 64 bits of 2nd 128 bits data
+                mem4[w_ptr[DEPTH_SIZE-1:0]] <= data_in[63:32];          // first 64 bits of 2nd 128 bits data
+                mem5[w_ptr[DEPTH_SIZE-1:0]] <= data_in[31:0];
             end
         end
     end
@@ -95,9 +101,12 @@ module datapath_fifo #(
         if(~rstn)
             data_out_reg <= {OUTPUT_DATA_WIDTH{1'b0}};
         else if(rd_en) begin
-            data_out_reg[191:128] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[127:64] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[63:0] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[191:160] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[159:128] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[127:96] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[95:64] <= mem3[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[63:32] <= mem4[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[31:0] <= mem5[r_ptr[DEPTH_SIZE-1: 0]];
         end else begin
             data_out_reg <= data_out_reg;
         end
