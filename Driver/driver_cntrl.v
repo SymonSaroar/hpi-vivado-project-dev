@@ -190,27 +190,27 @@ always @(posedge clk ) begin
       'h0000_024C: slave_data_out <= trace_buf_bram_data[255:224];
       
       default: begin
-          if(slave_addr >= 'h0001_1000 && slave_addr < 'h0001_1FFF) begin
+          if(slave_addr >= 'h0000_1000 && slave_addr < 'h0000_1FFF) begin
             for (int i = 0; i < addr_cnt_iterations; i += 1) begin
-                if (slave_addr == 'h0001_1000 + i * 'h4)
+                if (slave_addr == 'h0000_1000 + i * 'h4)
                   slave_data_out <= {16'h0000, addr_mon_cnts[i]};
             end
           end 
-          else if(slave_addr >= 'h0001_2000 && slave_addr < 'h0001_2FFF) begin
+          else if(slave_addr >= 'h0000_2000 && slave_addr < 'h0000_2FFF) begin
             for (int i = 0; i < addr_cnt_iterations; i += 1) begin
-                if (slave_addr == 'h0001_2000 + i * 'h4)
+                if (slave_addr == 'h0000_2000 + i * 'h4)
                   slave_data_out <= {16'h0000, addr_fifo_mon_cnts[i]};
             end
           end 
-          else if (slave_addr >= 'h0001_3000 && slave_addr < 'h0001_3FFF) begin
+          else if (slave_addr >= 'h0000_3000 && slave_addr < 'h0000_3FFF) begin
             for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
-                if (slave_addr == 'h0001_3000 + i * 'h4)
+                if (slave_addr == 'h0000_3000 + i * 'h4)
                   slave_data_out <= {16'h0000, vctr_mon_cnts[i]};
             end
           end 
-          else if (slave_addr >= 'h0001_4000 && slave_addr < 'h0001_4FFF) begin
+          else if (slave_addr >= 'h0000_4000 && slave_addr < 'h0000_4FFF) begin
             for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
-                if (slave_addr == 'h0001_4000 + i * 'h4)
+                if (slave_addr == 'h0000_4000 + i * 'h4)
                   slave_data_out <= {16'h0000, vctr_fifo_mon_cnts[i]};
             end
           end 
