@@ -65,7 +65,6 @@
 		output wire [15:0] words_in_addr_fifo,
 		output wire [15:0] words_in_vctr_fifo,
 		
-		input  wire [255:0] trace_buf_bram_data_a,
         input  wire [255:0] trace_buf_bram_data,
 		output wire [31:0]  trace_buf_bram_addr,
 		// User ports ends
@@ -738,7 +737,6 @@
     .words_in_addr_fifo(module_addr_fifo_data_count),
     .words_in_vctr_fifo(module_vector_fifo_data_count),
     .trace_buf_bram_data(trace_buf_bram_data),
-    .trace_buf_bram_data_a(trace_buf_bram_data_a),
     .trace_buf_bram_addr(trace_buf_bram_addr)
   );
   

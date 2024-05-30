@@ -43,7 +43,6 @@ module driver #(
   input       [15:0] words_in_vctr_fifo,
   
   input  wire [255:0] trace_buf_bram_data,
-  input  wire [255:0] trace_buf_bram_data_a,
   output wire [31:0]  trace_buf_bram_addr
 );
 
@@ -93,7 +92,6 @@ driver_cntrl #(
   .addr_fifo_almost_full(addr_fifo_almost_full),
   .run_program(run_program),
   .active_program(active_program),
-  .trace_buf_bram_data_a(trace_buf_bram_data_a),
   .trace_buf_bram_data(trace_buf_bram_data),
   .trace_buf_bram_addr(trace_buf_bram_addr)
 );

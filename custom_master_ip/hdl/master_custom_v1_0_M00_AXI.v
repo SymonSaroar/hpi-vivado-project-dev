@@ -56,7 +56,6 @@
 		output wire vctr_fifo_wr,
 		
 		input wire [31:0] trace_buf_bram_addr_slave,
-		output wire [TRACE_BUF_DATA_WIDTH-1:0] trace_buf_bram_data_a,
 		output wire [TRACE_BUF_DATA_WIDTH-1:0] trace_buf_bram_data,
 		// User ports ends
 		// Do not modify the ports beyond this line
@@ -1014,8 +1013,8 @@
 		.ena(trace_buf_we),      // input wire ena
 		.wea(trace_buf_we),      // input wire [0 : 0] wea
 		.addra(trace_buf_bram_addra),  // input wire [14 : 0] addra
-		.dina(trace_buf_bram_data_in),    // input wire [255 : 0] dina
-		.douta(trace_buf_bram_data_a),  // output wire [255 : 0] douta
+		.dina({{(TRACE_BUF_DATA_WIDTH - VECTOR_DATA_WIDTH){1'b0}}, output_data}),    // input wire [255 : 0] dina
+		.douta(),  // output wire [255 : 0] douta
 		.clkb(M_AXI_ACLK),    // input wire clkb
 		.enb(trace_buf_en),      // input wire enb
 		.web(1'b0),      // input wire [0 : 0] web
@@ -1033,8 +1032,6 @@
         .rstn(M_AXI_ARESETN),
         .rd_en_100ns(vctr_fifo_rd),
         .trace_buf_bram_addr_slave(trace_buf_bram_addr_slave),
-        .vctr_fifo_data_out(output_data),
-        .trace_buf_bram_data_in(trace_buf_bram_data_in),
         .trace_buf_bram_addra(trace_buf_bram_addra),
         .trace_buf_bram_addrb(trace_buf_bram_addrb),
         .trace_buf_we(trace_buf_we),

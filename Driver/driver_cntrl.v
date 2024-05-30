@@ -22,7 +22,6 @@ module driver_cntrl #(
   input        [15:0] words_in_addr_fifo,
   input        [15:0] words_in_vctr_fifo,
   input        [255:0] trace_buf_bram_data,
-  input        [255:0] trace_buf_bram_data_a,
   output reg   [31:0] trace_buf_bram_addr,
   output reg   [31:0] slave_data_out,
   output reg   [31:0] addr_fifo_din,
@@ -173,22 +172,14 @@ always @(posedge clk ) begin
       'h0000_0110: slave_data_out <= {16'h0000,words_in_vctr_fifo};
       
       'h0000_0200: slave_data_out <= trace_buf_bram_addr;
-      'h0000_0210: slave_data_out <= trace_buf_bram_data_a[31 :0  ];
-      'h0000_0214: slave_data_out <= trace_buf_bram_data_a[63 :32 ];
-      'h0000_0218: slave_data_out <= trace_buf_bram_data_a[95 :64 ];
-      'h0000_021C: slave_data_out <= trace_buf_bram_data_a[127:96 ];
-      'h0000_0220: slave_data_out <= trace_buf_bram_data_a[159:128];
-      'h0000_0224: slave_data_out <= trace_buf_bram_data_a[191:160];
-      'h0000_0228: slave_data_out <= trace_buf_bram_data_a[223:192];
-      'h0000_022C: slave_data_out <= trace_buf_bram_data_a[255:224];
-      'h0000_0230: slave_data_out <= trace_buf_bram_data[31 :0  ];
-      'h0000_0234: slave_data_out <= trace_buf_bram_data[63 :32 ];
-      'h0000_0238: slave_data_out <= trace_buf_bram_data[95 :64 ];
-      'h0000_023C: slave_data_out <= trace_buf_bram_data[127:96 ];
-      'h0000_0240: slave_data_out <= trace_buf_bram_data[159:128];
-      'h0000_0244: slave_data_out <= trace_buf_bram_data[191:160];
-      'h0000_0248: slave_data_out <= trace_buf_bram_data[223:192];
-      'h0000_024C: slave_data_out <= trace_buf_bram_data[255:224];
+      'h0000_0210: slave_data_out <= trace_buf_bram_data[31 :0  ];
+      'h0000_0214: slave_data_out <= trace_buf_bram_data[63 :32 ];
+      'h0000_0218: slave_data_out <= trace_buf_bram_data[95 :64 ];
+      'h0000_021C: slave_data_out <= trace_buf_bram_data[127:96 ];
+      'h0000_0220: slave_data_out <= trace_buf_bram_data[159:128];
+      'h0000_0224: slave_data_out <= trace_buf_bram_data[191:160];
+      'h0000_0228: slave_data_out <= trace_buf_bram_data[223:192];
+      'h0000_022C: slave_data_out <= trace_buf_bram_data[255:224];
       
       default: begin
           if(slave_araddr >= 'h0000_1000 && slave_araddr < 'h0000_1FFF) begin
