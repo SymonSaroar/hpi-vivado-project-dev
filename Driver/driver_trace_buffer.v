@@ -16,7 +16,7 @@ module driver_trace_buffer#(
     
     assign trace_buf_en = 1'b1;
     
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
         if(rstn == 1'b0) begin
             trace_buf_bram_addra <= {TRACE_BUF_ADDR_WIDTH{1'b0}};
         end else if(rd_en_100ns) begin
@@ -26,7 +26,7 @@ module driver_trace_buffer#(
         end
     end
     
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
         if(rstn == 1'b0) begin
             trace_buf_we <= 1'b0;
         end else if(rd_en_100ns) begin
@@ -36,7 +36,7 @@ module driver_trace_buffer#(
         end
     end
     
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
         if(rstn == 1'b0) begin
             trace_buf_bram_addrb <= {TRACE_BUF_ADDR_WIDTH{1'b0}};
         end else if(rd_en_100ns == 1'b1) begin

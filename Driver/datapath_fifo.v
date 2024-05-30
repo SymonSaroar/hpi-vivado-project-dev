@@ -13,8 +13,9 @@ module datapath_fifo #(
     input wire rd,
     input wire [INPUT_DATA_WIDTH - 1 : 0] data_in,
     output wire [DEPTH_SIZE - 1: 0] data_count,
-    output wire rd_en_100ns,
+    output reg rd_en_100ns,
     output wire [OUTPUT_DATA_WIDTH - 1 : 0] data_out,
+    output reg [OUTPUT_DATA_WIDTH - 1 : 0] data_out_delayed,
     output wire full,
     output wire empty,
     output wire threshold,
@@ -23,12 +24,9 @@ module datapath_fifo #(
     );
     
     localparam ptr_mask = {DEPTH_SIZE{1'b1}};
-    reg [32-1 : 0]  mem0 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem1 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem2 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem3 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem4 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem5 [DEPTH-1: 0];
+    reg [64-1 : 0]  mem0 [DEPTH-1: 0];
+    reg [64-1 : 0]  mem1 [DEPTH-1: 0];
+    reg [64-1 : 0]  mem2 [DEPTH-1: 0];
     reg [OUTPUT_DATA_WIDTH-1 : 0] data_out_reg;
     reg [DEPTH_SIZE : 0] w_ptr;
     reg [DEPTH_SIZE : 0] r_ptr;
@@ -43,7 +41,7 @@ module datapath_fifo #(
     wire rd_clk;
     
     assign rd_clk = (rd_clk_counter == (CLK_DIV - 1));
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
         if(~rstn)
             rd_clk_counter <= 0;
         else if(rd_clk)
@@ -53,7 +51,7 @@ module datapath_fifo #(
     end
     
     assign wr_en = (~full_reg) && wr;
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
         if(~rstn) begin
             w_ptr <= {(DEPTH_SIZE+1){1'b0}};
             cnt <= 1'b0;
@@ -67,8 +65,15 @@ module datapath_fifo #(
     end
     
     assign rd_en = (~empty_reg) && rd && rd_clk;
-    assign rd_en_100ns = rd_en;
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
+        if(~rstn) begin
+            rd_en_100ns <= 1'b0;
+        end else begin
+            rd_en_100ns <= rd_en;
+        end
+    end
+
+    always @(posedge clk) begin
         if(~rstn)
             r_ptr <= 0;
         else if(rd_en)
@@ -87,31 +92,33 @@ module datapath_fifo #(
     always @(posedge clk) begin
         if(wr_en) begin
             if(!cnt) begin
-                mem0[w_ptr[DEPTH_SIZE-1:0]] <= data_in[127:96];
-                mem1[w_ptr[DEPTH_SIZE-1:0]] <= data_in[95:64];
-                mem2[w_ptr[DEPTH_SIZE-1:0]] <= data_in[63:32];
-                mem3[w_ptr[DEPTH_SIZE-1:0]] <= data_in[31:0];
+                mem0[w_ptr[DEPTH_SIZE-1:0]] <= data_in[127:64];
+                mem1[w_ptr[DEPTH_SIZE-1:0]] <= data_in[63:0];
             end else begin
-                mem4[w_ptr[DEPTH_SIZE-1:0]] <= data_in[63:32];          // first 64 bits of 2nd 128 bits data
-                mem5[w_ptr[DEPTH_SIZE-1:0]] <= data_in[31:0];
+                mem2[w_ptr[DEPTH_SIZE-1:0]] <= data_in[63:0];          // first 64 bits of 2nd 128 bits data
             end
         end
     end
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
         if(~rstn)
             data_out_reg <= {OUTPUT_DATA_WIDTH{1'b0}};
         else if(rd_en) begin
-            data_out_reg[191:160] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[159:128] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[127:96] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[95:64] <= mem3[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[63:32] <= mem4[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[31:0] <= mem5[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[191:128] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[127:64] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[63:0] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
         end else begin
             data_out_reg <= data_out_reg;
         end
     end
     
+    always @(posedge clk) begin
+        if(~rstn) begin
+            data_out_delayed <= {OUTPUT_DATA_WIDTH{1'b0}};
+        end else begin
+            data_out_delayed <= data_out_reg;
+        end
+    end
+
     assign first_bit = w_ptr[DEPTH_SIZE] ^ r_ptr[DEPTH_SIZE];
     assign equal = (w_ptr[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0])? 1'b1 : 1'b0;
 //  assign equal_empty = (w_ptr[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0]);
@@ -138,7 +145,7 @@ module datapath_fifo #(
         threshold_reg = (diff[DEPTH_SIZE] || diff[DEPTH_SIZE - 1])? 1'b1: 1'b0;
     end
     
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
         if(~rstn)
             overflow_reg <= 0;
         else if(overflow_en && ~rd_en)
@@ -149,7 +156,7 @@ module datapath_fifo #(
             overflow_reg <= overflow_reg;
     end
     
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
         if(~rstn) 
             underflow_reg <= 0;
         else if (underflow_en && ~wr_en)
@@ -160,13 +167,13 @@ module datapath_fifo #(
             underflow_reg <= underflow_reg;
     end
     
-    always @(posedge clk or negedge rstn) begin
+    always @(posedge clk) begin
         if(~rstn)
             data_count_reg <= 0;
         else if(r_ptr[DEPTH_SIZE] ^ w_ptr[DEPTH_SIZE])
-            data_count_reg <= w_ptr[DEPTH_SIZE-1:0] - r_ptr[DEPTH_SIZE-1:0];
-        else
             data_count_reg <= (w_ptr[DEPTH_SIZE-1:0] + DEPTH_SIZE) - r_ptr[DEPTH_SIZE-1:0];
+        else
+            data_count_reg <= w_ptr[DEPTH_SIZE-1:0] - r_ptr[DEPTH_SIZE-1:0];
     end
     
     assign full = full_reg;

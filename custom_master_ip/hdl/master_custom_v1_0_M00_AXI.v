@@ -57,6 +57,12 @@
 		
 		input wire [31:0] trace_buf_bram_addr_slave,
 		output wire [TRACE_BUF_DATA_WIDTH-1:0] trace_buf_bram_data,
+
+		output wire [VECTOR_DATA_WIDTH-1:0] vector_fifo_data_out;
+	    output wire trace_buf_we;
+	    output wire trace_buf_en;
+	    output wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra;
+	    output wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb;
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -980,12 +986,11 @@
 
     assign vctr_fifo_wr = (rvalid && rready);
     
-    wire vctr_data_rdy_pulse;
-    wire trace_buf_we;
-    wire trace_buf_en;
-    wire [TRACE_BUF_DATA_WIDTH-1:0] trace_buf_bram_data_in;
-    wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra;
-    wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb;
+    // wire [VECTOR_DATA_WIDTH-1:0] vector_fifo_data_out;
+    // wire trace_buf_we;
+    // wire trace_buf_en;
+    // wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra;
+    // wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb;
     
     datapath_fifo #(
     	.INPUT_DATA_WIDTH(C_M_AXI_DATA_WIDTH),
@@ -1001,6 +1006,7 @@
     	.rd_en_100ns(vctr_fifo_rd),
     	.data_in(M_AXI_RDATA),
     	.data_out(output_data),
+    	.data_out_delayed(vector_fifo_data_out),
     	.full(vector_fifo_full),
     	.empty(vector_fifo_empty),
     	.threshold(vector_fifo_threshold),
@@ -1013,7 +1019,7 @@
 		.ena(trace_buf_we),      // input wire ena
 		.wea(trace_buf_we),      // input wire [0 : 0] wea
 		.addra(trace_buf_bram_addra),  // input wire [14 : 0] addra
-		.dina({{(TRACE_BUF_DATA_WIDTH - VECTOR_DATA_WIDTH){1'b0}}, output_data}),    // input wire [255 : 0] dina
+		.dina({{(TRACE_BUF_DATA_WIDTH - VECTOR_DATA_WIDTH){1'b0}}, vector_fifo_data_out}),    // input wire [255 : 0] dina
 		.douta(),  // output wire [255 : 0] douta
 		.clkb(M_AXI_ACLK),    // input wire clkb
 		.enb(trace_buf_en),      // input wire enb
