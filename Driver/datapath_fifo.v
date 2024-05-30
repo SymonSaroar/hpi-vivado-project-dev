@@ -31,7 +31,7 @@ module datapath_fifo #(
     reg full_reg, empty_reg, threshold_reg, overflow_reg, underflow_reg;
 //    reg almost_full_reg, almost_empty_reg;
     wire wr_en, rd_en;
-    wire equal_full, equal_empty, first_bit, overflow_en, underflow_en;
+    wire equal, first_bit, overflow_en, underflow_en;
     wire [DEPTH_SIZE : 0] diff;
     reg [DEPTH_SIZE - 1: 0] data_count_reg;
     reg cnt;
@@ -48,7 +48,7 @@ module datapath_fifo #(
             rd_clk_counter <= rd_clk_counter + 1;
     end
     
-    assign wr_en = (~(first_bit && equal)) && wr;
+    assign wr_en = (~full_reg) && wr;
     always @(posedge clk or negedge rstn) begin
         if(~rstn) begin
             w_ptr <= {(DEPTH_SIZE+1){1'b0}};
@@ -62,7 +62,7 @@ module datapath_fifo #(
         end
     end
     
-    assign rd_en = (~((~first_bit) && equal)) && rd && rd_clk;
+    assign rd_en = (~empty_reg) && rd && rd_clk;
     assign rd_en_100ns = rd_en;
     always @(posedge clk or negedge rstn) begin
         if(~rstn)
@@ -102,8 +102,8 @@ module datapath_fifo #(
     assign equal = (w_ptr[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0])? 1'b1 : 1'b0;
 //  assign equal_empty = (w_ptr[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0]);
     assign diff = w_ptr - r_ptr;
-    assign overflow_en = first_bit && equal && wr;
-    assign underflow_en = (~first_bit) && equal && rd_clk;
+    assign overflow_en = full_reg & wr;
+    assign underflow_en = empty_reg & rd_clk;
     
 //    always @(posedge clk or negedge rstn) begin
 //      if(~rstn) 
@@ -118,42 +118,12 @@ module datapath_fifo #(
 //          almost_empty_reg <= almost_equal_empty;
 //    end
     
-    // always @(*) begin
-    //     full_reg = first_bit & equal;
-    //     empty_reg = (~first_bit) & equal;
-    //     threshold_reg = (diff[DEPTH_SIZE] || diff[DEPTH_SIZE - 1])? 1'b1: 1'b0;
-    // end
+    always @(*) begin
+        full_reg = first_bit & equal;
+        empty_reg = (~first_bit) & equal;
+        threshold_reg = (diff[DEPTH_SIZE] || diff[DEPTH_SIZE - 1])? 1'b1: 1'b0;
+    end
     
-    always @(posedge clk or negedge rstn) begin
-        if(~rstn) begin
-            full_reg <= 1'b0;
-        end else if(first_bit == 1'b1 && equal == 1'b1) begin
-            full_reg <= 1'b1;
-        end else begin
-            full_reg <= 1'b0;
-        end
-    end
-
-    always @(posedge clk or negedge rstn) begin
-        if(~rstn) begin
-            empty_reg <= 1'b0;
-        end else if (first_bit == 1'b0 && equal == 1'b1) begin
-            empty_reg <= 1'b1;
-        end else begin
-            empty_reg <= 1'b0;
-        end
-    end
-
-    always @(posedge clk or negedge rstn) begin
-        if(~rstn) begin
-            threshold_reg <= 1'b0;
-        end else if(diff[DEPTH_SIZE] || diff[DEPTH_SIZE - 1]) begin
-            threshold_reg <= 1'b1;
-        end else begin
-            threshold_reg <= 1'b0;
-        end
-    end
-
     always @(posedge clk or negedge rstn) begin
         if(~rstn)
             overflow_reg <= 0;
@@ -179,15 +149,10 @@ module datapath_fifo #(
     always @(posedge clk or negedge rstn) begin
         if(~rstn)
             data_count_reg <= 0;
-        else if(wr_en && ~rd_en && data_count_reg != {DEPTH_SIZE{1'b1}})
-            data_count_reg <= data_count_reg + 1;
-        else if(~wr_en && rd_en && data_count_reg != {DEPTH_SIZE{1'b0}})
-            data_count_reg <= data_count_reg - 1;
-        else if(wr_en && rd_en) begin
-            data_count_reg <= data_count_reg;
-        end else begin
-            data_count_reg <= data_count_reg;
-        end
+        else if(r_ptr[DEPTH_SIZE] ^ w_ptr[DEPTH_SIZE])
+            data_count_reg <= w_ptr[DEPTH_SIZE-1:0] - r_ptr[DEPTH_SIZE-1:0];
+        else
+            data_count_reg <= (w_ptr[DEPTH_SIZE-1:0] + DEPTH_SIZE) - r_ptr[DEPTH_SIZE-1:0];
     end
     
     assign full = full_reg;

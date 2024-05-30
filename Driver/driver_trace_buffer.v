@@ -1,7 +1,7 @@
 module driver_trace_buffer#(
-    parameter VECTOR_DATA_WIDTH = 192,
-    parameter TRACE_BUF_DATA_WIDTH = 256,
-    parameter TRACE_BUF_ADDR_WIDTH = 15
+    parameter integer VECTOR_DATA_WIDTH = 192,
+    parameter integer TRACE_BUF_DATA_WIDTH = 256,
+    parameter integer TRACE_BUF_ADDR_WIDTH = 15
 )
 (
     input wire clk,
@@ -19,7 +19,7 @@ module driver_trace_buffer#(
     assign trace_buf_en = 1'b1;
     assign trace_buf_bram_data_in = {{(TRACE_BUF_DATA_WIDTH - VECTOR_DATA_WIDTH){1'b0}}, vctr_fifo_data_out};
     
-    always @(clk) begin
+    always @(posedge clk or negedge rstn) begin
         if(rstn == 1'b0) begin
             trace_buf_bram_addra <= {TRACE_BUF_ADDR_WIDTH{1'b0}};
         end else if(rd_en_100ns) begin
@@ -29,7 +29,7 @@ module driver_trace_buffer#(
         end
     end
     
-    always @(clk) begin
+    always @(posedge clk or negedge rstn) begin
         if(rstn == 1'b0) begin
             trace_buf_we <= 1'b0;
         end else if(rd_en_100ns) begin
@@ -39,7 +39,7 @@ module driver_trace_buffer#(
         end
     end
     
-    always @(clk) begin
+    always @(posedge clk or negedge rstn) begin
         if(rstn == 1'b0) begin
             trace_buf_bram_addrb <= {TRACE_BUF_ADDR_WIDTH{1'b0}};
         end else if(rd_en_100ns == 1'b1) begin

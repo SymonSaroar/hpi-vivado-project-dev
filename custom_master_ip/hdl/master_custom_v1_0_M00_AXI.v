@@ -969,7 +969,6 @@
 
 	// Add user logic here
 //    assign output_data = M_AXI_RDATA;
-    assign read_data_ready = M_AXI_RVALID;
 //    assign debug_addr = axi_araddr;
 //    assign debug_add_bytes = burst_size_bytes;
 //    assign debug_tx_num = C_TRANSACTIONS_NUM;
@@ -993,7 +992,7 @@
     	.INPUT_DATA_WIDTH(C_M_AXI_DATA_WIDTH),
     	.OUTPUT_DATA_WIDTH(VECTOR_DATA_WIDTH),
     	.DEPTH(VECTOR_FIFO_DEPTH),
-    	.DEPTH_SIZE(VECTOR_FIFO_DEPTH),
+    	.DEPTH_SIZE(VECTOR_FIFO_DEPTH_SIZE),
     	.CLK_DIV(VECTOR_DATA_PERIOD_CYCLE)
     ) datapath_fifo_0 (
     	.clk(M_AXI_ACLK),
@@ -1008,8 +1007,7 @@
     	.threshold(vector_fifo_threshold),
     	.overflow(vector_fifo_overflow),
     	.underflow(vector_fifo_underflow),
-    	.data_count(vector_fifo_data_count),
-    	.data_rdy_pulse(vctr_data_rdy_pulse)
+    	.data_count(vector_fifo_data_count)
     );
     trace_buffer_bram trace_buffer (
 		.clka(M_AXI_ACLK),    // input wire clka
@@ -1032,7 +1030,7 @@
         .TRACE_BUF_ADDR_WIDTH(TRACE_BUF_ADDR_WIDTH)
     ) driver_trace_buffer (
         .clk(M_AXI_ACLK),
-        .rstn(M_AXI_RESETN),
+        .rstn(M_AXI_ARESETN),
         .rd_en_100ns(vctr_fifo_rd),
         .trace_buf_bram_addr_slave(trace_buf_bram_addr_slave),
         .vctr_fifo_data_out(output_data),

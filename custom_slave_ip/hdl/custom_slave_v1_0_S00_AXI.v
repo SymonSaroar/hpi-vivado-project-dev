@@ -10,6 +10,7 @@
 		parameter integer VCTR_MON_CNT_RANGE = 8,
 		parameter integer VCTR_MON_CNT_SIZE = 16,
 		parameter integer MAX_VCTR_CYCLE_CNT = 128,
+        parameter integer VCTR_FIFO_DEPTH_SIZE = 10,
 		// User parameters ends
 		// Do not modify the parameters beyond this line
 
@@ -40,7 +41,7 @@
         input wire module_vector_fifo_empty,
         input wire module_vector_fifo_overflow,
         input wire module_vector_fifo_underflow,
-        input wire [9:0] module_vector_fifo_data_count,
+        input wire [VCTR_FIFO_DEPTH_SIZE-1:0] module_vector_fifo_data_count,
 
         input wire module_addr_fifo_full,
         input wire module_addr_fifo_empty,
@@ -694,7 +695,7 @@
   assign slave_addr = {{(32-C_S_AXI_ADDR_WIDTH){1'b0}},(S_AXI_AWADDR[C_S_AXI_ADDR_WIDTH-1:0])};
   assign slave_data_in = S_AXI_WDATA;
 
-  assign words_in_vctr_fifo = {{(16 - 10){1'b0}}, module_vector_fifo_data_count[0+:10]};
+  assign words_in_vctr_fifo = {{(16 - VCTR_FIFO_DEPTH_SIZE){1'b0}}, module_vector_fifo_data_count[0+:VCTR_FIFO_DEPTH_SIZE]};
   assign words_in_addr_fifo = {{(16 - 14){1'b0}}, module_addr_fifo_data_count[0+:14]};
 
   driver #(
