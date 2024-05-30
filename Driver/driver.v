@@ -11,7 +11,8 @@ module driver #(
 (
   input               clk,
   input               reset,
-  input        [31:0] slave_addr,
+  input        [31:0] slave_awaddr,
+  input        [31:0] slave_araddr,
   input               slave_rd,
   input               slave_wr,
   input        [31:0] slave_data_in,
@@ -62,7 +63,8 @@ driver_cntrl #(
 ) driver_cntrl_0(
   .clk(clk),
   .reset(reset),
-  .slave_addr(slave_addr),
+  .slave_awaddr(slave_awaddr),
+  .slave_araddr(slave_araddr),
   .slave_rd(slave_rd),
   .slave_wr(slave_wr),
   .slave_data_in(slave_data_in),
