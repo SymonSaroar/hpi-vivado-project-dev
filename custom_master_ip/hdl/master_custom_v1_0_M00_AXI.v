@@ -58,11 +58,11 @@
 		input wire [31:0] trace_buf_bram_addr_slave,
 		output wire [TRACE_BUF_DATA_WIDTH-1:0] trace_buf_bram_data,
 
-		output wire [VECTOR_DATA_WIDTH-1:0] vector_fifo_data_out,
-	    output wire trace_buf_we,
-	    output wire trace_buf_en,
-	    output wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra,
-	    output wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb,
+		output reg [VECTOR_DATA_WIDTH-1:0] vector_fifo_data_out_debug,
+	    output reg trace_buf_we_debug,
+	    output reg trace_buf_en_debug,
+	    output reg [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra_debug,
+	    output reg [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb_debug,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -985,13 +985,30 @@
 	assign addr_fifo_rd = (axi_araddr == 0 && axi_arvalid)? 1'b1: 1'b0;
 
     assign vctr_fifo_wr = (rvalid && rready);
+
+    wire [VECTOR_DATA_WIDTH-1:0] vector_fifo_data_out;
+    wire trace_buf_we;
+    wire trace_buf_en;
+    wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra;
+    wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb;
     
-    // wire [VECTOR_DATA_WIDTH-1:0] vector_fifo_data_out;
-    // wire trace_buf_we;
-    // wire trace_buf_en;
-    // wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra;
-    // wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb;
-    
+    always @(posedge M_AXI_ACLK) begin
+    	if(M_AXI_ARESETN == 1'b0) begin
+    		vector_fifo_data_out_debug <= 0;
+    		trace_buf_we_debug <= 0;
+    		trace_buf_en_debug <= 0;
+    		trace_buf_bram_addra_debug <= 0;
+    		trace_buf_bram_addrb_debug <= 0;
+    	end else begin
+    		vector_fifo_data_out_debug <= vector_fifo_data_out;
+    		trace_buf_we_debug <= trace_buf_we;
+    		trace_buf_en_debug <= trace_buf_en;
+    		trace_buf_bram_addra_debug <= trace_buf_bram_addra;
+    		trace_buf_bram_addrb_debug <= trace_buf_bram_addrb;
+    	end
+
+    end
+
     datapath_fifo #(
     	.INPUT_DATA_WIDTH(C_M_AXI_DATA_WIDTH),
     	.OUTPUT_DATA_WIDTH(VECTOR_DATA_WIDTH),
