@@ -109,12 +109,12 @@ module datapath_fifo #(
         if(~rstn)
             data_out_reg <= {OUTPUT_DATA_WIDTH{1'b0}};
         else if(rd_en) begin
-            data_out_reg[191:160] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[159:128] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[127:96] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[95:64] <= mem3[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[63:32] <= mem4[r_ptr[DEPTH_SIZE-1: 0]];
-            data_out_reg[31:0] <= mem5[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[191:160] <= mem4[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[159:128] <= mem5[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[127:96] <= mem0[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[95:64] <= mem1[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[63:32] <= mem2[r_ptr[DEPTH_SIZE-1: 0]];
+            data_out_reg[31:0] <= mem3[r_ptr[DEPTH_SIZE-1: 0]];
         end else begin
             data_out_reg <= data_out_reg;
         end

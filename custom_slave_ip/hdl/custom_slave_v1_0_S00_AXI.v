@@ -690,8 +690,8 @@
   assign slave_wr = axi_wready && S_AXI_WVALID;
   assign clk = S_AXI_ACLK;
   assign reset = S_AXI_ARESETN;
-  assign slave_awaddr = {{(32-C_S_AXI_ADDR_WIDTH){1'b0}}, (S_AXI_AWADDR[C_S_AXI_ADDR_WIDTH-1:0])};
-  assign slave_araddr = {{(32-C_S_AXI_ADDR_WIDTH){1'b0}}, (S_AXI_ARADDR[C_S_AXI_ADDR_WIDTH-1:0])};
+  assign slave_awaddr = {{(32-C_S_AXI_ADDR_WIDTH){1'b0}}, (axi_awaddr[C_S_AXI_ADDR_WIDTH-1:0])};
+  assign slave_araddr = {{(32-C_S_AXI_ADDR_WIDTH){1'b0}}, (axi_araddr[C_S_AXI_ADDR_WIDTH-1:0])};
   assign slave_data_in = S_AXI_WDATA;
 
   assign words_in_vctr_fifo = {{(16 - VCTR_FIFO_DEPTH_SIZE){1'b0}}, module_vector_fifo_data_count[0+:VCTR_FIFO_DEPTH_SIZE]};
