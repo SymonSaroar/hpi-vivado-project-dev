@@ -58,11 +58,11 @@
 		input wire [31:0] trace_buf_bram_addr_slave,
 		output wire [TRACE_BUF_DATA_WIDTH-1:0] trace_buf_bram_data,
 
-		output wire [VECTOR_DATA_WIDTH-1:0] vector_fifo_data_out;
-	    output wire trace_buf_we;
-	    output wire trace_buf_en;
-	    output wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra;
-	    output wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb;
+		output wire [VECTOR_DATA_WIDTH-1:0] vector_fifo_data_out,
+	    output wire trace_buf_we,
+	    output wire trace_buf_en,
+	    output wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addra,
+	    output wire [TRACE_BUF_ADDR_WIDTH-1:0] trace_buf_bram_addrb,
 		// User ports ends
 		// Do not modify the ports beyond this line
 
