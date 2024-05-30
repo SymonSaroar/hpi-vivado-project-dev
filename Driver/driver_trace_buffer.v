@@ -40,7 +40,7 @@ module driver_trace_buffer#(
         if(rstn == 1'b0) begin
             trace_buf_bram_addrb <= {TRACE_BUF_ADDR_WIDTH{1'b0}};
         end else begin
-            trace_buf_bram_addrb <= trace_buf_bram_addra + trace_buf_bram_addr_slave[0 +: TRACE_BUF_ADDR_WIDTH];
+            trace_buf_bram_addrb <= trace_buf_bram_addra - trace_buf_bram_addr_slave[0 +: TRACE_BUF_ADDR_WIDTH];
         end
     end
 endmodule
