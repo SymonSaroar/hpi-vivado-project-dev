@@ -5,7 +5,8 @@ module top;
   reg         reset_l;
 //reg [31:0]  master_data_in;
 //reg         master_data_in_val;
-  reg [31:0]  slave_addr;
+  reg [31:0]  slave_awaddr;
+  reg [31:0]  slave_araddr;
   reg         slave_rd;
   reg         slave_wr;
   reg [31:0]  slave_data_in;
@@ -18,11 +19,16 @@ module top;
   reg         vctr_fifo_wr;
   reg         vctr_fifo_rd;
   reg         addr_fifo_rd;
+  reg         vector_fifo_empty;
+  reg         vector_fifo_full;
   reg         vector_fifo_underrun;
   reg         vector_fifo_overrun;
+  reg         addr_fifo_full;
+  reg         addr_fifo_empty;
   reg         addr_fifo_underrun;
   reg         addr_fifo_overrun;
   reg         addr_fifo_almost_full;
+  reg [255:0] trace_buf_bram_data;
 
 //wire [31:0] master_add;
   wire [31:0] slave_data_out;
@@ -44,7 +50,8 @@ module top;
     reset_l                = 1'b1;
 //  master_data_in         = 32'h0000_0000;
 //  master_data_in_val     = 1'b0;
-    slave_addr             = 32'h0000_0000;
+    slave_awaddr           = 32'h0000_0000;
+    slave_araddr           = 32'h0000_0000;
     slave_rd               = 1'b0;
     slave_wr               = 1'b0;
     slave_data_in          = 32'h0000_0000;
@@ -57,11 +64,16 @@ module top;
     vctr_fifo_wr           = 1'b0;
     vctr_fifo_rd           = 1'b0;
     addr_fifo_rd           = 1'b0;
+    vector_fifo_full       = 1'b0;  // FIXME need to test these bits and error gets set
+    vector_fifo_empty      = 1'b0;  // FIXME need to test these bits and error gets set
     vector_fifo_underrun   = 1'b0;  // FIXME need to test these bits and error gets set
     vector_fifo_overrun    = 1'b0;
+    addr_fifo_full         = 1'b0;  // FIXME need to test these bits and error can be read
+    addr_fifo_empty        = 1'b0;  // FIXME need to test these bits and error can be read
     addr_fifo_underrun     = 1'b0;
     addr_fifo_overrun      = 1'b0;
     addr_fifo_almost_full  = 1'b0;
+    trace_buf_bram_data    = 256'd0;
     i = 0; j = 0; k = 0; l = 0;
   end
     
@@ -280,7 +292,8 @@ module top;
     $display("time: %0t ps *******************************************",$time);
     $display("time: %0t ps Reading Addr Cycle Monitor Registers       ",$time);
     $display("time: %0t ps *******************************************",$time);
-    reg_addr = 32'h0001_1000; expected_data = 32'h0000_0010;
+//  reg_addr = 32'h0001_1000; expected_data = 32'h0000_0010;  // FINDOUT
+    reg_addr = 32'h0000_1000; expected_data = 32'h0000_0010;
     repeat(15) begin
       slave_read(reg_addr,expected_data); 
       repeat (1) @(negedge clk);
@@ -292,9 +305,10 @@ module top;
     $display("time: %0t ps ******************************************",$time);
     $display("time: %0t ps Reading Addr FIFO Monitor Registers        ",$time);
     $display("time: %0t ps ******************************************",$time);
-    reg_addr = 32'h0001_2000; expected_data = 32'h0000_0008;
+//  reg_addr = 32'h0001_2000; expected_data = 32'h0000_0008;   // FINDOUT
+    reg_addr = 32'h0000_2000; expected_data = 32'h0000_0008;
     repeat(15) begin
-      if( reg_addr == 32'h0001_2004) begin
+      if( reg_addr == 32'h0000_2004) begin
       //$display("time: %0t ps *  MADE It 1    **************************",$time);
         expected_data = 32'h0000_0007;
       end
@@ -311,11 +325,11 @@ module top;
     $display("time: %0t ps Reading Vector Cycle Monitor Registers    ",$time);
     $display("time: %0t ps ******************************************",$time);
     repeat (10) @(negedge clk);
-    reg_addr = 32'h0001_3000; expected_data = 32'h0000_FFFF;
+    reg_addr = 32'h0000_3000; expected_data = 32'h0000_FFFF;
     slave_read(reg_addr,expected_data); 
-    reg_addr = 32'h0001_3004; expected_data = 32'h0000_001A;
+    reg_addr = 32'h0000_3004; expected_data = 32'h0000_001A;
     slave_read(reg_addr,expected_data); 
-    reg_addr = 32'h0001_3008; expected_data = 32'h0000_0018;
+    reg_addr = 32'h0000_3008; expected_data = 32'h0000_0018;
     repeat(14) begin
       slave_read(reg_addr,expected_data); 
       repeat (1) @(negedge clk);
@@ -327,9 +341,9 @@ module top;
     $display("time: %0t ps ******************************************",$time);
     $display("time: %0t ps Reading Addr FIFO Monitor Registers        ",$time);
     $display("time: %0t ps ******************************************",$time);
-    reg_addr = 32'h0001_4000; expected_data = 32'h0000_0008;
+    reg_addr = 32'h0000_4000; expected_data = 32'h0000_0008;
     repeat(15) begin
-      if( reg_addr == 32'h0001_4004) begin
+      if( reg_addr == 32'h0000_4004) begin
       //$display("time: %0t ps *  MADE It 1    **************************",$time);
         expected_data = 32'h0000_0007;
       end
@@ -385,7 +399,7 @@ task slave_write;
 //  $display("time: %0t ps ******************************************",$time);
 //  $display("time: %0t ps Beginning slave Write ",$time                    );
 //  $display("time: %0t ps ******************************************",$time);
-    slave_addr = addr; 
+    slave_awaddr = addr; 
     slave_data_in = data; 
     slave_wr   =   1'b1; 
     $display("time: %0t ps ******************************************",$time);
@@ -408,7 +422,7 @@ task slave_read;
 //  $display("time: %0t ps ******************************************",$time);
 //  $display("time: %0t ps Beginning slave Read                      ",$time);
 //  $display("time: %0t ps ******************************************",$time);
-    slave_addr = addr; 
+    slave_araddr = addr; 
     slave_rd   =   1'b1; 
     repeat (1) @(negedge clk);
     slave_rd   =   1'b0; 
@@ -418,7 +432,7 @@ task slave_read;
     $display("time: %0t ps ****************************************************",$time);
     $display("time: %0t ps slave read addr: %h data: %h : %0d                  ",$time, addr, data, data);
     $display("time: %0t ps ****************************************************",$time);
-    if(data != expected_data) begin
+    if(data !== expected_data) begin
       error_count +=1;
       $display("time: %0t ps !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",$time);
       $display("time: %0t ps slave read ERROR exected: %h actual: %h ERR CNT = %0d   ",$time, expected_data, data, error_count);
@@ -430,13 +444,57 @@ task slave_read;
   end
 endtask
 
+//////////////////////////////////////////////////////////////////////////////
+// recrating commented out logic in monitor block for words in FIFO
+//////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// Words in Vector FIFO counter
+///////////////////////////////////////////////////////////////////////////////
+reg [15:0] words_in_vctr_fifo;
+
+always @(posedge clk ) begin
+  if(reset_l == 1'b0) 
+    words_in_vctr_fifo <= 16'h0000;
+//else if(run_program && !active_program)
+//  words_in_vctr_fifo <= 16'h0000;
+  else if( vctr_fifo_wr && !vctr_fifo_rd && words_in_vctr_fifo != 16'hFFFF)
+    words_in_vctr_fifo <= words_in_vctr_fifo + 16'h0001;
+  else if(!vctr_fifo_wr &&  vctr_fifo_rd && words_in_vctr_fifo != 16'h0000)
+    words_in_vctr_fifo <= words_in_vctr_fifo - 16'h0001;
+  else if( vctr_fifo_wr &&  vctr_fifo_rd)
+    words_in_vctr_fifo <= words_in_vctr_fifo;
+  else
+    words_in_vctr_fifo <= words_in_vctr_fifo;
+end
+
+///////////////////////////////////////////////////////////////////////////////
+// Words in Address FIFO counter
+///////////////////////////////////////////////////////////////////////////////
+reg [15:0] words_in_addr_fifo;
+wire addr_fifo_wr; 
+
+always @(posedge clk ) begin
+  if(reset_l == 1'b0) 
+    words_in_addr_fifo <= 16'h0000;
+//else if(run_program && !active_program)
+//  words_in_addr_fifo <= 16'h0000;
+  else if( addr_fifo_wr && !addr_fifo_rd && words_in_addr_fifo != 16'hFFFF)
+    words_in_addr_fifo <= words_in_addr_fifo + 16'h0001;
+  else if(!addr_fifo_wr &&  addr_fifo_rd && words_in_addr_fifo != 16'h0000)
+    words_in_addr_fifo <= words_in_addr_fifo - 16'h0001;
+  else if( addr_fifo_wr &&  addr_fifo_rd)
+    words_in_addr_fifo <= words_in_addr_fifo;
+  else
+    words_in_addr_fifo <= words_in_addr_fifo;
+end
+
 wire active_program; 
 wire end_program; 
 wire run_program;
 wire [15:0] addr_cycle_cnt;
 wire [15:0] vctr_cycle_cnt;
-wire [15:0] words_in_addr_fifo;
-wire [15:0] words_in_vctr_fifo;
+wire [31:0] trace_buf_bram_addr;
 wire [15:0] addr_fifo_threshold; // FIXME check that this fifo works
 wire [15:0] vector_fifo_threshold;
   
@@ -447,7 +505,8 @@ driver driver_0(
 //.master_rd(master_rd),
 //.master_data_in(master_data_in),
 //.master_data_in_val(master_data_in_val),
-  .slave_addr(slave_addr),
+  .slave_awaddr(slave_awaddr),
+  .slave_araddr(slave_araddr),
   .slave_rd(slave_rd),
   .slave_wr(slave_wr),
   .slave_data_in(slave_data_in),
@@ -458,9 +517,13 @@ driver driver_0(
   .vctr_fifo_wr(vctr_fifo_wr),
   .vctr_fifo_rd(vctr_fifo_rd),
   .active_program(active_program),
+  .vector_fifo_empty(vector_fifo_empty),
+  .vector_fifo_full(vector_fifo_full),
   .vector_fifo_underrun(vector_fifo_underrun),
   .vector_fifo_overrun(vector_fifo_overrun),
   .vector_fifo_threshold(vector_fifo_threshold),
+  .addr_fifo_full(addr_fifo_full),
+  .addr_fifo_empty(addr_fifo_empty),
   .addr_fifo_overrun(addr_fifo_overrun),
   .addr_fifo_underrun(addr_fifo_underrun),
   .addr_fifo_threshold(addr_fifo_threshold),
@@ -470,7 +533,9 @@ driver driver_0(
   .addr_cycle_cnt(addr_cycle_cnt),
   .vctr_cycle_cnt(vctr_cycle_cnt),
   .words_in_addr_fifo(words_in_addr_fifo),
-  .words_in_vctr_fifo(words_in_vctr_fifo)
+  .words_in_vctr_fifo(words_in_vctr_fifo),
+  .trace_buf_bram_data(trace_buf_bram_data),
+  .trace_buf_bram_addr(trace_buf_bram_addr)
 );
   
 endmodule: top
