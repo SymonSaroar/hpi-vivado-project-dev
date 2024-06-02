@@ -3,177 +3,589 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="testbench_behav.wdb" id="1">
+      <db_ref path="top_behav.wdb" id="1">
          <top_modules>
-            <top_module name="axi_vip_pkg" />
             <top_module name="glbl" />
-            <top_module name="std" />
-            <top_module name="testbench" />
-            <top_module name="vcomponents" />
-            <top_module name="xil_common_vip_pkg" />
+            <top_module name="top" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="2,718.001 ns"></ZoomEndTime>
-      <Cursor1Time time="289.125 ns"></Cursor1Time>
+      <ZoomStartTime time="1,114,383.250 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,114,456.151 ns"></ZoomEndTime>
+      <Cursor1Time time="1,114,444.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="314"></NameColumnWidth>
-      <ValueColumnWidth column_width="96"></ValueColumnWidth>
+      <ValueColumnWidth column_width="80"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="17" />
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_AWADDR" type="array">
-      <obj_property name="ElementShortName">S_AXI_AWADDR[5:0]</obj_property>
-      <obj_property name="ObjectShortName">S_AXI_AWADDR[5:0]</obj_property>
+   <WVObjectSize size="141" />
+   <wvobject type="logic" fp_name="/top/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_AWLEN" type="array">
-      <obj_property name="ElementShortName">S_AXI_AWLEN[7:0]</obj_property>
-      <obj_property name="ObjectShortName">S_AXI_AWLEN[7:0]</obj_property>
+   <wvobject type="logic" fp_name="/top/reset_l">
+      <obj_property name="ElementShortName">reset_l</obj_property>
+      <obj_property name="ObjectShortName">reset_l</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_AWVALID" type="logic">
-      <obj_property name="ElementShortName">S_AXI_AWVALID</obj_property>
-      <obj_property name="ObjectShortName">S_AXI_AWVALID</obj_property>
+   <wvobject type="array" fp_name="/top/slave_awaddr">
+      <obj_property name="ElementShortName">slave_awaddr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">slave_awaddr[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_AWREADY" type="logic">
-      <obj_property name="ElementShortName">S_AXI_AWREADY</obj_property>
-      <obj_property name="ObjectShortName">S_AXI_AWREADY</obj_property>
+   <wvobject type="array" fp_name="/top/slave_araddr">
+      <obj_property name="ElementShortName">slave_araddr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">slave_araddr[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_WDATA" type="array">
-      <obj_property name="ElementShortName">S_AXI_WDATA[31:0]</obj_property>
-      <obj_property name="ObjectShortName">S_AXI_WDATA[31:0]</obj_property>
+   <wvobject type="logic" fp_name="/top/slave_rd">
+      <obj_property name="ElementShortName">slave_rd</obj_property>
+      <obj_property name="ObjectShortName">slave_rd</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_WLAST" type="logic">
-      <obj_property name="ElementShortName">S_AXI_WLAST</obj_property>
-      <obj_property name="ObjectShortName">S_AXI_WLAST</obj_property>
+   <wvobject type="logic" fp_name="/top/slave_wr">
+      <obj_property name="ElementShortName">slave_wr</obj_property>
+      <obj_property name="ObjectShortName">slave_wr</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_WVALID" type="logic">
-      <obj_property name="ElementShortName">S_AXI_WVALID</obj_property>
-      <obj_property name="ObjectShortName">S_AXI_WVALID</obj_property>
+   <wvobject type="array" fp_name="/top/slave_data_in">
+      <obj_property name="ElementShortName">slave_data_in[31:0]</obj_property>
+      <obj_property name="ObjectShortName">slave_data_in[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/S_AXI_WREADY" type="logic">
-      <obj_property name="ElementShortName">S_AXI_WREADY</obj_property>
-      <obj_property name="ObjectShortName">S_AXI_WREADY</obj_property>
+   <wvobject type="array" fp_name="/top/reg_addr">
+      <obj_property name="ElementShortName">reg_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_addr[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/addr_fifo_din" type="array">
+   <wvobject type="array" fp_name="/top/reg_wr_data">
+      <obj_property name="ElementShortName">reg_wr_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_wr_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/expected_data">
+      <obj_property name="ElementShortName">expected_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">expected_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/sim_count">
+      <obj_property name="ElementShortName">sim_count[63:0]</obj_property>
+      <obj_property name="ObjectShortName">sim_count[63:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/error_count">
+      <obj_property name="ElementShortName">error_count[63:0]</obj_property>
+      <obj_property name="ObjectShortName">error_count[63:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/mod_sim_count">
+      <obj_property name="ElementShortName">mod_sim_count[63:0]</obj_property>
+      <obj_property name="ObjectShortName">mod_sim_count[63:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/vctr_fifo_wr">
+      <obj_property name="ElementShortName">vctr_fifo_wr</obj_property>
+      <obj_property name="ObjectShortName">vctr_fifo_wr</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/vctr_fifo_rd">
+      <obj_property name="ElementShortName">vctr_fifo_rd</obj_property>
+      <obj_property name="ObjectShortName">vctr_fifo_rd</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_rd">
+      <obj_property name="ElementShortName">addr_fifo_rd</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_rd</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/vector_fifo_empty">
+      <obj_property name="ElementShortName">vector_fifo_empty</obj_property>
+      <obj_property name="ObjectShortName">vector_fifo_empty</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/vector_fifo_full">
+      <obj_property name="ElementShortName">vector_fifo_full</obj_property>
+      <obj_property name="ObjectShortName">vector_fifo_full</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/vector_fifo_underrun">
+      <obj_property name="ElementShortName">vector_fifo_underrun</obj_property>
+      <obj_property name="ObjectShortName">vector_fifo_underrun</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/vector_fifo_overrun">
+      <obj_property name="ElementShortName">vector_fifo_overrun</obj_property>
+      <obj_property name="ObjectShortName">vector_fifo_overrun</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_full">
+      <obj_property name="ElementShortName">addr_fifo_full</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_full</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_empty">
+      <obj_property name="ElementShortName">addr_fifo_empty</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_empty</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_underrun">
+      <obj_property name="ElementShortName">addr_fifo_underrun</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_underrun</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_overrun">
+      <obj_property name="ElementShortName">addr_fifo_overrun</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_overrun</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_almost_full">
+      <obj_property name="ElementShortName">addr_fifo_almost_full</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_almost_full</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/trace_buf_bram_data">
+      <obj_property name="ElementShortName">trace_buf_bram_data[255:0]</obj_property>
+      <obj_property name="ObjectShortName">trace_buf_bram_data[255:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/slave_data_out">
+      <obj_property name="ElementShortName">slave_data_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">slave_data_out[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/addr_fifo_din">
       <obj_property name="ElementShortName">addr_fifo_din[31:0]</obj_property>
       <obj_property name="ObjectShortName">addr_fifo_din[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/addr_fifo_wr" type="logic">
-      <obj_property name="ElementShortName">addr_fifo_wr</obj_property>
-      <obj_property name="ObjectShortName">addr_fifo_wr</obj_property>
+   <wvobject type="array" fp_name="/top/i">
+      <obj_property name="ElementShortName">i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_cycle_cnt" type="array">
-      <obj_property name="ElementShortName">addr_cycle_cnt[31:0]</obj_property>
-      <obj_property name="ObjectShortName">addr_cycle_cnt[31:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject type="array" fp_name="/top/j">
+      <obj_property name="ElementShortName">j[31:0]</obj_property>
+      <obj_property name="ObjectShortName">j[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts" type="array">
-      <obj_property name="ElementShortName">addr_mon_cnts[15:0][15:0]</obj_property>
-      <obj_property name="ObjectShortName">addr_mon_cnts[15:0][15:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[15]" type="array">
-         <obj_property name="ElementShortName">[15][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[15][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[14]" type="array">
-         <obj_property name="ElementShortName">[14][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[14][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[13]" type="array">
-         <obj_property name="ElementShortName">[13][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[13][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[12]" type="array">
-         <obj_property name="ElementShortName">[12][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[12][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[11]" type="array">
-         <obj_property name="ElementShortName">[11][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[11][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[10]" type="array">
-         <obj_property name="ElementShortName">[10][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[10][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[9]" type="array">
-         <obj_property name="ElementShortName">[9][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[9][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[8]" type="array">
-         <obj_property name="ElementShortName">[8][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[8][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[7]" type="array">
-         <obj_property name="ElementShortName">[7][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[7][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[6]" type="array">
-         <obj_property name="ElementShortName">[6][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[6][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[5]" type="array">
-         <obj_property name="ElementShortName">[5][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[5][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[4]" type="array">
-         <obj_property name="ElementShortName">[4][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[4][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[3]" type="array">
-         <obj_property name="ElementShortName">[3][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[3][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[2]" type="array">
-         <obj_property name="ElementShortName">[2][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[2][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[1]" type="array">
-         <obj_property name="ElementShortName">[1][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[1][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_monitor_0/addr_mon_cnts[0]" type="array">
-         <obj_property name="ElementShortName">[0][15:0]</obj_property>
-         <obj_property name="ObjectShortName">[0][15:0]</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
+   <wvobject type="array" fp_name="/top/k">
+      <obj_property name="ElementShortName">k[31:0]</obj_property>
+      <obj_property name="ObjectShortName">k[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/addr_mon_cnts" type="array">
-      <obj_property name="ElementShortName">addr_mon_cnts[15:0][15:0]</obj_property>
-      <obj_property name="ObjectShortName">addr_mon_cnts[15:0][15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject type="array" fp_name="/top/l">
+      <obj_property name="ElementShortName">l[31:0]</obj_property>
+      <obj_property name="ObjectShortName">l[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/freeze_program" type="logic">
-      <obj_property name="ElementShortName">freeze_program</obj_property>
-      <obj_property name="ObjectShortName">freeze_program</obj_property>
+   <wvobject type="array" fp_name="/top/fd">
+      <obj_property name="ElementShortName">fd[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fd[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/abort_program" type="logic">
-      <obj_property name="ElementShortName">abort_program</obj_property>
-      <obj_property name="ObjectShortName">abort_program</obj_property>
+   <wvobject type="logic" fp_name="/top/active_program">
+      <obj_property name="ElementShortName">active_program</obj_property>
+      <obj_property name="ObjectShortName">active_program</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/run_program" type="logic">
+   <wvobject type="logic" fp_name="/top/end_program">
+      <obj_property name="ElementShortName">end_program</obj_property>
+      <obj_property name="ObjectShortName">end_program</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/run_program">
       <obj_property name="ElementShortName">run_program</obj_property>
       <obj_property name="ObjectShortName">run_program</obj_property>
    </wvobject>
-   <wvobject fp_name="/testbench/DUT/design_1_i/custom_slave_v1_0_S0_0/inst/driver_0/driver_cntrl_0/send_consec_addr" type="logic">
-      <obj_property name="ElementShortName">send_consec_addr</obj_property>
-      <obj_property name="ObjectShortName">send_consec_addr</obj_property>
+   <wvobject type="array" fp_name="/top/addr_cycle_cnt">
+      <obj_property name="ElementShortName">addr_cycle_cnt[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_cycle_cnt[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/vctr_cycle_cnt">
+      <obj_property name="ElementShortName">vctr_cycle_cnt[15:0]</obj_property>
+      <obj_property name="ObjectShortName">vctr_cycle_cnt[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/trace_buf_bram_addr">
+      <obj_property name="ElementShortName">trace_buf_bram_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">trace_buf_bram_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/addr_fifo_threshold">
+      <obj_property name="ElementShortName">addr_fifo_threshold[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_threshold[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/vector_fifo_threshold">
+      <obj_property name="ElementShortName">vector_fifo_threshold[15:0]</obj_property>
+      <obj_property name="ObjectShortName">vector_fifo_threshold[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_wr">
+      <obj_property name="ElementShortName">addr_fifo_wr</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_wr</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/words_in_addr_fifo">
+      <obj_property name="ElementShortName">words_in_addr_fifo[15:0]</obj_property>
+      <obj_property name="ObjectShortName">words_in_addr_fifo[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/words_in_vctr_fifo">
+      <obj_property name="ElementShortName">words_in_vctr_fifo[15:0]</obj_property>
+      <obj_property name="ObjectShortName">words_in_vctr_fifo[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider307" type="divider">
+      <obj_property name="label">Addr Fifo</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/srst">
+      <obj_property name="ElementShortName">srst</obj_property>
+      <obj_property name="ObjectShortName">srst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/addr_fifo_0/din">
+      <obj_property name="ElementShortName">din[31:0]</obj_property>
+      <obj_property name="ObjectShortName">din[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/wr_en">
+      <obj_property name="ElementShortName">wr_en</obj_property>
+      <obj_property name="ObjectShortName">wr_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/rd_en">
+      <obj_property name="ElementShortName">rd_en</obj_property>
+      <obj_property name="ObjectShortName">rd_en</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/addr_fifo_0/dout">
+      <obj_property name="ElementShortName">dout[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dout[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/full">
+      <obj_property name="ElementShortName">full</obj_property>
+      <obj_property name="ObjectShortName">full</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/almost_full">
+      <obj_property name="ElementShortName">almost_full</obj_property>
+      <obj_property name="ObjectShortName">almost_full</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/wr_ack">
+      <obj_property name="ElementShortName">wr_ack</obj_property>
+      <obj_property name="ObjectShortName">wr_ack</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/overflow">
+      <obj_property name="ElementShortName">overflow</obj_property>
+      <obj_property name="ObjectShortName">overflow</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/empty">
+      <obj_property name="ElementShortName">empty</obj_property>
+      <obj_property name="ObjectShortName">empty</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/almost_empty">
+      <obj_property name="ElementShortName">almost_empty</obj_property>
+      <obj_property name="ObjectShortName">almost_empty</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/valid">
+      <obj_property name="ElementShortName">valid</obj_property>
+      <obj_property name="ObjectShortName">valid</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/underflow">
+      <obj_property name="ElementShortName">underflow</obj_property>
+      <obj_property name="ObjectShortName">underflow</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/words_in_addr_fifo_tb">
+      <obj_property name="ElementShortName">words_in_addr_fifo_tb[15:0]</obj_property>
+      <obj_property name="ObjectShortName">words_in_addr_fifo_tb[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/addr_fifo_0/data_count">
+      <obj_property name="ElementShortName">data_count[13:0]</obj_property>
+      <obj_property name="ObjectShortName">data_count[13:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/wr_rst_busy">
+      <obj_property name="ElementShortName">wr_rst_busy</obj_property>
+      <obj_property name="ObjectShortName">wr_rst_busy</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/addr_fifo_0/rd_rst_busy">
+      <obj_property name="ElementShortName">rd_rst_busy</obj_property>
+      <obj_property name="ObjectShortName">rd_rst_busy</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider308" type="divider">
+      <obj_property name="label">Vector Fifo</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/rstn">
+      <obj_property name="ElementShortName">rstn</obj_property>
+      <obj_property name="ObjectShortName">rstn</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/wr">
+      <obj_property name="ElementShortName">wr</obj_property>
+      <obj_property name="ObjectShortName">wr</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/rd">
+      <obj_property name="ElementShortName">rd</obj_property>
+      <obj_property name="ObjectShortName">rd</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/data_in">
+      <obj_property name="ElementShortName">data_in[127:0]</obj_property>
+      <obj_property name="ObjectShortName">data_in[127:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/words_in_vctr_fifo_tb">
+      <obj_property name="ElementShortName">words_in_vctr_fifo_tb[15:0]</obj_property>
+      <obj_property name="ObjectShortName">words_in_vctr_fifo_tb[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/data_count">
+      <obj_property name="ElementShortName">data_count[16:0]</obj_property>
+      <obj_property name="ObjectShortName">data_count[16:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/rd_en_100ns">
+      <obj_property name="ElementShortName">rd_en_100ns</obj_property>
+      <obj_property name="ObjectShortName">rd_en_100ns</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/data_out">
+      <obj_property name="ElementShortName">data_out[191:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[191:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/data_out_delayed">
+      <obj_property name="ElementShortName">data_out_delayed[191:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out_delayed[191:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/full">
+      <obj_property name="ElementShortName">full</obj_property>
+      <obj_property name="ObjectShortName">full</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/empty">
+      <obj_property name="ElementShortName">empty</obj_property>
+      <obj_property name="ObjectShortName">empty</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/threshold">
+      <obj_property name="ElementShortName">threshold</obj_property>
+      <obj_property name="ObjectShortName">threshold</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/overflow">
+      <obj_property name="ElementShortName">overflow</obj_property>
+      <obj_property name="ObjectShortName">overflow</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/underflow">
+      <obj_property name="ElementShortName">underflow</obj_property>
+      <obj_property name="ObjectShortName">underflow</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/mem0">
+      <obj_property name="ElementShortName">mem0[65535:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem0[65535:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/mem1">
+      <obj_property name="ElementShortName">mem1[65535:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem1[65535:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/mem2">
+      <obj_property name="ElementShortName">mem2[65535:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem2[65535:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/mem3">
+      <obj_property name="ElementShortName">mem3[65535:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem3[65535:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/mem4">
+      <obj_property name="ElementShortName">mem4[65535:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem4[65535:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/mem5">
+      <obj_property name="ElementShortName">mem5[65535:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem5[65535:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/data_out_reg">
+      <obj_property name="ElementShortName">data_out_reg[191:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out_reg[191:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/w_ptr">
+      <obj_property name="ElementShortName">w_ptr[16:0]</obj_property>
+      <obj_property name="ObjectShortName">w_ptr[16:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/r_ptr">
+      <obj_property name="ElementShortName">r_ptr[16:0]</obj_property>
+      <obj_property name="ObjectShortName">r_ptr[16:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/full_reg">
+      <obj_property name="ElementShortName">full_reg</obj_property>
+      <obj_property name="ObjectShortName">full_reg</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/empty_reg">
+      <obj_property name="ElementShortName">empty_reg</obj_property>
+      <obj_property name="ObjectShortName">empty_reg</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/threshold_reg">
+      <obj_property name="ElementShortName">threshold_reg</obj_property>
+      <obj_property name="ObjectShortName">threshold_reg</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/overflow_reg">
+      <obj_property name="ElementShortName">overflow_reg</obj_property>
+      <obj_property name="ObjectShortName">overflow_reg</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/underflow_reg">
+      <obj_property name="ElementShortName">underflow_reg</obj_property>
+      <obj_property name="ObjectShortName">underflow_reg</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/wr_en">
+      <obj_property name="ElementShortName">wr_en</obj_property>
+      <obj_property name="ObjectShortName">wr_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/rd_en">
+      <obj_property name="ElementShortName">rd_en</obj_property>
+      <obj_property name="ObjectShortName">rd_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/equal">
+      <obj_property name="ElementShortName">equal</obj_property>
+      <obj_property name="ObjectShortName">equal</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/first_bit">
+      <obj_property name="ElementShortName">first_bit</obj_property>
+      <obj_property name="ObjectShortName">first_bit</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/overflow_en">
+      <obj_property name="ElementShortName">overflow_en</obj_property>
+      <obj_property name="ObjectShortName">overflow_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/underflow_en">
+      <obj_property name="ElementShortName">underflow_en</obj_property>
+      <obj_property name="ObjectShortName">underflow_en</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/diff">
+      <obj_property name="ElementShortName">diff[16:0]</obj_property>
+      <obj_property name="ObjectShortName">diff[16:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/data_count_reg">
+      <obj_property name="ElementShortName">data_count_reg[16:0]</obj_property>
+      <obj_property name="ObjectShortName">data_count_reg[16:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/cnt">
+      <obj_property name="ElementShortName">cnt</obj_property>
+      <obj_property name="ObjectShortName">cnt</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/rd_clk_counter">
+      <obj_property name="ElementShortName">rd_clk_counter[5:0]</obj_property>
+      <obj_property name="ObjectShortName">rd_clk_counter[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/datapath_fifo_0/rd_clk">
+      <obj_property name="ElementShortName">rd_clk</obj_property>
+      <obj_property name="ObjectShortName">rd_clk</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/INPUT_DATA_WIDTH">
+      <obj_property name="ElementShortName">INPUT_DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">INPUT_DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/OUTPUT_DATA_WIDTH">
+      <obj_property name="ElementShortName">OUTPUT_DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">OUTPUT_DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/DEPTH">
+      <obj_property name="ElementShortName">DEPTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">DEPTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/DEPTH_SIZE">
+      <obj_property name="ElementShortName">DEPTH_SIZE[31:0]</obj_property>
+      <obj_property name="ObjectShortName">DEPTH_SIZE[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/CLK_DIV">
+      <obj_property name="ElementShortName">CLK_DIV[31:0]</obj_property>
+      <obj_property name="ObjectShortName">CLK_DIV[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/datapath_fifo_0/ptr_mask">
+      <obj_property name="ElementShortName">ptr_mask[15:0]</obj_property>
+      <obj_property name="ObjectShortName">ptr_mask[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider279" type="divider">
+      <obj_property name="label">Monitor</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/reset">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/end_program">
+      <obj_property name="ElementShortName">end_program</obj_property>
+      <obj_property name="ObjectShortName">end_program</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/active_program">
+      <obj_property name="ElementShortName">active_program</obj_property>
+      <obj_property name="ObjectShortName">active_program</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/run_program">
+      <obj_property name="ElementShortName">run_program</obj_property>
+      <obj_property name="ObjectShortName">run_program</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/addr_fifo_wr">
+      <obj_property name="ElementShortName">addr_fifo_wr</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_wr</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/addr_fifo_rd">
+      <obj_property name="ElementShortName">addr_fifo_rd</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_rd</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/addr_cycle_cnt">
+      <obj_property name="ElementShortName">addr_cycle_cnt[15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_cycle_cnt[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/addr_mon_cnts">
+      <obj_property name="ElementShortName">addr_mon_cnts[15:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_mon_cnts[15:0][15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/addr_fifo_mon_cnts">
+      <obj_property name="ElementShortName">addr_fifo_mon_cnts[15:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_fifo_mon_cnts[15:0][15:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/vctr_fifo_wr">
+      <obj_property name="ElementShortName">vctr_fifo_wr</obj_property>
+      <obj_property name="ObjectShortName">vctr_fifo_wr</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/vctr_fifo_rd">
+      <obj_property name="ElementShortName">vctr_fifo_rd</obj_property>
+      <obj_property name="ObjectShortName">vctr_fifo_rd</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/vctr_cycle_cnt">
+      <obj_property name="ElementShortName">vctr_cycle_cnt[15:0]</obj_property>
+      <obj_property name="ObjectShortName">vctr_cycle_cnt[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/vctr_mon_cnts">
+      <obj_property name="ElementShortName">vctr_mon_cnts[15:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">vctr_mon_cnts[15:0][15:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/vctr_fifo_mon_cnts">
+      <obj_property name="ElementShortName">vctr_fifo_mon_cnts[15:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">vctr_fifo_mon_cnts[15:0][15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/words_in_addr_fifo">
+      <obj_property name="ElementShortName">words_in_addr_fifo[15:0]</obj_property>
+      <obj_property name="ObjectShortName">words_in_addr_fifo[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/words_in_vctr_fifo">
+      <obj_property name="ElementShortName">words_in_vctr_fifo[15:0]</obj_property>
+      <obj_property name="ObjectShortName">words_in_vctr_fifo[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/addr_first_write">
+      <obj_property name="ElementShortName">addr_first_write</obj_property>
+      <obj_property name="ObjectShortName">addr_first_write</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/vctr_first_write">
+      <obj_property name="ElementShortName">vctr_first_write</obj_property>
+      <obj_property name="ObjectShortName">vctr_first_write</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/cnt">
+      <obj_property name="ElementShortName">cnt</obj_property>
+      <obj_property name="ObjectShortName">cnt</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/top/driver_0/driver_monitor_0/vctr_fifo_word_wr">
+      <obj_property name="ElementShortName">vctr_fifo_word_wr</obj_property>
+      <obj_property name="ObjectShortName">vctr_fifo_word_wr</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/ADDR_MON_CNT_RANGE">
+      <obj_property name="ElementShortName">ADDR_MON_CNT_RANGE[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDR_MON_CNT_RANGE[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/ADDR_MON_CNT_SIZE">
+      <obj_property name="ElementShortName">ADDR_MON_CNT_SIZE[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ADDR_MON_CNT_SIZE[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/MAX_ADDR_CYCLE_CNT">
+      <obj_property name="ElementShortName">MAX_ADDR_CYCLE_CNT[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MAX_ADDR_CYCLE_CNT[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/VCTR_MON_CNT_RANGE">
+      <obj_property name="ElementShortName">VCTR_MON_CNT_RANGE[31:0]</obj_property>
+      <obj_property name="ObjectShortName">VCTR_MON_CNT_RANGE[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/VCTR_MON_CNT_SIZE">
+      <obj_property name="ElementShortName">VCTR_MON_CNT_SIZE[31:0]</obj_property>
+      <obj_property name="ObjectShortName">VCTR_MON_CNT_SIZE[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/MAX_VCTR_CYCLE_CNT">
+      <obj_property name="ElementShortName">MAX_VCTR_CYCLE_CNT[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MAX_VCTR_CYCLE_CNT[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/MAX_COUNT">
+      <obj_property name="ElementShortName">MAX_COUNT[15:0]</obj_property>
+      <obj_property name="ObjectShortName">MAX_COUNT[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/addr_cnt_iterations">
+      <obj_property name="ElementShortName">addr_cnt_iterations[31:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_cnt_iterations[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/top/driver_0/driver_monitor_0/vctr_cnt_iterations">
+      <obj_property name="ElementShortName">vctr_cnt_iterations[31:0]</obj_property>
+      <obj_property name="ObjectShortName">vctr_cnt_iterations[31:0]</obj_property>
    </wvobject>
 </wave_config>

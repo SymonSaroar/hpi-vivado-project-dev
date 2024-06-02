@@ -48,7 +48,7 @@
 		output wire arvalid,
 		output wire arready,
 		output wire [VECTOR_DATA_WIDTH-1 : 0] output_data,
-		output wire [VECTOR_FIFO_DEPTH_SIZE-1: 0] vector_fifo_data_count,
+		output wire [VECTOR_FIFO_DEPTH_SIZE: 0] vector_fifo_data_count,
 		output wire rvalid,
 		output wire rready,
 		output wire addr_fifo_rd,

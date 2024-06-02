@@ -12,7 +12,7 @@ module datapath_fifo #(
     input wire wr,
     input wire rd,
     input wire [INPUT_DATA_WIDTH - 1 : 0] data_in,
-    output wire [DEPTH_SIZE - 1: 0] data_count,
+    output wire [DEPTH_SIZE: 0] data_count,
     output reg rd_en_100ns,
     output wire [OUTPUT_DATA_WIDTH - 1 : 0] data_out,
     output reg [OUTPUT_DATA_WIDTH - 1 : 0] data_out_delayed,
@@ -36,9 +36,10 @@ module datapath_fifo #(
     reg full_reg, empty_reg, threshold_reg, overflow_reg, underflow_reg;
 //    reg almost_full_reg, almost_empty_reg;
     wire wr_en, rd_en;
+    wire fifo_wr, fifo_rd;
     wire equal, first_bit, overflow_en, underflow_en;
     wire [DEPTH_SIZE : 0] diff;
-    reg [DEPTH_SIZE - 1: 0] data_count_reg;
+    reg [DEPTH_SIZE: 0] data_count_reg;
     reg cnt;
     reg [5:0] rd_clk_counter;
     wire rd_clk;
@@ -53,21 +54,30 @@ module datapath_fifo #(
             rd_clk_counter <= rd_clk_counter + 1;
     end
     
+    always @(posedge clk) begin
+        if(~rstn) begin
+            cnt <= 1'b0;
+        end else if(wr) begin
+            cnt <= ~cnt;
+        end
+    end
+    
     assign wr_en = (~full_reg) && wr;
     always @(posedge clk) begin
         if(~rstn) begin
             w_ptr <= {(DEPTH_SIZE+1){1'b0}};
-            cnt <= 1'b0;
         end
         else if(wr_en) begin
             w_ptr <= w_ptr + cnt;
-            cnt <= cnt + 1;
         end else begin
             w_ptr <= w_ptr;
         end
     end
     
+    assign fifo_wr = wr && cnt;
+    
     assign rd_en = (~empty_reg) && rd && rd_clk;
+    assign fifo_rd = rd && rd_clk;
     always @(posedge clk) begin
         if(~rstn) begin
             rd_en_100ns <= 1'b0;
@@ -133,7 +143,7 @@ module datapath_fifo #(
 //  assign equal_empty = (w_ptr[DEPTH_SIZE-1:0] == r_ptr[DEPTH_SIZE-1:0]);
     assign diff = w_ptr - r_ptr;
     assign overflow_en = full_reg & wr;
-    assign underflow_en = empty_reg & rd_clk;
+    assign underflow_en = empty_reg & rd && rd_clk;
     
 //    always @(posedge clk or negedge rstn) begin
 //      if(~rstn) 
@@ -176,13 +186,18 @@ module datapath_fifo #(
             underflow_reg <= underflow_reg;
     end
     
-    always @(posedge clk) begin
-        if(~rstn)
+    always @(posedge clk ) begin
+        if(~rstn) begin
             data_count_reg <= 0;
-        else if(r_ptr[DEPTH_SIZE] ^ w_ptr[DEPTH_SIZE])
-            data_count_reg <= (w_ptr[DEPTH_SIZE-1:0] + DEPTH_SIZE) - r_ptr[DEPTH_SIZE-1:0];
-        else
-            data_count_reg <= w_ptr[DEPTH_SIZE-1:0] - r_ptr[DEPTH_SIZE-1:0];
+        end else if(fifo_wr && !fifo_rd && data_count_reg != DEPTH) begin
+            data_count_reg <= data_count_reg + 1;
+        end else if(!fifo_wr && fifo_rd && data_count_reg != 0) begin
+            data_count_reg <= data_count_reg - 1;
+        end else if( fifo_wr &&  fifo_rd) begin
+            data_count_reg <= data_count_reg;
+        end else begin
+            data_count_reg <= data_count_reg;
+        end
     end
     
     assign full = full_reg;

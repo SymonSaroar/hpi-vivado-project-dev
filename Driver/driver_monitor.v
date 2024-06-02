@@ -31,6 +31,9 @@ localparam addr_cnt_iterations = (MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE);
 localparam vctr_cnt_iterations = (MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE);
 reg addr_first_write;
 reg vctr_first_write;
+reg cnt;
+
+wire vctr_fifo_word_wr;
 
 ////////////////////////////////////////////////////////////////////////////////
 //  First section monitors the address fifo write 
@@ -93,13 +96,13 @@ always @(posedge clk ) begin
   end 
   else if(addr_fifo_wr && active_program && addr_first_write) begin
     for (int i = 0; i < addr_cnt_iterations; i += 1) begin
-      if(addr_cycle_cnt <= 16'd8                               && addr_mon_cnts[0] < MAX_COUNT) begin
+      if((i == 0) && addr_cycle_cnt <= ADDR_MON_CNT_RANGE && addr_mon_cnts[0] < MAX_COUNT) begin
         addr_mon_cnts[0] <= addr_mon_cnts[0] + 16'd1; 
       end
-      else if(addr_cycle_cnt > 16'd120                         && addr_mon_cnts[15] < MAX_COUNT) begin
-        addr_mon_cnts[15] <= addr_mon_cnts[15] + 16'd1; 
+      else if((i == addr_cnt_iterations-1) && addr_cycle_cnt > (i*ADDR_MON_CNT_RANGE) && addr_mon_cnts[addr_cnt_iterations-1] < MAX_COUNT) begin
+        addr_mon_cnts[addr_cnt_iterations-1] <= addr_mon_cnts[addr_cnt_iterations-1] + 16'd1; 
       end
-      else if (addr_cycle_cnt >= i * ADDR_MON_CNT_RANGE && addr_cycle_cnt < (i + 1) * ADDR_MON_CNT_RANGE && addr_mon_cnts[i] < MAX_COUNT)  begin
+      else if (addr_cycle_cnt > i * ADDR_MON_CNT_RANGE && addr_cycle_cnt <= (i + 1) * ADDR_MON_CNT_RANGE && addr_mon_cnts[i] < MAX_COUNT)  begin
         addr_mon_cnts[i] <= addr_mon_cnts[i] + 16'd1;
       end
     end     
@@ -122,13 +125,13 @@ always @(posedge clk ) begin
   end 
   else if(addr_fifo_wr && active_program && addr_first_write) begin
     for (int i = 0; i < addr_cnt_iterations; i += 1) begin
-      if(words_in_addr_fifo <= 16'd8                               && addr_fifo_mon_cnts[0] < MAX_COUNT) begin
+      if((i == 0) && words_in_addr_fifo <= ADDR_MON_CNT_RANGE && addr_fifo_mon_cnts[0] < MAX_COUNT) begin
         addr_fifo_mon_cnts[0] <= addr_fifo_mon_cnts[0] + 16'd1; 
       end
-      else if(words_in_addr_fifo > 16'd120                         && addr_fifo_mon_cnts[15] < MAX_COUNT) begin
-        addr_fifo_mon_cnts[15] <= addr_fifo_mon_cnts[15] + 16'd1; 
+      else if((i == addr_cnt_iterations-1) && words_in_addr_fifo > (i*ADDR_MON_CNT_RANGE) && addr_fifo_mon_cnts[addr_cnt_iterations-1] < MAX_COUNT) begin
+        addr_fifo_mon_cnts[addr_cnt_iterations-1] <= addr_fifo_mon_cnts[addr_cnt_iterations-1] + 16'd1; 
       end
-      else if (words_in_addr_fifo >= i * ADDR_MON_CNT_RANGE && words_in_addr_fifo < (i + 1) * ADDR_MON_CNT_RANGE && addr_fifo_mon_cnts[i] < MAX_COUNT)  begin
+      else if (words_in_addr_fifo > i * ADDR_MON_CNT_RANGE && words_in_addr_fifo <= (i + 1) * ADDR_MON_CNT_RANGE && addr_fifo_mon_cnts[i] < MAX_COUNT)  begin
         addr_fifo_mon_cnts[i] <= addr_fifo_mon_cnts[i] + 16'd1;
       end
     end     
@@ -138,10 +141,25 @@ end
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //  First section monitors the vector fifo write 
 /////////////////////////////////////////////////////////////////////////////////////////////////
+always @(posedge clk )
+    if(reset == 1'b0)
+        cnt <= 1'b0;
+    else if (vctr_fifo_wr)
+        cnt <= ~cnt;
+        
+assign vctr_fifo_word_wr = vctr_fifo_wr && cnt;
+// =====================================================
+// two writes adds one entry in the vector FIFO
+// two 128 bit writes adds one 192bit vector data.
+// =====================================================
+// one read removes one entry from the vector FIFO
+// one read outputs one 192bit vector data
+// =====================================================
+
 always @(posedge clk ) 
   if(reset == 1'b0) 
     vctr_first_write <= 1'b0;
-  else if (vctr_fifo_wr && active_program)
+  else if (vctr_fifo_word_wr && active_program)
     vctr_first_write <= 1'b1;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -152,11 +170,11 @@ always @(posedge clk )
 //     words_in_vctr_fifo <= 16'h0000;
 // //else if(run_program && !active_program)
 // //  words_in_vctr_fifo <= 16'h0000;
-//   else if( vctr_fifo_wr && !vctr_fifo_rd && words_in_vctr_fifo != 16'hFFFF)
+//   else if( vctr_fifo_word_wr && !vctr_fifo_rd && words_in_vctr_fifo != 16'hFFFF)
 //     words_in_vctr_fifo <= words_in_vctr_fifo + 16'h0001;
-//   else if(!vctr_fifo_wr &&  vctr_fifo_rd && words_in_vctr_fifo != 16'h0000)
+//   else if(!vctr_fifo_word_wr &&  vctr_fifo_rd && words_in_vctr_fifo != 16'h0000)
 //     words_in_vctr_fifo <= words_in_vctr_fifo - 16'h0001;
-//   else if( vctr_fifo_wr &&  vctr_fifo_rd)
+//   else if( vctr_fifo_word_wr &&  vctr_fifo_rd)
 //     words_in_vctr_fifo <= words_in_vctr_fifo;
 //   else
 //     words_in_vctr_fifo <= words_in_vctr_fifo;
@@ -169,7 +187,7 @@ always @(posedge clk )
     vctr_cycle_cnt <= 16'h0000;
   else if(end_program == 1'b1) 
     vctr_cycle_cnt <= 16'h0000;
-  else if (vctr_fifo_wr)
+  else if (vctr_fifo_word_wr)
     vctr_cycle_cnt <= 16'h0000;
   else if(vctr_cycle_cnt == 16'hFFFF)
     vctr_cycle_cnt <= vctr_cycle_cnt;
@@ -183,7 +201,7 @@ always @(posedge clk )
 ///////////////////////////////////////////////////////////////////////////////
 always @(posedge clk ) begin
   if(reset == 1'b0 ) begin
-    for (int i = 0; i < 16; i += 1) begin
+    for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
       vctr_mon_cnts[i] <= 16'd0;
     end
   end 
@@ -192,15 +210,15 @@ always @(posedge clk ) begin
       vctr_mon_cnts[i] <= 16'd0;
     end
   end 
-  else if(vctr_fifo_wr && active_program && vctr_first_write) begin
+  else if(vctr_fifo_word_wr && active_program && vctr_first_write) begin
     for (int i = 0; i < vctr_cnt_iterations; i += 1) begin 
-      if(vctr_cycle_cnt <= 16'd8                               && vctr_mon_cnts[0] < MAX_COUNT) begin
+      if((i == 0) && vctr_cycle_cnt <= VCTR_MON_CNT_RANGE && vctr_mon_cnts[0] < MAX_COUNT) begin
         vctr_mon_cnts[0] <= vctr_mon_cnts[0] + 16'd1; 
       end
-      else if(vctr_cycle_cnt > 16'd120                         && vctr_mon_cnts[15] < MAX_COUNT) begin 
-        vctr_mon_cnts[15] <= vctr_mon_cnts[15] + 16'd1; 
+      else if((i == vctr_cnt_iterations-1) && vctr_cycle_cnt > (i*VCTR_MON_CNT_RANGE) && vctr_mon_cnts[vctr_cnt_iterations-1] < MAX_COUNT) begin 
+        vctr_mon_cnts[vctr_cnt_iterations-1] <= vctr_mon_cnts[vctr_cnt_iterations-1] + 16'd1;
       end
-      else if ((vctr_cycle_cnt >= i*VCTR_MON_CNT_RANGE) && (vctr_cycle_cnt < (i+1)*VCTR_MON_CNT_RANGE) && vctr_mon_cnts[i] < MAX_COUNT) begin
+      else if ((vctr_cycle_cnt > i*VCTR_MON_CNT_RANGE) && (vctr_cycle_cnt <= (i+1)*VCTR_MON_CNT_RANGE) && vctr_mon_cnts[i] < MAX_COUNT) begin
         vctr_mon_cnts[i] <= vctr_mon_cnts[i] + 16'd1;
       end
     end     
@@ -212,7 +230,7 @@ end
 ///////////////////////////////////////////////////////////////////////////////
 always @(posedge clk ) begin
   if(reset == 1'b0 ) begin
-    for (int i = 0; i < 16; i += 1) begin
+    for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
       vctr_fifo_mon_cnts[i] <= 16'd0;
     end
   end 
@@ -221,15 +239,15 @@ always @(posedge clk ) begin
       vctr_fifo_mon_cnts[i] <= 16'd0;
     end
   end 
-  else if(vctr_fifo_wr && active_program && vctr_first_write) begin
+  else if(vctr_fifo_word_wr && active_program && vctr_first_write) begin
     for (int i = 0; i < vctr_cnt_iterations; i += 1) begin 
-      if(words_in_vctr_fifo <= 16'd8                               && vctr_fifo_mon_cnts[0] < MAX_COUNT) begin
+      if((i == 0) && words_in_vctr_fifo <= VCTR_MON_CNT_RANGE  && vctr_fifo_mon_cnts[0] < MAX_COUNT) begin
         vctr_fifo_mon_cnts[0] <= vctr_fifo_mon_cnts[0] + 16'd1; 
       end
-      else if(words_in_vctr_fifo > 16'd120                         && vctr_fifo_mon_cnts[15] < MAX_COUNT) begin // FIXME is this really paramaterized?
-        vctr_fifo_mon_cnts[15] <= vctr_fifo_mon_cnts[15] + 16'd1; 
+      else if((i == vctr_cnt_iterations-1) && words_in_vctr_fifo > (i*VCTR_MON_CNT_RANGE) && vctr_fifo_mon_cnts[vctr_cnt_iterations-1] < MAX_COUNT) begin // FIXME is this really paramaterized?
+        vctr_fifo_mon_cnts[vctr_cnt_iterations-1] <= vctr_fifo_mon_cnts[vctr_cnt_iterations-1] + 16'd1; 
       end
-      else if ((words_in_vctr_fifo >= i*VCTR_MON_CNT_RANGE) && (words_in_vctr_fifo < (i+1)*VCTR_MON_CNT_RANGE) && vctr_fifo_mon_cnts[i] < MAX_COUNT) begin
+      else if ((words_in_vctr_fifo > i*VCTR_MON_CNT_RANGE) && (words_in_vctr_fifo <= (i+1)*VCTR_MON_CNT_RANGE) && vctr_fifo_mon_cnts[i] < MAX_COUNT) begin
         vctr_fifo_mon_cnts[i] <= vctr_fifo_mon_cnts[i] + 16'd1;
       end
     end     

@@ -41,7 +41,7 @@
         input wire module_vector_fifo_empty,
         input wire module_vector_fifo_overflow,
         input wire module_vector_fifo_underflow,
-        input wire [VCTR_FIFO_DEPTH_SIZE-1:0] module_vector_fifo_data_count,
+        input wire [VCTR_FIFO_DEPTH_SIZE:0] module_vector_fifo_data_count,
 
         input wire module_addr_fifo_full,
         input wire module_addr_fifo_empty,
@@ -694,7 +694,7 @@
   assign slave_araddr = {{(32-C_S_AXI_ADDR_WIDTH){1'b0}}, (S_AXI_ARADDR[C_S_AXI_ADDR_WIDTH-1:0])};
   assign slave_data_in = S_AXI_WDATA;
 
-  assign words_in_vctr_fifo = {{(16 - VCTR_FIFO_DEPTH_SIZE){1'b0}}, module_vector_fifo_data_count[0+:VCTR_FIFO_DEPTH_SIZE]};
+  assign words_in_vctr_fifo = {{(16 - VCTR_FIFO_DEPTH_SIZE - 1){1'b0}}, module_vector_fifo_data_count[VCTR_FIFO_DEPTH_SIZE:0]};
   assign words_in_addr_fifo = {{(16 - 14){1'b0}}, module_addr_fifo_data_count[0+:14]};
 
   driver #(
@@ -734,8 +734,8 @@
     .run_program(run_program),
     .addr_cycle_cnt(addr_cycle_cnt),
     .vctr_cycle_cnt(vctr_cycle_cnt),
-    .words_in_addr_fifo(module_addr_fifo_data_count),
-    .words_in_vctr_fifo(module_vector_fifo_data_count),
+    .words_in_addr_fifo(words_in_addr_fifo),
+    .words_in_vctr_fifo(words_in_vctr_fifo),
     .trace_buf_bram_data(trace_buf_bram_data),
     .trace_buf_bram_addr(trace_buf_bram_addr)
   );

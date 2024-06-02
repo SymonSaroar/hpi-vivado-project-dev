@@ -1,4 +1,5 @@
 //`include "design.sv"
+`timescale 1 ps / 1 ps
 
 module top;
   reg         clk;
@@ -29,7 +30,9 @@ module top;
   reg         addr_fifo_overrun;
   reg         addr_fifo_almost_full;
   reg [255:0] trace_buf_bram_data;
-
+  reg [15:0] words_in_addr_fifo_tb;
+  reg [15:0] words_in_vctr_fifo_tb;
+  
 //wire [31:0] master_add;
   wire [31:0] slave_data_out;
   wire [31:0] addr_fifo_din;
@@ -64,16 +67,18 @@ module top;
     vctr_fifo_wr           = 1'b0;
     vctr_fifo_rd           = 1'b0;
     addr_fifo_rd           = 1'b0;
-    vector_fifo_full       = 1'b0;  // FIXME need to test these bits and error gets set
-    vector_fifo_empty      = 1'b0;  // FIXME need to test these bits and error gets set
-    vector_fifo_underrun   = 1'b0;  // FIXME need to test these bits and error gets set
-    vector_fifo_overrun    = 1'b0;
-    addr_fifo_full         = 1'b0;  // FIXME need to test these bits and error can be read
-    addr_fifo_empty        = 1'b0;  // FIXME need to test these bits and error can be read
-    addr_fifo_underrun     = 1'b0;
-    addr_fifo_overrun      = 1'b0;
-    addr_fifo_almost_full  = 1'b0;
+//    vector_fifo_full       = 1'b0;  // FIXME need to test these bits and error gets set
+//    vector_fifo_empty      = 1'b0;  // FIXME need to test these bits and error gets set
+//    vector_fifo_underrun   = 1'b0;  // FIXME need to test these bits and error gets set
+//    vector_fifo_overrun    = 1'b0;
+//    addr_fifo_full         = 1'b0;  // FIXME need to test these bits and error can be read
+//    addr_fifo_empty        = 1'b0;  // FIXME need to test these bits and error can be read
+//    addr_fifo_underrun     = 1'b0;
+//    addr_fifo_overrun      = 1'b0;
+//    addr_fifo_almost_full  = 1'b0;
     trace_buf_bram_data    = 256'd0;
+    words_in_addr_fifo_tb  = 16'd0;
+    words_in_vctr_fifo_tb  = 16'd0;
     i = 0; j = 0; k = 0; l = 0;
   end
     
@@ -180,7 +185,7 @@ module top;
 
       repeat (10) @(negedge clk);  // First to prime the pump
       vctr_fifo_wr = 1'b1;
-      repeat (1) @(negedge clk);
+      repeat (2) @(negedge clk);
       vctr_fifo_wr = 1'b0;
       repeat (1) @(negedge clk);
 
@@ -189,7 +194,7 @@ module top;
           $display("time: %0t ps loop 1: l=%0d  k=%0d                      ",$time,l,k);
           repeat (k) @(negedge clk);
           vctr_fifo_wr = 1'b1;
-          repeat (1) @(negedge clk);
+          repeat (2) @(negedge clk);
           vctr_fifo_wr = 1'b0;
           $display("time: %0t ps ******************************************",$time);
           $display("time: %0t ps 1st vector fifo write loop l=%0d k=%0d    ",$time,k,l);
@@ -199,7 +204,7 @@ module top;
 
       repeat (10) @(negedge clk);  
       vctr_fifo_wr = 1'b1;
-      repeat (1) @(negedge clk);
+      repeat (2) @(negedge clk);
       vctr_fifo_wr = 1'b0;
       repeat (1) @(negedge clk);
 
@@ -208,7 +213,7 @@ module top;
           $display("time: %0t ps loop 1: l=%0d  k=%0d                      ",$time,l,k);
           repeat (k) @(negedge clk);
           vctr_fifo_wr = 1'b1;
-          repeat (1) @(negedge clk);
+          repeat (2) @(negedge clk);
           vctr_fifo_wr = 1'b0;
           $display("time: %0t ps ******************************************",$time);
           $display("time: %0t ps 2nd vector fifo write loop l=%0d k=%0d    ",$time,k,l);
@@ -224,7 +229,7 @@ module top;
         $display("time: %0t ps ******************************************",$time);
         $display("time: %0t ps 3rd vector fifo write loop =%0d           ",$time,k);
         $display("time: %0t ps ******************************************",$time);
-        repeat (1) @(negedge clk);
+        repeat (2) @(negedge clk);
         vctr_fifo_wr = 1'b0;
         k+=1;
       end
@@ -274,15 +279,17 @@ module top;
     $display("time: %0t ps ******************************************",$time);
     $display("time: %0t ps Reading Status Registers                  ",$time);
     $display("time: %0t ps ******************************************",$time);
-    reg_addr = 32'h0000_0100; expected_data = 32'h0000_0000;
+    reg_addr = 32'h0000_0100; expected_data = 32'h0800_0000;  // Vector FIFO is full
     slave_read(reg_addr,expected_data); 
     reg_addr = 32'h0000_0104; expected_data = 32'h0000_0000;
     slave_read(reg_addr,expected_data); 
-    reg_addr = 32'h0000_0108; expected_data = 32'h0000_0089;
+//    reg_addr = 32'h0000_0108; expected_data = 32'h0000_0089;
+    reg_addr = 32'h0000_0108; expected_data = {16'h0000, words_in_addr_fifo_tb};
     slave_read(reg_addr,expected_data); 
     reg_addr = 32'h0000_010C; expected_data = 32'h0000_0000;
     slave_read(reg_addr,expected_data); 
-    reg_addr = 32'h0000_0110; expected_data = 32'h0000_ffff;
+//    reg_addr = 32'h0000_0110; expected_data = 32'h0000_ffff;
+    reg_addr = 32'h0000_0110; expected_data = {16'h0000, words_in_vctr_fifo_tb};
     slave_read(reg_addr,expected_data); 
     repeat (10) @(negedge clk);
 
@@ -308,14 +315,14 @@ module top;
 //  reg_addr = 32'h0001_2000; expected_data = 32'h0000_0008;   // FINDOUT
     reg_addr = 32'h0000_2000; expected_data = 32'h0000_0008;
     repeat(15) begin
-      if( reg_addr == 32'h0000_2004) begin
-      //$display("time: %0t ps *  MADE It 1    **************************",$time);
-        expected_data = 32'h0000_0007;
-      end
-      else begin
-        expected_data = 32'h0000_0008;
+//      if( reg_addr == 32'h0000_2004) begin
+//      //$display("time: %0t ps *  MADE It 1    **************************",$time);
+//        expected_data = 32'h0000_0007;
+//      end
+//      else begin
+      expected_data = 32'h0000_0008;
       //$display("time: %0t ps *  MADE It 2    **************************",$time);
-      end
+//      end
       slave_read(reg_addr,expected_data); 
       repeat (1) @(negedge clk);
       reg_addr += 32'h0000_0004; 
@@ -343,14 +350,14 @@ module top;
     $display("time: %0t ps ******************************************",$time);
     reg_addr = 32'h0000_4000; expected_data = 32'h0000_0008;
     repeat(15) begin
-      if( reg_addr == 32'h0000_4004) begin
-      //$display("time: %0t ps *  MADE It 1    **************************",$time);
-        expected_data = 32'h0000_0007;
-      end
-      else begin
+//      if( reg_addr == 32'h0000_4004) begin
+//      //$display("time: %0t ps *  MADE It 1    **************************",$time);
+//        expected_data = 32'h0000_0007;
+//      end
+//      else begin
         expected_data = 32'h0000_0008;
       //$display("time: %0t ps *  MADE It 2    **************************",$time);
-      end
+//      end
       slave_read(reg_addr,expected_data); 
       repeat (1) @(negedge clk);
       reg_addr += 32'h0000_0004; 
@@ -364,8 +371,9 @@ module top;
     vctr_fifo_wr = 1'b1;
     vctr_fifo_rd = 1'b1;
     repeat (1) @(negedge clk);
-    vctr_fifo_wr = 1'b0;
     vctr_fifo_rd = 1'b0;
+    repeat (1) @(negedge clk);
+    vctr_fifo_wr = 1'b0;
     repeat (1) @(negedge clk);
 
     vctr_fifo_rd = 1'b1;
@@ -375,9 +383,11 @@ module top;
     addr_fifo_rd = 1'b0;
     repeat (1) @(negedge clk);
 
-    reg_addr = 32'h0000_0108; expected_data = 32'h0000_0088;
+//    reg_addr = 32'h0000_0108; expected_data = 32'h0000_0088;
+    reg_addr = 32'h0000_0108; expected_data = {16'h0000, words_in_addr_fifo_tb};
     slave_read(reg_addr,expected_data); 
-    repeat (1) @(negedge clk); expected_data = 32'h0000_FFFE;
+//    repeat (1) @(negedge clk); expected_data = 32'h0000_FFFE;
+    repeat (1) @(negedge clk); expected_data = {16'h0000, words_in_vctr_fifo_tb};
     reg_addr = 32'h0000_0110; 
     slave_read(reg_addr,expected_data); 
 
@@ -444,6 +454,7 @@ task slave_read;
   end
 endtask
 
+wire addr_fifo_wr;
 //////////////////////////////////////////////////////////////////////////////
 // recrating commented out logic in monitor block for words in FIFO
 //////////////////////////////////////////////////////////////////////////////
@@ -451,42 +462,60 @@ endtask
 ///////////////////////////////////////////////////////////////////////////////
 // Words in Vector FIFO counter
 ///////////////////////////////////////////////////////////////////////////////
-reg [15:0] words_in_vctr_fifo;
+
+reg cnt;
+
+always @(posedge clk ) begin
+    if(reset_l == 1'b0) begin
+        cnt <= 1'b0;
+    end else if(vctr_fifo_wr) begin
+        cnt <= ~cnt;
+    end
+end
+wire vctr_fifo_word_wr;
+// =====================================================
+// two writes creates one entry in the vector FIFO
+// two 128 bit writes creates one 192bit vector data.
+// =====================================================
+// one read removes one entry from the vector FIFO
+// one read outputs one 192bit vector data
+// =====================================================
+assign vctr_fifo_word_wr = vctr_fifo_wr && cnt;
 
 always @(posedge clk ) begin
   if(reset_l == 1'b0) 
-    words_in_vctr_fifo <= 16'h0000;
+    words_in_vctr_fifo_tb <= 16'h0000;
 //else if(run_program && !active_program)
-//  words_in_vctr_fifo <= 16'h0000;
-  else if( vctr_fifo_wr && !vctr_fifo_rd && words_in_vctr_fifo != 16'hFFFF)
-    words_in_vctr_fifo <= words_in_vctr_fifo + 16'h0001;
-  else if(!vctr_fifo_wr &&  vctr_fifo_rd && words_in_vctr_fifo != 16'h0000)
-    words_in_vctr_fifo <= words_in_vctr_fifo - 16'h0001;
-  else if( vctr_fifo_wr &&  vctr_fifo_rd)
-    words_in_vctr_fifo <= words_in_vctr_fifo;
+//  words_in_vctr_fifo_tb <= 16'h0000;
+  else if( vctr_fifo_word_wr && !vctr_fifo_rd && words_in_vctr_fifo_tb != 16'hFFFF)
+    words_in_vctr_fifo_tb <= words_in_vctr_fifo_tb + 16'h0001;
+  else if(!vctr_fifo_word_wr &&  vctr_fifo_rd && words_in_vctr_fifo_tb != 16'h0000)
+    words_in_vctr_fifo_tb <= words_in_vctr_fifo_tb - 16'h0001;
+  else if( vctr_fifo_word_wr &&  vctr_fifo_rd)
+    words_in_vctr_fifo_tb <= words_in_vctr_fifo_tb;
   else
-    words_in_vctr_fifo <= words_in_vctr_fifo;
+    words_in_vctr_fifo_tb <= words_in_vctr_fifo_tb;
 end
 
 ///////////////////////////////////////////////////////////////////////////////
 // Words in Address FIFO counter
 ///////////////////////////////////////////////////////////////////////////////
-reg [15:0] words_in_addr_fifo;
-wire addr_fifo_wr; 
+
+//wire addr_fifo_wr; 
 
 always @(posedge clk ) begin
   if(reset_l == 1'b0) 
-    words_in_addr_fifo <= 16'h0000;
+    words_in_addr_fifo_tb <= 16'h0000;
 //else if(run_program && !active_program)
-//  words_in_addr_fifo <= 16'h0000;
-  else if( addr_fifo_wr && !addr_fifo_rd && words_in_addr_fifo != 16'hFFFF)
-    words_in_addr_fifo <= words_in_addr_fifo + 16'h0001;
-  else if(!addr_fifo_wr &&  addr_fifo_rd && words_in_addr_fifo != 16'h0000)
-    words_in_addr_fifo <= words_in_addr_fifo - 16'h0001;
+//  words_in_addr_fifo_tb <= 16'h0000;
+  else if( addr_fifo_wr && !addr_fifo_rd && words_in_addr_fifo_tb != 16'hFFFF)
+    words_in_addr_fifo_tb <= words_in_addr_fifo_tb + 16'h0001;
+  else if(!addr_fifo_wr &&  addr_fifo_rd && words_in_addr_fifo_tb != 16'h0000)
+    words_in_addr_fifo_tb <= words_in_addr_fifo_tb - 16'h0001;
   else if( addr_fifo_wr &&  addr_fifo_rd)
-    words_in_addr_fifo <= words_in_addr_fifo;
+    words_in_addr_fifo_tb <= words_in_addr_fifo_tb;
   else
-    words_in_addr_fifo <= words_in_addr_fifo;
+    words_in_addr_fifo_tb <= words_in_addr_fifo_tb;
 end
 
 wire active_program; 
@@ -497,7 +526,58 @@ wire [15:0] vctr_cycle_cnt;
 wire [31:0] trace_buf_bram_addr;
 wire [15:0] addr_fifo_threshold; // FIXME check that this fifo works
 wire [15:0] vector_fifo_threshold;
-  
+
+
+wire [15:0] words_in_addr_fifo;
+wire [15:0] words_in_vctr_fifo;
+localparam vector_fifo_depth_size = 16;
+localparam addr_fifo_depth_size = 13;
+assign words_in_addr_fifo[15:addr_fifo_depth_size+1] = 2'b0;
+//assign words_in_vctr_fifo[15:vector_fifo_depth_size+1] = 5'b0;
+
+addr_fifo addr_fifo_0 (
+  .clk(clk),                                // input wire clk
+  .srst(~reset_l),                          // input wire srst
+  .din(addr_fifo_din),                      // input wire [31 : 0] din
+  .wr_en(addr_fifo_wr),                     // input wire wr_en
+  .rd_en(addr_fifo_rd),                     // input wire rd_en
+  .dout(),                                  // output wire [31 : 0] dout
+  .full(addr_fifo_full),                    // output wire full
+  .almost_full(addr_fifo_almost_full),      // output wire almost_full
+  .wr_ack(),                                // output wire wr_ack
+  .overflow(addr_fifo_overrun),             // output wire overflow
+  .empty(addr_fifo_empty),                  // output wire empty
+  .almost_empty(),                          // output wire almost_empty
+  .valid(),                                 // output wire valid
+  .underflow(addr_fifo_underrun),           // output wire underflow
+  .data_count(words_in_addr_fifo[addr_fifo_depth_size:0]),   // output wire [13 : 0] data_count
+  .wr_rst_busy(),                           // output wire wr_rst_busy
+  .rd_rst_busy()                            // output wire rd_rst_busy
+);
+
+datapath_fifo #(
+    .INPUT_DATA_WIDTH(128),
+    .OUTPUT_DATA_WIDTH(192),
+    .DEPTH((1<<vector_fifo_depth_size)-1),
+    .DEPTH_SIZE(vector_fifo_depth_size),
+    .CLK_DIV(1)
+) datapath_fifo_0 (
+    .clk(clk),
+    .rstn(reset_l),
+    .wr(vctr_fifo_wr),
+    .rd(vctr_fifo_rd),
+    .rd_en_100ns(),
+    .data_in(128'h0),
+    .data_out(),
+    .data_out_delayed(),
+    .full(vector_fifo_full),
+    .empty(vector_fifo_empty),
+    .threshold(),
+    .overflow(vector_fifo_overrun),
+    .underflow(vector_fifo_underrun),
+    .data_count(words_in_vctr_fifo[vector_fifo_depth_size-1:0])
+);
+
 driver driver_0(
   .clk(clk),
   .reset(reset_l),
