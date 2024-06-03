@@ -6,10 +6,17 @@
 		// Users to add parameters here
         parameter integer ADDR_MON_CNT_RANGE = 8,
         parameter integer ADDR_MON_CNT_SIZE = 16,
-        parameter integer MAX_ADDR_CYCLE_CNT = 128,
-		parameter integer VCTR_MON_CNT_RANGE = 8,
-		parameter integer VCTR_MON_CNT_SIZE = 16,
-		parameter integer MAX_VCTR_CYCLE_CNT = 128,
+        parameter integer MAX_ADDR_MON_CYCLE_CNT = 128,
+        parameter integer ADDR_FIFO_MON_CNT_RANGE = 8,
+        parameter integer ADDR_FIFO_MON_CNT_SIZE = 16,
+        parameter integer MAX_ADDR_FIFO_MON_CYCLE_CNT = 128,
+        parameter integer VCTR_MON_CNT_RANGE = 8,
+        parameter integer VCTR_MON_CNT_SIZE = 16,
+        parameter integer MAX_VCTR_MON_CYCLE_CNT = 128,
+        parameter integer VCTR_FIFO_MON_CNT_RANGE = 8,
+        parameter integer VCTR_FIFO_MON_CNT_SIZE = 16,
+        parameter integer MAX_VCTR_FIFO_MON_CYCLE_CNT = 128,
+          
         parameter integer VCTR_FIFO_DEPTH_SIZE = 10,
 		// User parameters ends
 		// Do not modify the parameters beyond this line
@@ -698,12 +705,18 @@
   assign words_in_addr_fifo = {{(16 - 14){1'b0}}, module_addr_fifo_data_count[0+:14]};
 
   driver #(
-    .ADDR_MON_CNT_RANGE(ADDR_MON_CNT_RANGE),
-	.ADDR_MON_CNT_SIZE(ADDR_MON_CNT_SIZE),
-	.MAX_ADDR_CYCLE_CNT(MAX_ADDR_CYCLE_CNT),
-	.VCTR_MON_CNT_RANGE(VCTR_MON_CNT_RANGE),
-	.VCTR_MON_CNT_SIZE(VCTR_MON_CNT_SIZE),
-	.MAX_VCTR_CYCLE_CNT(MAX_VCTR_CYCLE_CNT)
+    .ADDR_MON_CNT_RANGE                  (ADDR_MON_CNT_RANGE),
+    .ADDR_MON_CNT_SIZE                   (ADDR_MON_CNT_SIZE),
+    .MAX_ADDR_MON_CYCLE_CNT              (MAX_ADDR_MON_CYCLE_CNT),
+    .ADDR_FIFO_MON_CNT_RANGE             (ADDR_FIFO_MON_CNT_RANGE),
+    .ADDR_FIFO_MON_CNT_SIZE              (ADDR_FIFO_MON_CNT_SIZE),
+    .MAX_ADDR_FIFO_MON_CYCLE_CNT         (MAX_ADDR_FIFO_MON_CYCLE_CNT),
+    .VCTR_MON_CNT_RANGE                  (VCTR_MON_CNT_RANGE),
+    .VCTR_MON_CNT_SIZE                   (VCTR_MON_CNT_SIZE),
+    .MAX_VCTR_MON_CYCLE_CNT              (MAX_VCTR_MON_CYCLE_CNT),
+    .VCTR_FIFO_MON_CNT_RANGE             (VCTR_FIFO_MON_CNT_RANGE),
+    .VCTR_FIFO_MON_CNT_SIZE              (VCTR_FIFO_MON_CNT_SIZE),
+    .MAX_VCTR_FIFO_MON_CYCLE_CNT         (MAX_VCTR_FIFO_MON_CYCLE_CNT)
   ) driver_0(
     .clk(clk),
     .reset(reset),

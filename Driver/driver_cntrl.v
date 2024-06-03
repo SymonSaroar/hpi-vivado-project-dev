@@ -1,10 +1,16 @@
 module driver_cntrl #(
   parameter integer ADDR_MON_CNT_RANGE = 8,
   parameter integer ADDR_MON_CNT_SIZE = 16,
-  parameter integer MAX_ADDR_CYCLE_CNT = 128,
+  parameter integer MAX_ADDR_MON_CYCLE_CNT = 128,
+  parameter integer ADDR_FIFO_MON_CNT_RANGE = 8,
+  parameter integer ADDR_FIFO_MON_CNT_SIZE = 16,
+  parameter integer MAX_ADDR_FIFO_MON_CYCLE_CNT = 128,
   parameter integer VCTR_MON_CNT_RANGE = 8,
   parameter integer VCTR_MON_CNT_SIZE = 16,
-  parameter integer MAX_VCTR_CYCLE_CNT = 128
+  parameter integer MAX_VCTR_MON_CYCLE_CNT = 128,
+  parameter integer VCTR_FIFO_MON_CNT_RANGE = 8,
+  parameter integer VCTR_FIFO_MON_CNT_SIZE = 16,
+  parameter integer MAX_VCTR_FIFO_MON_CYCLE_CNT = 128
 )(
   input               clk,
   input               reset,
@@ -14,11 +20,11 @@ module driver_cntrl #(
   input               slave_wr,
   input        [31:0] slave_data_in,
   input        [15:0] addr_cycle_cnt,
-  input        [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0],
-  input        [ADDR_MON_CNT_SIZE-1:0] addr_fifo_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0],
+  input        [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_MON_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0],
+  input        [ADDR_FIFO_MON_CNT_SIZE-1:0] addr_fifo_mon_cnts[(MAX_ADDR_FIFO_MON_CYCLE_CNT/ADDR_FIFO_MON_CNT_RANGE)-1:0],
   input        [15:0] vctr_cycle_cnt,
-  input        [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0],
-  input        [VCTR_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0],
+  input        [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_MON_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0],
+  input        [VCTR_FIFO_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[(MAX_VCTR_FIFO_MON_CYCLE_CNT/VCTR_FIFO_MON_CNT_RANGE)-1:0],
   input        [15:0] words_in_addr_fifo,
   input        [15:0] words_in_vctr_fifo,
   input        [255:0] trace_buf_bram_data,
@@ -42,8 +48,10 @@ module driver_cntrl #(
   output reg          active_program
 );
 
-localparam addr_cnt_iterations = (MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE);
-localparam vctr_cnt_iterations = (MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE);
+localparam addr_mon_cnt_iterations = (MAX_ADDR_MON_CYCLE_CNT/ADDR_MON_CNT_RANGE);
+localparam addr_fifo_mon_cnt_iterations = (MAX_ADDR_FIFO_MON_CYCLE_CNT/ADDR_FIFO_MON_CNT_RANGE);
+localparam vctr_mon_cnt_iterations = (MAX_VCTR_MON_CYCLE_CNT/VCTR_MON_CNT_RANGE);
+localparam vctr_fifo_mon_cnt_iterations = (MAX_VCTR_FIFO_MON_CYCLE_CNT/VCTR_FIFO_MON_CNT_RANGE);
 
 reg [31:0] vctor_addr;
 reg [15:0] driver_cntrl_rsvd;
@@ -183,25 +191,25 @@ always @(posedge clk ) begin
       
       default: begin
           if(slave_araddr >= 'h0000_1000 && slave_araddr < 'h0000_1FFF) begin
-            for (int i = 0; i < addr_cnt_iterations; i += 1) begin
+            for (int i = 0; i < addr_mon_cnt_iterations; i += 1) begin
                 if (slave_araddr == 'h0000_1000 + i * 'h4)
                   slave_data_out <= {16'h0000, addr_mon_cnts[i]};
             end
           end 
           else if(slave_araddr >= 'h0000_2000 && slave_araddr < 'h0000_2FFF) begin
-            for (int i = 0; i < addr_cnt_iterations; i += 1) begin
+            for (int i = 0; i < addr_fifo_mon_cnt_iterations; i += 1) begin
                 if (slave_araddr == 'h0000_2000 + i * 'h4)
                   slave_data_out <= {16'h0000, addr_fifo_mon_cnts[i]};
             end
           end 
           else if (slave_araddr >= 'h0000_3000 && slave_araddr < 'h0000_3FFF) begin
-            for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
+            for (int i = 0; i < vctr_mon_cnt_iterations; i += 1) begin
                 if (slave_araddr == 'h0000_3000 + i * 'h4)
                   slave_data_out <= {16'h0000, vctr_mon_cnts[i]};
             end
           end 
           else if (slave_araddr >= 'h0000_4000 && slave_araddr < 'h0000_4FFF) begin
-            for (int i = 0; i < vctr_cnt_iterations; i += 1) begin
+            for (int i = 0; i < vctr_fifo_mon_cnt_iterations; i += 1) begin
                 if (slave_araddr == 'h0000_4000 + i * 'h4)
                   slave_data_out <= {16'h0000, vctr_fifo_mon_cnts[i]};
             end

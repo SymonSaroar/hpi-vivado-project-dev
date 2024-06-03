@@ -3,10 +3,16 @@
 module driver #(
   parameter integer ADDR_MON_CNT_RANGE = 8,
   parameter integer ADDR_MON_CNT_SIZE = 16,
-  parameter integer MAX_ADDR_CYCLE_CNT = 128,
+  parameter integer MAX_ADDR_MON_CYCLE_CNT = 128,
+  parameter integer ADDR_FIFO_MON_CNT_RANGE = 8,
+  parameter integer ADDR_FIFO_MON_CNT_SIZE = 16,
+  parameter integer MAX_ADDR_FIFO_MON_CYCLE_CNT = 128,
   parameter integer VCTR_MON_CNT_RANGE = 8,
   parameter integer VCTR_MON_CNT_SIZE = 16,
-  parameter integer MAX_VCTR_CYCLE_CNT = 128
+  parameter integer MAX_VCTR_MON_CYCLE_CNT = 128,
+  parameter integer VCTR_FIFO_MON_CNT_RANGE = 8,
+  parameter integer VCTR_FIFO_MON_CNT_SIZE = 16,
+  parameter integer MAX_VCTR_FIFO_MON_CYCLE_CNT = 128
 )
 (
   input               clk,
@@ -46,19 +52,25 @@ module driver #(
   output wire [31:0]  trace_buf_bram_addr
 );
 
-wire [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0];
-wire [ADDR_MON_CNT_SIZE-1:0] addr_fifo_mon_cnts[(MAX_ADDR_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0];
-wire [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0];
-wire [VCTR_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[(MAX_VCTR_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0];
+wire [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_MON_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0];
+wire [ADDR_FIFO_MON_CNT_SIZE-1:0] addr_fifo_mon_cnts[(MAX_ADDR_FIFO_MON_CYCLE_CNT/ADDR_FIFO_MON_CNT_RANGE)-1:0];
+wire [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_MON_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0];
+wire [VCTR_FIFO_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[(MAX_VCTR_FIFO_MON_CYCLE_CNT/VCTR_FIFO_MON_CNT_RANGE)-1:0];
 
 
 driver_cntrl #(
-  .ADDR_MON_CNT_RANGE(ADDR_MON_CNT_RANGE),
-  .ADDR_MON_CNT_SIZE(ADDR_MON_CNT_SIZE),
-  .MAX_ADDR_CYCLE_CNT(MAX_ADDR_CYCLE_CNT),
-  .VCTR_MON_CNT_RANGE(VCTR_MON_CNT_RANGE),
-  .VCTR_MON_CNT_SIZE(VCTR_MON_CNT_SIZE),
-  .MAX_VCTR_CYCLE_CNT(MAX_VCTR_CYCLE_CNT)
+  .ADDR_MON_CNT_RANGE                  (ADDR_MON_CNT_RANGE),
+  .ADDR_MON_CNT_SIZE                   (ADDR_MON_CNT_SIZE),
+  .MAX_ADDR_MON_CYCLE_CNT              (MAX_ADDR_MON_CYCLE_CNT),
+  .ADDR_FIFO_MON_CNT_RANGE             (ADDR_FIFO_MON_CNT_RANGE),
+  .ADDR_FIFO_MON_CNT_SIZE              (ADDR_FIFO_MON_CNT_SIZE),
+  .MAX_ADDR_FIFO_MON_CYCLE_CNT         (MAX_ADDR_FIFO_MON_CYCLE_CNT),
+  .VCTR_MON_CNT_RANGE                  (VCTR_MON_CNT_RANGE),
+  .VCTR_MON_CNT_SIZE                   (VCTR_MON_CNT_SIZE),
+  .MAX_VCTR_MON_CYCLE_CNT              (MAX_VCTR_MON_CYCLE_CNT),
+  .VCTR_FIFO_MON_CNT_RANGE             (VCTR_FIFO_MON_CNT_RANGE),
+  .VCTR_FIFO_MON_CNT_SIZE              (VCTR_FIFO_MON_CNT_SIZE),
+  .MAX_VCTR_FIFO_MON_CYCLE_CNT         (MAX_VCTR_FIFO_MON_CYCLE_CNT)
 ) driver_cntrl_0(
   .clk(clk),
   .reset(reset),
@@ -97,12 +109,18 @@ driver_cntrl #(
 );
   
 driver_monitor #(
-  .ADDR_MON_CNT_RANGE(ADDR_MON_CNT_RANGE),
-  .ADDR_MON_CNT_SIZE(ADDR_MON_CNT_SIZE),
-  .MAX_ADDR_CYCLE_CNT(MAX_ADDR_CYCLE_CNT),
-  .VCTR_MON_CNT_RANGE(VCTR_MON_CNT_RANGE),
-  .VCTR_MON_CNT_SIZE(VCTR_MON_CNT_SIZE),
-  .MAX_VCTR_CYCLE_CNT(MAX_VCTR_CYCLE_CNT)
+  .ADDR_MON_CNT_RANGE                  (ADDR_MON_CNT_RANGE),
+  .ADDR_MON_CNT_SIZE                   (ADDR_MON_CNT_SIZE),
+  .MAX_ADDR_MON_CYCLE_CNT              (MAX_ADDR_MON_CYCLE_CNT),
+  .ADDR_FIFO_MON_CNT_RANGE             (ADDR_FIFO_MON_CNT_RANGE),
+  .ADDR_FIFO_MON_CNT_SIZE              (ADDR_FIFO_MON_CNT_SIZE),
+  .MAX_ADDR_FIFO_MON_CYCLE_CNT         (MAX_ADDR_FIFO_MON_CYCLE_CNT),
+  .VCTR_MON_CNT_RANGE                  (VCTR_MON_CNT_RANGE),
+  .VCTR_MON_CNT_SIZE                   (VCTR_MON_CNT_SIZE),
+  .MAX_VCTR_MON_CYCLE_CNT              (MAX_VCTR_MON_CYCLE_CNT),
+  .VCTR_FIFO_MON_CNT_RANGE             (VCTR_FIFO_MON_CNT_RANGE),
+  .VCTR_FIFO_MON_CNT_SIZE              (VCTR_FIFO_MON_CNT_SIZE),
+  .MAX_VCTR_FIFO_MON_CYCLE_CNT         (MAX_VCTR_FIFO_MON_CYCLE_CNT)
 ) driver_monitor_0(
   .clk(clk),
   .reset(reset),
