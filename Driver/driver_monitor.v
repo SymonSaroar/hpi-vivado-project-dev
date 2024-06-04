@@ -21,13 +21,13 @@ module driver_monitor#(
   input             addr_fifo_wr,
   input             addr_fifo_rd,
   output reg [15:0] addr_cycle_cnt,
-  output reg [ADDR_MON_CNT_SIZE-1 : 0] addr_mon_cnts[(MAX_ADDR_MON_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1 : 0],
-  output reg [ADDR_FIFO_MON_CNT_SIZE-1 : 0] addr_fifo_mon_cnts[(MAX_ADDR_FIFO_MON_CYCLE_CNT/ADDR_FIFO_MON_CNT_RANGE)-1 : 0],
+  output reg [ADDR_MON_CNT_SIZE-1 : 0] addr_mon_cnts[0: (MAX_ADDR_MON_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1],
+  output reg [ADDR_FIFO_MON_CNT_SIZE-1 : 0] addr_fifo_mon_cnts[0: (MAX_ADDR_FIFO_MON_CYCLE_CNT/ADDR_FIFO_MON_CNT_RANGE)-1],
   input             vctr_fifo_wr,
   input             vctr_fifo_rd,
   output reg [15:0] vctr_cycle_cnt,
-  output reg [VCTR_MON_CNT_SIZE-1 : 0] vctr_mon_cnts[(MAX_VCTR_MON_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1 : 0],
-  output reg [VCTR_FIFO_MON_CNT_SIZE-1 : 0] vctr_fifo_mon_cnts[(MAX_VCTR_FIFO_MON_CYCLE_CNT/VCTR_FIFO_MON_CNT_RANGE)-1 : 0],
+  output reg [VCTR_MON_CNT_SIZE-1 : 0] vctr_mon_cnts[0: (MAX_VCTR_MON_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1],
+  output reg [VCTR_FIFO_MON_CNT_SIZE-1 : 0] vctr_fifo_mon_cnts[0: (MAX_VCTR_FIFO_MON_CYCLE_CNT/VCTR_FIFO_MON_CNT_RANGE)-1],
   input      [15:0] words_in_addr_fifo,
   input      [15:0] words_in_vctr_fifo
 );

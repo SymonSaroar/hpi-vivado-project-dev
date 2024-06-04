@@ -20,11 +20,11 @@ module driver_cntrl #(
   input               slave_wr,
   input        [31:0] slave_data_in,
   input        [15:0] addr_cycle_cnt,
-  input        [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_MON_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0],
-  input        [ADDR_FIFO_MON_CNT_SIZE-1:0] addr_fifo_mon_cnts[(MAX_ADDR_FIFO_MON_CYCLE_CNT/ADDR_FIFO_MON_CNT_RANGE)-1:0],
+  input        [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[0: (MAX_ADDR_MON_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1],
+  input        [ADDR_FIFO_MON_CNT_SIZE-1:0] addr_fifo_mon_cnts[0: (MAX_ADDR_FIFO_MON_CYCLE_CNT/ADDR_FIFO_MON_CNT_RANGE)-1],
   input        [15:0] vctr_cycle_cnt,
-  input        [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_MON_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0],
-  input        [VCTR_FIFO_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[(MAX_VCTR_FIFO_MON_CYCLE_CNT/VCTR_FIFO_MON_CNT_RANGE)-1:0],
+  input        [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[0: (MAX_VCTR_MON_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1],
+  input        [VCTR_FIFO_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[0: (MAX_VCTR_FIFO_MON_CYCLE_CNT/VCTR_FIFO_MON_CNT_RANGE)-1],
   input        [15:0] words_in_addr_fifo,
   input        [15:0] words_in_vctr_fifo,
   input        [255:0] trace_buf_bram_data,
@@ -162,65 +162,106 @@ wire [31:0] driver_status =
   8'h00,
   3'b000,                active_program};
 
+
+
+wire [31:0] data_out_addr_mon_cnt;
+wire [31:0] data_out_addr_fifo_mon_cnt;
+wire [31:0] data_out_vctr_mon_cnt;
+wire [31:0] data_out_vctr_fifo_mon_cnt;
+
+reg [31:0] slave_data_out_next;
 always @(posedge clk ) begin
   if(reset == 1'b0) begin
     slave_data_out <= 32'h0000_0000;
   end
   else begin
-    if(slave_rd) begin
-      case (slave_araddr)
-      'h0000_0000: slave_data_out <= addr_fifo_din;
-      'h0000_0004: slave_data_out <= driver_cntrl_word;
-      'h0000_0008: slave_data_out <= {addr_fifo_threshold};
-      'h0000_000C: slave_data_out <= {vector_fifo_threshold};
-      'h0000_0100: slave_data_out <= driver_status;
-      'h0000_0104: slave_data_out <= {16'h0000,addr_cycle_cnt};
-      'h0000_0108: slave_data_out <= {16'h0000,words_in_addr_fifo};
-      'h0000_010C: slave_data_out <= {16'h0000,vctr_cycle_cnt};
-      'h0000_0110: slave_data_out <= {16'h0000,words_in_vctr_fifo};
+    slave_data_out <= slave_data_out_next;
+  end
+end 
+
+always @(*) begin
+  slave_data_out_next = 32'h0000_0000;
+  
+  // if(slave_rd) begin
+    case(slave_araddr[31:12])
+    'h0000_0: begin
+      case (slave_araddr[11:0])
+      'h000: slave_data_out_next = addr_fifo_din;
+      'h004: slave_data_out_next = driver_cntrl_word;
+      'h008: slave_data_out_next = {addr_fifo_threshold};
+      'h00C: slave_data_out_next = {vector_fifo_threshold};
       
-      'h0000_0200: slave_data_out <= trace_buf_bram_addr;
-      'h0000_0210: slave_data_out <= trace_buf_bram_data[31 :0  ];
-      'h0000_0214: slave_data_out <= trace_buf_bram_data[63 :32 ];
-      'h0000_0218: slave_data_out <= trace_buf_bram_data[95 :64 ];
-      'h0000_021C: slave_data_out <= trace_buf_bram_data[127:96 ];
-      'h0000_0220: slave_data_out <= trace_buf_bram_data[159:128];
-      'h0000_0224: slave_data_out <= trace_buf_bram_data[191:160];
-      'h0000_0228: slave_data_out <= trace_buf_bram_data[223:192];
-      'h0000_022C: slave_data_out <= trace_buf_bram_data[255:224];
+      'h100: slave_data_out_next = driver_status;
+      'h104: slave_data_out_next = {16'h0000,addr_cycle_cnt};
+      'h108: slave_data_out_next = {16'h0000,words_in_addr_fifo};
+      'h10C: slave_data_out_next = {16'h0000,vctr_cycle_cnt};
+      'h110: slave_data_out_next = {16'h0000,words_in_vctr_fifo};
       
-      default: begin
-          if(slave_araddr >= 'h0000_1000 && slave_araddr < 'h0000_1FFF) begin
-            for (int i = 0; i < addr_mon_cnt_iterations; i += 1) begin
-                if (slave_araddr == 'h0000_1000 + i * 'h4)
-                  slave_data_out <= {16'h0000, addr_mon_cnts[i]};
-            end
-          end 
-          else if(slave_araddr >= 'h0000_2000 && slave_araddr < 'h0000_2FFF) begin
-            for (int i = 0; i < addr_fifo_mon_cnt_iterations; i += 1) begin
-                if (slave_araddr == 'h0000_2000 + i * 'h4)
-                  slave_data_out <= {16'h0000, addr_fifo_mon_cnts[i]};
-            end
-          end 
-          else if (slave_araddr >= 'h0000_3000 && slave_araddr < 'h0000_3FFF) begin
-            for (int i = 0; i < vctr_mon_cnt_iterations; i += 1) begin
-                if (slave_araddr == 'h0000_3000 + i * 'h4)
-                  slave_data_out <= {16'h0000, vctr_mon_cnts[i]};
-            end
-          end 
-          else if (slave_araddr >= 'h0000_4000 && slave_araddr < 'h0000_4FFF) begin
-            for (int i = 0; i < vctr_fifo_mon_cnt_iterations; i += 1) begin
-                if (slave_araddr == 'h0000_4000 + i * 'h4)
-                  slave_data_out <= {16'h0000, vctr_fifo_mon_cnts[i]};
-            end
-          end 
-          else begin
-            slave_data_out <= 32'h0000_0000;
-          end
-      end
+      'h200: slave_data_out_next = trace_buf_bram_addr;
+      'h210: slave_data_out_next = trace_buf_bram_data[31 :0  ];
+      'h214: slave_data_out_next = trace_buf_bram_data[63 :32 ];
+      'h218: slave_data_out_next = trace_buf_bram_data[95 :64 ];
+      'h21C: slave_data_out_next = trace_buf_bram_data[127:96 ];
+      'h220: slave_data_out_next = trace_buf_bram_data[159:128];
+      'h224: slave_data_out_next = trace_buf_bram_data[191:160];
+      'h228: slave_data_out_next = trace_buf_bram_data[223:192];
+      'h22C: slave_data_out_next = trace_buf_bram_data[255:224];
+
+      default: slave_data_out_next = 32'h0000_0000;
       endcase
     end
-  end
+    'h0000_1: begin
+      slave_data_out_next = data_out_addr_mon_cnt;
+    end
+    'h0000_2: begin
+      slave_data_out_next = data_out_addr_fifo_mon_cnt;
+    end
+    'h0000_3: begin
+      slave_data_out_next = data_out_vctr_mon_cnt;
+    end
+    'h0000_4: begin
+      slave_data_out_next = data_out_vctr_fifo_mon_cnt;
+    end
+    default: begin
+      slave_data_out_next = 32'h0000_0000;
+    end
+    endcase
+  // end
+  // else begin
+  //   slave_data_out_next = 32'h0000_0000;
+  // end
 end
- 
+
+mon_cnts_handler #(addr_mon_cnt_iterations) u1 (.addr(slave_araddr[11:0]), .mon_cnts(addr_mon_cnts), .data_out(data_out_addr_mon_cnt));
+mon_cnts_handler #(addr_fifo_mon_cnt_iterations) u2 (.addr(slave_araddr[11:0]), .mon_cnts(addr_fifo_mon_cnts), .data_out(data_out_addr_fifo_mon_cnt));
+mon_cnts_handler #(vctr_mon_cnt_iterations) u3 (.addr(slave_araddr[11:0]), .mon_cnts(vctr_mon_cnts), .data_out(data_out_vctr_mon_cnt));
+mon_cnts_handler #(vctr_fifo_mon_cnt_iterations) u4 (.addr(slave_araddr[11:0]), .mon_cnts(vctr_fifo_mon_cnts), .data_out(data_out_vctr_fifo_mon_cnt));
+
 endmodule //driver_cntrl
+
+module mon_cnts_handler # (
+  parameter integer iterations = 16
+)(
+  input [11:0] addr,
+  input [15:0] mon_cnts [0: iterations-1],
+  output reg [31:0] data_out
+);
+  integer i;
+  function integer log2;
+    input integer value;
+    integer result;
+    begin
+      result = 0;
+      while (value > 1) begin
+        value = value >> 1;
+        result = result + 1;
+      end
+      log2 = result;
+    end
+  endfunction
+
+  localparam iteration_bits = log2(iterations);
+  always @(*) begin
+      data_out = {16'h0000, mon_cnts[addr[2 +: iteration_bits]]};
+  end
+endmodule

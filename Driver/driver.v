@@ -52,10 +52,10 @@ module driver #(
   output wire [31:0]  trace_buf_bram_addr
 );
 
-wire [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[(MAX_ADDR_MON_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1:0];
-wire [ADDR_FIFO_MON_CNT_SIZE-1:0] addr_fifo_mon_cnts[(MAX_ADDR_FIFO_MON_CYCLE_CNT/ADDR_FIFO_MON_CNT_RANGE)-1:0];
-wire [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[(MAX_VCTR_MON_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1:0];
-wire [VCTR_FIFO_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[(MAX_VCTR_FIFO_MON_CYCLE_CNT/VCTR_FIFO_MON_CNT_RANGE)-1:0];
+wire [ADDR_MON_CNT_SIZE-1:0] addr_mon_cnts[0: (MAX_ADDR_MON_CYCLE_CNT/ADDR_MON_CNT_RANGE)-1];
+wire [ADDR_FIFO_MON_CNT_SIZE-1:0] addr_fifo_mon_cnts[0: (MAX_ADDR_FIFO_MON_CYCLE_CNT/ADDR_FIFO_MON_CNT_RANGE)-1];
+wire [VCTR_MON_CNT_SIZE-1:0] vctr_mon_cnts[0: (MAX_VCTR_MON_CYCLE_CNT/VCTR_MON_CNT_RANGE)-1];
+wire [VCTR_FIFO_MON_CNT_SIZE-1:0] vctr_fifo_mon_cnts[0: (MAX_VCTR_FIFO_MON_CYCLE_CNT/VCTR_FIFO_MON_CNT_RANGE)-1];
 
 
 driver_cntrl #(

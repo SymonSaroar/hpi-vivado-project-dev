@@ -24,12 +24,12 @@ module datapath_fifo #(
     );
     
     localparam ptr_mask = {DEPTH_SIZE{1'b1}};
-    reg [32-1 : 0]  mem0 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem1 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem2 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem3 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem4 [DEPTH-1: 0];
-    reg [32-1 : 0]  mem5 [DEPTH-1: 0];
+    reg [32-1 : 0]  mem0 [0: DEPTH-1];
+    reg [32-1 : 0]  mem1 [0: DEPTH-1];
+    reg [32-1 : 0]  mem2 [0: DEPTH-1];
+    reg [32-1 : 0]  mem3 [0: DEPTH-1];
+    reg [32-1 : 0]  mem4 [0: DEPTH-1];
+    reg [32-1 : 0]  mem5 [0: DEPTH-1];
     reg [OUTPUT_DATA_WIDTH-1 : 0] data_out_reg;
     reg [DEPTH_SIZE : 0] w_ptr;
     reg [DEPTH_SIZE : 0] r_ptr;

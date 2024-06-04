@@ -579,18 +579,18 @@ datapath_fifo #(
 );
 
 driver #(
-  .ADDR_MON_CNT_RANGE                  (8    ),  // Address FIFO write cycle monitor resolution. nth counter counts if FIFO write takes between n*CNT_RANGE and (n+1)*CNT_RANGE cycles
-  .ADDR_MON_CNT_SIZE                   (16   ),  // Address FIFO write cycle counter bit size. Maximum count supported : 2^size - 1
-  .MAX_ADDR_MON_CYCLE_CNT              (128  ),  // Maximum supported cycle monitor for address FIFO write cycle counters.
-  .ADDR_FIFO_MON_CNT_RANGE             (8    ),  // Address FIFO word monitor resolution. nth counter counts if number of word is address FIFO is between n*CNT_RANGE and (n+1)*CNT_RANGE
-  .ADDR_FIFO_MON_CNT_SIZE              (16   ),  // Address FIFO word monitor counter bit size. Maximum count supported : 2^size - 1
-  .MAX_ADDR_FIFO_MON_CYCLE_CNT         (128  ),  // Maximum suppoeted FIFO word monitor for address FIFO word count counters.
-  .VCTR_MON_CNT_RANGE                  (8    ),  // Vector FIFO write cycle monitor resolution. nth counter counts if FIFO write takes between n*CNT_RANGE and (n+1)*CNT_RANGE cycles
-  .VCTR_MON_CNT_SIZE                   (16   ),  // Vector FIFO write cycle counter bit size. Maximum count supported : 2^size - 1
-  .MAX_VCTR_MON_CYCLE_CNT              (128  ),  // Maximum supported cycle monitor for vector FIFO write cycle counters.
-  .VCTR_FIFO_MON_CNT_RANGE             (8    ),  // Vector FIFO word monitor resolution. nth counter counts if number of word is vector FIFO is between n*CNT_RANGE and (n+1)*CNT_RANGE
-  .VCTR_FIFO_MON_CNT_SIZE              (16   ),  // Vector FIFO word monitor counter bit size. Maximum count supported : 2^size - 1
-  .MAX_VCTR_FIFO_MON_CYCLE_CNT         (128  )   // Maximum suppoeted FIFO word monitor for vector FIFO word count counters.
+  .ADDR_MON_CNT_RANGE           (8    ),  // Address FIFO write cycle monitor resolution. nth counter counts if FIFO write takes between n*CNT_RANGE and (n+1)*CNT_RANGE cycles
+  .ADDR_MON_CNT_SIZE            (16   ),  // Address FIFO write cycle counter bit size. Maximum count supported : 2^size - 1
+  .MAX_ADDR_MON_CYCLE_CNT       (128  ),  // Maximum supported cycle monitor for address FIFO write cycle counters.
+  .ADDR_FIFO_MON_CNT_RANGE      (8    ),  // Address FIFO word monitor resolution. nth counter counts if number of word is address FIFO is between n*CNT_RANGE and (n+1)*CNT_RANGE
+  .ADDR_FIFO_MON_CNT_SIZE       (16   ),  // Address FIFO word monitor counter bit size. Maximum count supported : 2^size - 1
+  .MAX_ADDR_FIFO_MON_CYCLE_CNT  (128  ),  // Maximum suppoeted FIFO word monitor for address FIFO word count counters.
+  .VCTR_MON_CNT_RANGE           (8    ),  // Vector FIFO write cycle monitor resolution. nth counter counts if FIFO write takes between n*CNT_RANGE and (n+1)*CNT_RANGE cycles
+  .VCTR_MON_CNT_SIZE            (16   ),  // Vector FIFO write cycle counter bit size. Maximum count supported : 2^size - 1
+  .MAX_VCTR_MON_CYCLE_CNT       (128  ),  // Maximum supported cycle monitor for vector FIFO write cycle counters.
+  .VCTR_FIFO_MON_CNT_RANGE      (8    ),  // Vector FIFO word monitor resolution. nth counter counts if number of word is vector FIFO is between n*CNT_RANGE and (n+1)*CNT_RANGE
+  .VCTR_FIFO_MON_CNT_SIZE       (16   ),  // Vector FIFO word monitor counter bit size. Maximum count supported : 2^size - 1
+  .MAX_VCTR_FIFO_MON_CYCLE_CNT  (128  )   // Maximum suppoeted FIFO word monitor for vector FIFO word count counters.
   ) driver_0 (
   .clk(clk),
   .reset(reset_l),
