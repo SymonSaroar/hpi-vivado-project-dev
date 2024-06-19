@@ -1,0 +1,2 @@
+trace_buffer_bram.v,verilog,xil_defaultlib,../../../../../ip_src/trace_buffer_bram/sim/trace_buffer_bram.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

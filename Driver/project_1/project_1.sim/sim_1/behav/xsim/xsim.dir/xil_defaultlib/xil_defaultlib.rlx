@@ -1,9 +1,0 @@
-0.7
-2020.2
-Oct 13 2023
-20:47:58
-C:/larry_delivery/Driver/driver.v,1712262928,systemVerilog,,C:/larry_delivery/Driver/driver_cntrl.v,,driver,,uvm,,,,,,
-C:/larry_delivery/Driver/driver_cntrl.v,1712264913,systemVerilog,,C:/larry_delivery/Driver/driver_monitor.v,,driver_cntrl,,uvm,,,,,,
-C:/larry_delivery/Driver/driver_monitor.v,1712265695,systemVerilog,,C:/larry_delivery/Driver/driver_tb.v,,driver_monitor,,uvm,,,,,,
-C:/larry_delivery/Driver/driver_tb.v,1712266174,systemVerilog,,,,top,,uvm,,,,,,
-C:/larry_delivery/Driver/project_1/project_1.sim/sim_1/behav/xsim/glbl.v,1697210495,verilog,,,,glbl,,uvm,,,,,,

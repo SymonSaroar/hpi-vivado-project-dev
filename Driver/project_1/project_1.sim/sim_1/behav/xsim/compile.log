@@ -1,9 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/larry_delivery/Driver/driver.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module driver
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/larry_delivery/Driver/driver_cntrl.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module driver_cntrl
-WARNING: [VRFC 10-9336] redeclaration of ANSI port 'end_program' is not allowed [C:/larry_delivery/Driver/driver_cntrl.v:26]
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/larry_delivery/Driver/driver_monitor.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module driver_monitor
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "C:/larry_delivery/Driver/driver_tb.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module top

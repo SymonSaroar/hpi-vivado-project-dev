@@ -1,0 +1,53 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/ec67/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f805/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f0b6/hdl/verilog" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/66be/hdl/verilog" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_zynq_ps_0_0/sim/design_bd_zynq_ps_0_0_vip_wrapper.v" \
+"../../../../../ip_src/trace_buffer_bram/sim/trace_buffer_bram.v" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_auto_pc_0/sim/design_bd_auto_pc_0.v" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_0/sim/bd_b3b8_one_0.v" \
+
+sv xil_defaultlib  --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/ec67/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f805/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f0b6/hdl/verilog" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/66be/hdl/verilog" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_2/sim/bd_b3b8_s00mmu_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_3/sim/bd_b3b8_s00tr_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_4/sim/bd_b3b8_s00sic_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_5/sim/bd_b3b8_s00a2s_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_6/sim/bd_b3b8_sarn_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_7/sim/bd_b3b8_srn_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_8/sim/bd_b3b8_sawn_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_9/sim/bd_b3b8_swn_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_10/sim/bd_b3b8_sbn_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_11/sim/bd_b3b8_m00s2a_0.sv" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_12/sim/bd_b3b8_m00e_0.sv" \
+
+verilog xil_defaultlib  --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/ec67/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f805/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f0b6/hdl/verilog" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/66be/hdl/verilog" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/sim/bd_b3b8.v" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/ip/design_bd_smartconnect_0_0/sim/design_bd_smartconnect_0_0.v" \
+"../../../../vivado_design_192b.ip_user_files/bd/design_bd/sim/design_bd.v" \
+"../../../../../ip_src/addr_fifo/sim/addr_fifo.v" \
+"../../../../../Design_src/custom_slave_v1_0_S00_AXI.v" \
+"../../../../../Design_src/Driver/datapath_fifo.v" \
+
+sv xil_defaultlib  --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/ec67/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f805/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f0b6/hdl/verilog" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/66be/hdl/verilog" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
+"../../../../../Design_src/Driver/driver.v" \
+
+verilog xil_defaultlib  --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/ec67/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f805/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f0b6/hdl/verilog" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/66be/hdl/verilog" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
+"../../../../../Design_src/Driver/driver_dp.v" \
+"../../../../../Design_src/Driver/driver_trace_buffer.v" \
+"../../../../../Design_src/master_custom_v1_0_M00_AXI.v" \
+
+sv xil_defaultlib  --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/ec67/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f805/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f0b6/hdl/verilog" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/66be/hdl/verilog" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
+"../../../../../Design_src/Driver/driver_cntrl.v" \
+"../../../../../Design_src/Driver/driver_monitor.v" \
+"../../../../../Design_src/design_top.v" \
+
+verilog xil_defaultlib  --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/ec67/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f805/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f0b6/hdl/verilog" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/66be/hdl/verilog" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
+"../../../../../Design_src/trace_buffer_slave_S00_AXI.v" \
+"../../../../../Design_src/design_bd_wrapper.v" \
+
+sv xil_defaultlib  --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/ec67/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f805/hdl" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/f0b6/hdl/verilog" --include "../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ipshared/66be/hdl/verilog" --include "/tools/Xilinx/Vivado/2023.1/data/xilinx_vip/include" \
+"../../../../../Design_src/Driver/driver_tb.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

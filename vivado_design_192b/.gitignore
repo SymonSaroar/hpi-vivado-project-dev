@@ -1,0 +1,6 @@
+/*.runs/
+/*.cache/
+*.jou
+*.log
+*.str
+/.Xil
