@@ -11,7 +11,7 @@
 // otherwise provided in a valid license issued to you by
 // AMD, and to the maximum extent permitted by applicable
 // law: (1) THESE MATERIALS ARE MADE AVAILABLE "AS IS" AND
-// WITH ALL FAULTS, AND XILINX HEREBY DISCLAIMS ALL WARRANTIES
+// WITH ALL FAULTS, AND AMD HEREBY DISCLAIMS ALL WARRANTIES
 // AND CONDITIONS, EXPRESS, IMPLIED, OR STATUTORY, INCLUDING
 // BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, NON-
 // INFRINGEMENT, OR FITNESS FOR ANY PARTICULAR PURPOSE; and
@@ -48,7 +48,7 @@
 
 
 // IP VLNV: xilinx.com:ip:blk_mem_gen:8.4
-// IP Revision: 6
+// IP Revision: 7
 
 `timescale 1ns/1ps
 
@@ -95,7 +95,7 @@ input wire [31 : 0] dinb;
 (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 BRAM_PORTB DOUT" *)
 output wire [31 : 0] doutb;
 
-  blk_mem_gen_v8_4_6 #(
+  blk_mem_gen_v8_4_7 #(
     .C_FAMILY("zynquplus"),
     .C_XDEVICEFAMILY("zynquplus"),
     .C_ELABORATION_DIR("./"),
@@ -138,7 +138,7 @@ output wire [31 : 0] doutb;
     .C_HAS_REGCEB(0),
     .C_USE_BYTE_WEB(0),
     .C_WEB_WIDTH(1),
-    .C_WRITE_MODE_B("WRITE_FIRST"),
+    .C_WRITE_MODE_B("READ_FIRST"),
     .C_WRITE_WIDTH_B(32),
     .C_READ_WIDTH_B(32),
     .C_WRITE_DEPTH_B(200000),
@@ -170,7 +170,7 @@ output wire [31 : 0] doutb;
     .C_DISABLE_WARN_BHV_RANGE(0),
     .C_COUNT_36K_BRAM("200"),
     .C_COUNT_18K_BRAM("0"),
-    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     170.468304 mW")
+    .C_EST_POWER_SUMMARY("Estimated Power for IP     :     171.148912 mW")
   ) inst (
     .clka(clka),
     .rsta(1'D0),

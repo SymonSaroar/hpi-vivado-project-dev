@@ -138,7 +138,7 @@ always @(posedge clk ) begin
   end
   else begin
     if(program_start == 1'b0)
-      program_start <= run_program && !active_program;
+      program_start <= run_program && !active_program && (words_in_addr_fifo >= addr_fifo_threshold);
     else
       program_start <= program_start;
     

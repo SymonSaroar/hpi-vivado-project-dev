@@ -1,6 +1,6 @@
 vhdl xil_defaultlib  \
-"../../../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ip/design_bd_ps_reset_0_0/sim/design_bd_ps_reset_0_0.vhd" \
-"../../../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_1/sim/bd_b3b8_psr_aclk_0.vhd" \
+"../../../bd/design_bd/ip/design_bd_smartconnect_0_0/bd_0/ip/ip_1/sim/bd_b3b8_psr_aclk_0.vhd" \
+"../../../bd/design_bd/ip/design_bd_proc_sys_reset_0_0/sim/design_bd_proc_sys_reset_0_0.vhd" \
 
 # Do not sort compile order
 nosort

@@ -4,8 +4,8 @@
     "xci_name": "design_bd_axi_interconnect_0_1",
     "cell_name": "axi_interconnect_1",
     "component_reference": "xilinx.com:ip:axi_interconnect:2.1",
-    "ip_revision": "29",
-    "gen_directory": "../../../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ip/design_bd_axi_interconnect_0_1",
+    "ip_revision": "30",
+    "gen_directory": ".",
     "parameters": {
       "component_parameters": {
         "NUM_SI": [ { "value": "1", "resolve_type": "user", "format": "long", "usage": "all" } ],
@@ -339,12 +339,12 @@
       },
       "runtime_parameters": {
         "IPCONTEXT": [ { "value": "IP_Integrator_AppCore" } ],
-        "IPREVISION": [ { "value": "29" } ],
+        "IPREVISION": [ { "value": "30" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../../../vivado_design_192b.gen/sources_1/bd/design_bd/ip/design_bd_axi_interconnect_0_1" } ],
+        "OUTPUTDIR": [ { "value": "." } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "../../ipshared" } ],
-        "SWVERSION": [ { "value": "2023.1.1" } ],
+        "SWVERSION": [ { "value": "2023.2" } ],
         "SYNTHESISFLOW": [ { "value": "GLOBAL" } ]
       }
     }
