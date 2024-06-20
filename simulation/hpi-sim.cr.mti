@@ -1,0 +1,74 @@
+{/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/ip_src/addr_fifo/hdl/fifo_generator_v13_2_rfs.v} {1 {vlog -work work -stats=none {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/ip_src/addr_fifo/hdl/fifo_generator_v13_2_rfs.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+
+Top level modules:
+
+} {} {}} {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_cntrl.v} {1 {vlog -work work -sv -stats=none {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_cntrl.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module driver_cntrl
+-- Compiling module mon_cnts_handler
+
+Top level modules:
+	driver_cntrl
+
+} {} {}} {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/datapath_fifo.v} {1 {vlog -work work -stats=none {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/datapath_fifo.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module datapath_fifo
+
+Top level modules:
+	datapath_fifo
+
+} {} {}} {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/ip_src/addr_fifo/sim/addr_fifo.v} {1 {vlog -work work -stats=none {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/ip_src/addr_fifo/sim/addr_fifo.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module addr_fifo
+
+Top level modules:
+	addr_fifo
+
+} {} {}} {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_monitor.v} {2 {vlog -work work -sv -stats=none {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_monitor.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module driver_monitor
+** Warning: /home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_monitor.v(197): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+Top level modules:
+	driver_monitor
+
+} {} {}} {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_dp.v} {1 {vlog -work work -sv -stats=none {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_dp.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module driver_dp
+
+Top level modules:
+	driver_dp
+
+} {} {}} {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/ip_src/addr_fifo/simulation/fifo_generator_vlog_beh.v} {1 {vlog -work work -stats=none {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/ip_src/addr_fifo/simulation/fifo_generator_vlog_beh.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module fifo_generator_vlog_beh
+-- Compiling module fifo_generator_v13_2_9_CONV_VER
+-- Compiling module fifo_generator_v13_2_9_sync_stage
+-- Compiling module fifo_generator_v13_2_9_bhv_ver_as
+-- Compiling module fifo_generator_v13_2_9_beh_ver_ll_afifo
+-- Compiling module fifo_generator_v13_2_9_bhv_ver_ss
+-- Compiling module fifo_generator_v13_2_9_bhv_ver_preload0
+-- Compiling module fifo_generator_v13_2_9_axic_reg_slice
+
+Top level modules:
+	fifo_generator_vlog_beh
+
+} {} {}} {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver.v} {1 {vlog -work work -sv -stats=none {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module driver
+
+Top level modules:
+	driver
+
+} {} {}} {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_tb.v} {2 {vlog -work work -sv -stats=none {/home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_tb.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module top
+** Warning: /home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_tb.v(64): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+** Warning: /home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_tb.v(65): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+** Warning: /home/symon/hpi-dev/from larry/hpi-vivado-project-dev/Design_src/Driver/driver_tb.v(66): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+Top level modules:
+	top
+
+} {} {}}
