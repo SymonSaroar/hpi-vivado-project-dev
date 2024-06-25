@@ -38,7 +38,7 @@ module driver #(
   input                 addr_fifo_underrun,
   input                 addr_fifo_overrun,
   input                 addr_fifo_almost_full,
-  output wire   [15:0]  addr_fifo_threshold,
+  (* mark_debug = "true" *) output wire   [15:0]  addr_fifo_threshold,
   output                active_program,
   output                end_program,
   output                run_program,
