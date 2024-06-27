@@ -736,8 +736,8 @@
   ) driver_0(
     .clk(clk),
     .reset(reset),
-    .slave_awaddr(slave_awaddr),
-    .slave_araddr(slave_araddr),
+    .slave_awaddr(axi_awaddr),
+    .slave_araddr(axi_araddr),
     .slave_rd(slave_rd),
     .slave_wr(slave_wr),
     .slave_data_in(slave_data_in),

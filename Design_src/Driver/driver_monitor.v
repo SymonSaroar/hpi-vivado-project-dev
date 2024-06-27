@@ -194,7 +194,7 @@ always @(posedge clk )
 always @(posedge clk)
   if(reset == 1'b0)
     total_vctr_fifo_words_written <= 32'h0;
-  else if(vctr_fifo_word_wr && active_program && total_vctr_fifo_words_written != 32'hFFFF_FFFF_FFFF_FFFF)
+  else if(vctr_fifo_word_wr && active_program && total_vctr_fifo_words_written != 32'hFFFF_FFFF)
     total_vctr_fifo_words_written <= total_vctr_fifo_words_written + 1;
   else
     total_vctr_fifo_words_written <= total_vctr_fifo_words_written;

@@ -108,7 +108,7 @@ always @(posedge clk ) begin
     freeze_program <= 1'b0;
     end_program <= 1'b0;
     run_program <= 1'b0;
-    addr_fifo_threshold <= 16'd820;
+    addr_fifo_threshold <= 16'd10;
     vector_fifo_threshold <= 16'd7500;
   end
   else if ((slave_awaddr == 32'h0000_0004) && slave_wr) begin
